@@ -16,7 +16,7 @@
   "include": [
     "app",
     "src",
-    ".storybook",
+    ".storybook/**/*",
     "types",
     "app.config.ts",
     "eslint.config.mts",

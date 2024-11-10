@@ -178,6 +178,6 @@ export const AvatarGroup = createGenericComponent<
       </As>
     );
   },
-) as (<T extends object>(props: AvatarGroupProps<T>) => React.JSX.ELement) & {
+) as (<T extends object>(props: AvatarGroupProps<T>) => React.JSX.Element) & {
   displayName: string;
 };

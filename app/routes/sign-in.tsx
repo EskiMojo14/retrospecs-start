@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter, useSearch } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { Form } from "react-aria-components";
 import { object, optional, string } from "valibot";
@@ -43,9 +43,7 @@ function SignIn() {
   const router = useRouter();
   const { url } = Route.useLoaderData();
   const supabase = useSupabase();
-  const { error, error_description: errorDescription } = useSearch({
-    from: "/sign-in",
-  });
+  const { error, error_description: errorDescription } = Route.useSearch();
 
   const toastKeyRef = useRef<string>();
 

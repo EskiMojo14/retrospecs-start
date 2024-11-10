@@ -35,7 +35,7 @@ type MenuTriggerProps =
     }
   | {
       isSubMenu: true;
-      trigger: React.JSX.ELement;
+      trigger: React.JSX.Element;
       triggerProps?: Omit<SubmenuTriggerProps, "children">;
     };
 
@@ -109,7 +109,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps<any>>((props, ref) => {
       {popover}
     </MenuTrigger>
   );
-}) as (<T extends object>(props: MenuProps<T>) => React.JSX.ELement) & {
+}) as (<T extends object>(props: MenuProps<T>) => React.JSX.Element) & {
   displayName?: string;
 };
 
@@ -169,7 +169,7 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps<any>>(
       </AriaMenuItem>
     );
   },
-) as (<T extends object>(props: MenuItemProps<T>) => React.JSX.ELement) & {
+) as (<T extends object>(props: MenuItemProps<T>) => React.JSX.Element) & {
   displayName?: string;
 };
 

@@ -37,7 +37,7 @@ export interface SectionItem extends CommonItemProps {
 
 export type MenuItem = StandardItem | SubmenuItem | SectionItem;
 
-export function renderMenuItem(item: MenuItem): React.JSX.ELement {
+export function renderMenuItem(item: MenuItem): React.JSX.Element {
   const dividerProps =
     item.divider &&
     (typeof item.divider === "object"

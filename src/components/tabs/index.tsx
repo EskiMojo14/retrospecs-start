@@ -71,7 +71,7 @@ export const TabList = forwardRef<HTMLDivElement, TabListProps<{}>>(
       </TabContext.Provider>
     );
   },
-) as (<T extends object>(props: TabListProps<T>) => React.JSX.ELement) & {
+) as (<T extends object>(props: TabListProps<T>) => React.JSX.Element) & {
   displayName?: string;
 };
 

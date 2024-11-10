@@ -248,7 +248,7 @@ export const ButtonGroup = forwardRef<HTMLDivElement, ButtonGroupProps<{}>>(
       </Group>
     );
   },
-) as (<T extends object>(props: ButtonGroupProps<T>) => React.JSX.ELement) & {
+) as (<T extends object>(props: ButtonGroupProps<T>) => React.JSX.Element) & {
   displayName: string;
 };
 

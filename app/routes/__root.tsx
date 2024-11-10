@@ -1,4 +1,3 @@
-import type { QueryClient } from "@tanstack/react-query";
 import type { NavigateOptions, ToOptions } from "@tanstack/react-router";
 import {
   Outlet,
@@ -9,8 +8,10 @@ import {
 import { Body, Head, Html, Meta, Scripts } from "@tanstack/start";
 import type { ReactNode } from "react";
 import { RouterProvider } from "react-aria-components";
-import type { AppSupabaseClient } from "~/db";
+import { ForeEauFore } from "~/404";
 import { SupabaseProvider } from "~/db/provider";
+import { ErrorPage } from "~/error-page";
+import type { AppContext } from "~/util/supabase-query";
 import "~/index.scss";
 
 declare module "react-aria-components" {
@@ -20,12 +21,7 @@ declare module "react-aria-components" {
   }
 }
 
-interface AppRouterContext {
-  supabase: AppSupabaseClient;
-  queryClient: QueryClient;
-}
-
-export const Route = createRootRouteWithContext<AppRouterContext>()({
+export const Route = createRootRouteWithContext<AppContext>()({
   meta: () => [
     {
       charSet: "utf-8",
@@ -40,6 +36,14 @@ export const Route = createRootRouteWithContext<AppRouterContext>()({
   ],
   links: () => [{ rel: "icon", href: "/assets/retrospecs.png" }],
   component: RootComponent,
+  notFoundComponent: () => <ForeEauFore />,
+  errorComponent: ({ error, info }) => (
+    <ErrorPage
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      message={error.message ?? String(error)}
+      stack={info?.componentStack}
+    />
+  ),
 });
 
 function RootComponent() {

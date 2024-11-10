@@ -59,7 +59,7 @@ export const List = forwardRef<HTMLDivElement, ListProps<any>>(
       </ListItemContext.Provider>
     );
   },
-) as (<T>(props: ListProps<T>) => React.JSX.ELement) & { displayName?: string };
+) as (<T>(props: ListProps<T>) => React.JSX.Element) & { displayName?: string };
 
 List.displayName = "List";
 
@@ -115,7 +115,7 @@ export const ListItem = forwardRef<HTMLDivElement, ListItemProps<any>>(
       </GridListItem>
     );
   },
-) as (<T>(props: ListItemProps<T>) => React.JSX.ELement) & {
+) as (<T>(props: ListItemProps<T>) => React.JSX.Element) & {
   displayName?: string;
 };
 

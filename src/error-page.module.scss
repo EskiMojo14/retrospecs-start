@@ -1,0 +1,22 @@
+@use "~/theme";
+
+.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  .error,
+  .stack {
+    font-family: monospace;
+    background-color: var(--surface);
+    color: var(--red-700);
+    padding: 1rem;
+    border-radius: var(--border-radius-medium);
+    max-width: 50vw;
+    text-wrap: wrap;
+    @include theme.dark {
+      color: var(--red-300);
+    }
+  }
+}
