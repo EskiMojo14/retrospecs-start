@@ -1,0 +1,151 @@
+@use "sass:map";
+@use "~/theme/typography";
+@use "~/theme";
+@use "~/util";
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 1;
+  transition: opacity 200ms;
+  @include typography.style("body2");
+
+  --selected-fill-rgb: var(--shade-500-rgb);
+  --selected-outline-rgb: var(--shade-500-rgb);
+  --selected-outline-focus-rgb: var(--shade-500-rgb);
+  --selected-handle-rgb: var(--shade-50-rgb);
+  --selected-handle-focus-rgb: var(--shade-100-rgb);
+  --selected-icon-rgb: var(--shade-900-rgb);
+
+  --switch-track-color: #{typography.emphasis("text", "disabled")};
+  --switch-track-border-color: #{typography.emphasis("text", "medium")};
+  --switch-track-focused-border-color: #{typography.emphasis("text", "high")};
+  --switch-handle-color: #{typography.emphasis("text", "medium")};
+  --switch-handle-focused-color: #{typography.emphasis("text", "high")};
+  --switch-icon-color: var(--background);
+
+  --ripple: var(--text);
+
+  @include theme.ripple(var(--ripple), " .switch__ripple");
+
+  @include theme.dark {
+    --selected-fill-rgb: var(--shade-800-rgb);
+    --selected-outline-rgb: var(--shade-800-rgb);
+    --selected-outline-focus-rgb: var(--shade-800-rgb);
+    --selected-handle-rgb: var(--shade-300-rgb);
+    --selected-handle-focus-rgb: var(--shade-200-rgb);
+    --selected-icon-rgb: var(--shade-900-rgb);
+  }
+
+  &__track {
+    position: relative;
+    height: 32px;
+    width: 52px;
+    display: flex;
+    align-items: center;
+    border-radius: var(--border-radius-full);
+    background-color: var(--switch-track-color);
+    border: 2px solid var(--switch-track-border-color);
+    transition:
+      background-color 200ms,
+      border-color 200ms;
+  }
+
+  &__handle {
+    height: 16px;
+    width: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: var(--border-radius-full);
+    background-color: var(--switch-handle-color);
+    color: transparent;
+    transition:
+      height 200ms,
+      width 200ms,
+      background-color 200ms,
+      color 200ms;
+    &-container {
+      position: absolute;
+      transition:
+        left 200ms,
+        right 200ms;
+      @include util.reflexive-position(left, 4px);
+      &--has-icon {
+        @include util.reflexive-position(left, 2px);
+        .switch__handle {
+          width: 24px;
+          height: 24px;
+          color: var(--switch-icon-color);
+        }
+      }
+    }
+  }
+
+  &__ripple-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    translate: -50% -50%;
+  }
+
+  &__icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &[data-selected] {
+    --switch-track-color: rgb(var(--selected-fill-rgb));
+    --switch-track-border-color: rgb(var(--selected-outline-rgb));
+    --switch-track-focused-border-color: rgb(var(--selected-outline-focus-rgb));
+    --switch-handle-color: rgb(var(--selected-handle-rgb));
+    --switch-handle-focused-color: rgb(var(--selected-handle-focus-rgb));
+    --switch-icon-color: rgb(var(--selected-icon-rgb));
+
+    --ripple: var(--shade-500);
+
+    @include theme.dark {
+      --ripple: var(--shade-300);
+    }
+
+    .switch__handle {
+      height: 24px;
+      width: 24px;
+      &-container {
+        @include util.reflexive-position(left, 22px);
+      }
+    }
+  }
+
+  &[data-focus-visible],
+  &[data-hovered],
+  &[data-pressed] {
+    --switch-track-border-color: var(--switch-track-focused-border-color);
+    --switch-handle-color: var(--switch-handle-focused-color);
+  }
+
+  &[data-pressed] {
+    .switch__handle {
+      height: 28px;
+      width: 28px;
+      &-container {
+        @include util.reflexive-position(left, 0);
+      }
+    }
+    &[data-selected] {
+      .switch__handle-container {
+        @include util.reflexive-position(left, 20px);
+      }
+    }
+  }
+
+  &[data-disabled] {
+    opacity: 0.5;
+  }
+}

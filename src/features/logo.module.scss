@@ -1,0 +1,25 @@
+@use "~/theme/layout";
+@use "~/theme/typography";
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  .wordmark {
+    @include typography.defaults;
+    font-family: "Super Dream", cursive;
+    margin: 0;
+    @include layout.breakpoint("tablet-s", "above") {
+      @include typography.style("headline6", $no-defaults: true);
+    }
+    @include layout.breakpoint("tablet-s", "below") {
+      @include typography.style("subtitle1", $no-defaults: true);
+    }
+  }
+  &:global(.link) {
+    text-decoration: none;
+    &:focus-visible:not([data-focus-visible]) {
+      outline: none;
+    }
+  }
+}

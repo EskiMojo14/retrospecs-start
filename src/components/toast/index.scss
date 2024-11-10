@@ -1,0 +1,164 @@
+@use "sass:map";
+@use "~/theme";
+@use "~/theme/animation";
+@use "~/theme/elevation";
+@use "~/theme/layout";
+@use "~/theme/typography";
+@use "~/util";
+
+.toast {
+  @include theme.rgb-var("background", "shade-900");
+  @include theme.rgb-var("text", "shade-50");
+  display: flex;
+  align-items: center;
+  max-width: 560px;
+  border-radius: var(--border-radius-x-small);
+  background-color: var(--background);
+  color: var(--text);
+  padding: 0 8px;
+  gap: 8px;
+  min-height: 48px;
+  overflow: hidden;
+  @include elevation.shadow(8);
+  @include layout.breakpoint("phone", "only") {
+    max-width: none;
+    width: calc(100vw - 32px);
+  }
+  @include theme.dark {
+    --background-rgb: var(--shade-50-rgb);
+    --text-rgb: var(--shade-900-rgb);
+  }
+  &-region {
+    position: fixed;
+    bottom: 0;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    width: auto;
+    @include util.reflexive-position("left", 0);
+    &:focus-visible {
+      outline: none;
+    }
+  }
+  &--has-timeout {
+    position: relative;
+    padding-bottom: 4px;
+    .toast__progress {
+      position: absolute;
+      display: flex;
+      bottom: 4px;
+      left: 4px;
+      right: 4px;
+      height: 4px;
+      gap: 4px;
+      &::before {
+        content: "";
+        order: 2;
+        flex: 1 1 auto;
+        height: 4px;
+        background-color: typography.emphasis("text", "disabled");
+        border-radius: var(--border-radius-full);
+      }
+      &::after {
+        content: "";
+        order: 1;
+        height: 4px;
+        background-color: var(--text);
+        animation: timeout-progress var(--timeout) linear forwards;
+        border-radius: var(--border-radius-full);
+
+        @keyframes timeout-progress {
+          from {
+            width: 100%;
+          }
+          to {
+            width: 0;
+          }
+        }
+      }
+      &-stop {
+        height: 4px;
+        width: 4px;
+        position: absolute;
+        bottom: 0;
+        background-color: var(--text);
+        border-radius: var(--border-radius-full);
+        @include util.reflexive-position("right", 0);
+      }
+    }
+    &:hover .toast__progress::after {
+      animation-play-state: paused;
+    }
+  }
+  &[data-animation="entering"] {
+    animation: toast-slide-in 300ms;
+    @keyframes toast-slide-in {
+      from {
+        transform: translateY(calc(100% + 16px));
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+  }
+  &[data-animation="exiting"] {
+    animation: toast-slide-out 300ms;
+    @keyframes toast-slide-out {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(calc(-100% - 16px));
+      }
+    }
+    @include util.rtl {
+      animation-name: toast-slide-out-rtl;
+      @keyframes toast-slide-out-rtl {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(calc(100% + 16px));
+        }
+      }
+    }
+  }
+  &[data-animation="queued"] {
+    animation:
+      fade-in 300ms,
+      toast-appear-size 300ms;
+    @include animation.spring-in("toast-appear-size", 300ms);
+  }
+  &__icon {
+    padding: 8px;
+  }
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 0;
+    flex: 1 1 auto;
+  }
+  &__close {
+    @include util.reflexive-box("margin", 0, -8px);
+  }
+  .button {
+    @include theme.light {
+      --button-text-rgb: var(--shade-50-rgb);
+      --button-outline-rgb: var(--shade-50-rgb);
+      --button-fill-rgb: var(--shade-800-rgb);
+      --button-filled-text-rgb: var(--shade-50-rgb);
+      --button-filled-outline-rgb: var(--shade-50-rgb);
+    }
+
+    @include theme.dark {
+      --button-text-rgb: var(--shade-900-rgb);
+      --button-outline-rgb: var(--shade-900-rgb);
+      --button-fill-rgb: var(--shade-200-rgb);
+      --button-filled-text-rgb: var(--shade-900-rgb);
+      --button-filled-outline-rgb: var(--shade-900-rgb);
+    }
+  }
+}

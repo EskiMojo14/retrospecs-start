@@ -1,0 +1,34 @@
+@use "~/theme/animation";
+@use "~/theme/typography";
+@use "~/theme";
+@use "./mixins";
+
+.tooltip {
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  border-radius: var(--border-radius-x-small);
+  --surface: var(--black);
+  --text: var(--white);
+  background-color: var(--surface);
+  color: var(--text);
+  @include typography.style("body2");
+  @include theme.dark {
+    --surface: var(--white);
+    --text: var(--black);
+  }
+  &[data-entering] {
+    animation:
+      tooltip-enter 120ms ease-in,
+      fade-in 120ms;
+    @include animation.spring-in("tooltip-enter", 120ms);
+  }
+  &[data-exiting] {
+    animation:
+      shrink-back 120ms ease-out forwards,
+      fade-in 120ms reverse;
+  }
+  @include mixins.placement-origins;
+}

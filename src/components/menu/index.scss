@@ -1,0 +1,95 @@
+@use "~/theme";
+@use "~/theme/typography";
+@use "~/util";
+
+.menu {
+  padding: 4px 0;
+  min-width: 112px;
+  max-width: 280px;
+  &:focus {
+    outline: none;
+  }
+  &-popover {
+    padding: 0;
+  }
+  &--two-line {
+    .menu__item-content {
+      height: 64px;
+    }
+  }
+  &__item {
+    --ripple: var(--text);
+    --selected-text-rgb: var(--shade-900-rgb);
+    position: relative;
+    @include theme.ripple(var(--ripple), " .menu__item-ripple");
+    @include theme.ripple-selected(
+      $surface: " .menu__item-ripple",
+      $ripple-color: var(--ripple)
+    );
+    &-content {
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 12px;
+      height: 48px;
+    }
+    @include theme.dark {
+      --selected-text-rgb: var(--shade-50-rgb);
+    }
+    &:focus-visible {
+      outline: none;
+    }
+    &[data-has-submenu] {
+      .menu__item-icon--trailing {
+        display: none;
+      }
+    }
+    &[data-selected] {
+      --text-rgb: var(--selected-text-rgb);
+      --ripple: var(--shade-500);
+      .menu__item-icon--leading {
+        display: none;
+      }
+    }
+    &-icon {
+      color: typography.emphasis("text", "medium");
+      flex-shrink: 0;
+      &--trailing,
+      &--submenu {
+        @include util.reflexive-box(margin, auto);
+      }
+    }
+    &-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      flex: 1 1 auto;
+      min-width: 0;
+      .typography {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        &--body1 {
+          color: typography.emphasis("text", "high");
+        }
+        &--caption,
+        &--subtitle1 {
+          color: typography.emphasis("text", "medium");
+        }
+      }
+    }
+    kbd {
+      color: typography.emphasis("text", "medium");
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+  }
+  section {
+    margin: 8px 0;
+    header {
+      color: typography.emphasis("text", "medium");
+      margin-bottom: 8px;
+      padding: 0 12px;
+    }
+  }
+}

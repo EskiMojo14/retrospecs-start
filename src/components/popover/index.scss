@@ -1,0 +1,27 @@
+@use "~/theme/elevation";
+@use "~/components/tooltip/mixins" as tooltip-mixins;
+@use "~/theme/animation";
+
+.popover {
+  background-color: var(--surface);
+  color: var(--text);
+  border-radius: var(--border-radius-x-small);
+  padding: 8px;
+  @include elevation.shadow(6);
+  @include tooltip-mixins.placement-origins;
+  &[data-entering] {
+    animation:
+      popover-enter 200ms ease-in,
+      fade-in 200ms;
+    @include animation.spring-in("popover-enter", 200ms);
+  }
+  &[data-exiting] {
+    animation:
+      shrink-back 200ms ease-out forwards,
+      fade-in 200ms reverse;
+  }
+  .button--text,
+  .button--outlined {
+    background-color: rgba(var(--surface-rgb), 0.75);
+  }
+}

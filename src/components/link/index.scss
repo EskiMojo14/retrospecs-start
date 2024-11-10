@@ -1,0 +1,31 @@
+@use "~/theme";
+
+.link {
+  color: var(--blue-500);
+  transition: color 0.2s;
+  @include theme.focus-ring;
+  @include theme.dark {
+    color: var(--blue-300);
+  }
+  &:focus:not([data-focus-visible]) {
+    outline: none;
+  }
+  &:hover {
+    color: var(--blue-300);
+    @include theme.dark {
+      color: var(--blue-100);
+    }
+  }
+  &:visited {
+    color: var(--pink-500);
+    &:hover {
+      color: var(--pink-300);
+    }
+    @include theme.dark {
+      color: var(--pink-300);
+      &:hover {
+        color: var(--pink-100);
+      }
+    }
+  }
+}

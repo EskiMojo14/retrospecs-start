@@ -1,0 +1,26 @@
+$min-height: 40px;
+$padding: 0 16px;
+$spacing: 8px;
+
+$fab-sizes: (
+  small: (
+    size: 40px,
+    radius: medium,
+    icon-size: 24px,
+    padding: 12px,
+  ),
+  medium: (
+    size: 56px,
+    radius: large,
+    icon-size: 24px,
+    padding: 16px,
+  ),
+  large: (
+    size: 96px,
+    radius: x-large,
+    icon-size: 36px,
+    padding: 16px,
+  ),
+);
+
+$extended-fab-min-width: 80px;

@@ -14,18 +14,32 @@
     "format": "prettier --write .",
     "lint": "eslint --flag unstable_ts_config",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
-  },
-  "packageManager": "yarn@4.5.1",
-  "prettier": {},
-  "engines": {
-    "node": ">=20.0.0"
+    "build-storybook": "storybook build",
+    "typecheck": "tsc",
+    "build-icons": "svgr --icon --out-dir src/icons src/icons/svg"
   },
   "dependencies": {
+    "@material/ripple": "^14.0.0",
+    "@material/top-app-bar": "^14.0.0",
+    "@react-aria/toast": "3.0.0-beta.17",
+    "@react-aria/utils": "^3.25.3",
+    "@react-stately/toast": "3.0.0-beta.6",
+    "@reduxjs/toolkit": "^2.3.0",
+    "@supabase/ssr": "^0.5.1",
+    "@supabase/supabase-js": "^2.46.1",
     "@tanstack/react-router": "^1.81.1",
     "@tanstack/start": "^1.81.1",
+    "clsx": "^2.1.1",
+    "immer": "^10.1.1",
+    "lodash": "^4.17.21",
+    "normalize.css": "^8.0.1",
     "react": "^18.3.1",
+    "react-aria-components": "^1.4.1",
+    "react-bem-helper": "^1.4.1",
     "react-dom": "^18.3.1",
+    "react-redux": "^9.1.2",
+    "remix-utils": "^7.7.0",
+    "valibot": "1.0.0-beta.3",
     "vinxi": "^0.4.3"
   },
   "devDependencies": {
@@ -37,24 +51,44 @@
     "@storybook/react": "8.4.2",
     "@storybook/react-vite": "8.4.2",
     "@storybook/test": "8.4.2",
+    "@svgr/cli": "^8.1.0",
     "@tanstack/eslint-plugin-router": "^1.79.0",
+    "@types/lodash": "^4",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
     "eslint": "^9.14.0",
     "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-import-x": "^4.4.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-storybook": "^0.11.0",
+    "eslint-plugin-vitest": "^0.5.4",
     "globals": "^15.12.0",
     "jiti": "^2.4.0",
     "postcss-load-config": "^6.0.1",
     "prettier": "^3.3.3",
     "sass-embedded": "^1.80.6",
+    "sass-map-get-next-prev": "^1.0.0",
     "storybook": "8.4.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.13.0",
-    "vite-tsconfig-paths": "^5.1.1"
+    "vitest": "^2.1.4"
+  },
+  "packageManager": "yarn@4.5.1",
+  "prettier": {},
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "svgr": {
+    "typescript": true,
+    "jsxRuntime": "automatic",
+    "index": false,
+    "filenameCase": "kebab",
+    "svgProps": {
+      "fill": "currentColor"
+    }
   }
 }

@@ -1,0 +1,61 @@
+@use "sass:list";
+@use "~/theme";
+@use "~/theme/layout";
+@use "~/util";
+
+$colors: (#bb3e03, #ca6702, #ee9b00, #eadaa9);
+
+:root {
+  --header-outline-width: calc(var(--outline-width) * 2);
+  --header-row-height: 64px;
+  --header-shadow-height: calc(
+    #{list.length($colors) + 1} * var(--header-outline-width)
+  );
+  @include layout.breakpoint("phone", "only") {
+    --header-row-height: 56px;
+  }
+}
+
+.app-bar {
+  position: sticky;
+  z-index: 500;
+  width: 100%;
+  --background: var(--brown-700);
+  background-color: var(--background);
+  --text-rgb: var(--white-rgb);
+  --text: #{rgb(var(--text-rgb))};
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  $shadow: 0 calc(var(--header-outline-width) * 0.5) 0 0 #ebebeb;
+  @for $i from 1 through list.length($colors) {
+    $shadow:
+      #{$shadow},
+      0
+        calc(var(--header-outline-width) * #{$i + 0.5})
+        0
+        0
+        list.nth($colors, $i);
+  }
+  $shadow:
+    #{$shadow},
+    0 calc(var(--header-outline-width) * #{list.length($colors) + 1}) 0 0
+      #ebebeb;
+  box-shadow: $shadow;
+  .link,
+  .link:visited {
+    color: inherit;
+  }
+  &__row {
+    display: inline-flex;
+    justify-content: space-between;
+    min-height: var(--header-row-height);
+    padding: 0 1rem;
+  }
+  &__logo img {
+    height: 192px * 0.25;
+  }
+  &__section {
+    gap: 0.5rem;
+  }
+}

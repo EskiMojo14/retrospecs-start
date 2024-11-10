@@ -1,0 +1,41 @@
+@use "~/theme/layout";
+@use "~/theme/typography";
+@use "~/util";
+
+.navBar {
+  margin-bottom: var(--header-shadow-height);
+  top: max(var(--top), calc(var(--app-bar-height) * -1));
+  @include layout.breakpoint("desktop", "above") {
+    top: 0;
+  }
+  :global {
+    .app-bar {
+      &__section {
+        &--nav {
+          flex: 1 1 auto;
+          min-width: 0;
+          flex-wrap: wrap;
+          gap: 0 0.5rem;
+          .app-bar__logo {
+            height: var(--header-row-height);
+          }
+          .breadcrumbs {
+            height: var(--header-row-height);
+            flex: 0 0 auto;
+            min-width: 0;
+            max-width: calc(100vw - 2rem);
+            .breadcrumb {
+              min-width: 0;
+              .link {
+                @include util.ellipsis;
+              }
+            }
+          }
+        }
+        &--actions {
+          height: var(--header-row-height);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+@use "~/theme";
+@use "~/theme/typography";
+@use "~/util";
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  @include util.ellipsis;
+  @include typography.style("body2");
+  &__icon {
+    color: typography.emphasis("text", "medium");
+  }
+  &:last-child {
+    .breadcrumb__icon {
+      display: none;
+    }
+  }
+  .link {
+    color: inherit;
+    text-decoration: none;
+    &[data-hovered] {
+      text-decoration: underline;
+    }
+    &[data-disabled] {
+      color: typography.emphasis("text", "disabled");
+    }
+    &[data-current] {
+      font-weight: var(--typography-weight-bold);
+      color: typography.emphasis("text", "high");
+    }
+  }
+}

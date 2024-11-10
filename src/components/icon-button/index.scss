@@ -1,0 +1,13 @@
+@use "sass:meta";
+@use "~/util";
+@use "./variables";
+
+.icon-button.icon-button {
+  padding: variables.$padding;
+  width: variables.$normal-size;
+  height: variables.$normal-size;
+  --button-radius: #{variables.$border-radius};
+  &::before {
+    --outline-border-radius: #{variables.$outline-border-radius};
+  }
+}

@@ -1,0 +1,137 @@
+@use "sass:map";
+@use "~/theme/typography";
+@use "~/theme";
+@use "~/util";
+
+$variants: (
+  one-line: (
+    height: 56px,
+    padding-y: 8px,
+    align: center,
+  ),
+  two-line: (
+    height: 72px,
+    padding-y: 8px,
+    align: center,
+  ),
+  three-line: (
+    height: 88px,
+    padding-y: 12px,
+    align: start,
+  ),
+);
+
+.list {
+  padding: 8px 0;
+  @include theme.inner-focus-ring;
+  @each $variant, $map in $variants {
+    &--#{$variant} {
+      @each $key, $value in map.keys($map) {
+        --list-#{$key}: #{map.get($map, $key)};
+      }
+    }
+  }
+  &__item {
+    transition:
+      opacity 0.2s,
+      background-color 0.2s;
+    position: relative;
+    --ripple-rgb: var(--text-rgb);
+    --ripple: rgb(var(--ripple-rgb));
+    @include theme.ripple(
+      var(--ripple),
+      ":not(.list__item--non-interactive) .list__item-ripple"
+    );
+    @include theme.ripple-selected(
+      var(--ripple),
+      ":not(.list__item--non-interactive) .list__item-ripple"
+    );
+    &--non-interactive {
+      &[data-focus-visible] {
+        background-color: rgba(var(--text-rgb), theme.states-opacity("focus"));
+      }
+    }
+    &:focus {
+      outline: none;
+    }
+    &-content {
+      height: var(--list-height);
+      padding: var(--list-padding-y) 16px;
+      display: flex;
+      align-items: var(--list-align);
+      gap: 16px;
+    }
+    &[data-selected] {
+      --ripple-rgb: var(--shade-500-rgb);
+      @include theme.dark {
+        --ripple-rgb: var(--shade-300-rgb);
+      }
+    }
+    //@include theme.inner-focus-ring;
+    &[data-disabled] {
+      pointer-events: none;
+      opacity: map.get(typography.$emphasis-map, disabled);
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      @include typography.style("headline5");
+    }
+    .icon-button:last-child {
+      @include util.reflexive-box("margin", 0, -12px);
+    }
+    .checkbox-container:first-child .checkbox__target,
+    .checkbox__target:first-child {
+      @include util.reflexive-box("margin", -8px);
+    }
+    .checkbox-container:last-child .checkbox__target,
+    .checkbox__target:last-child {
+      @include util.reflexive-box("margin", 0, -8px);
+    }
+  }
+  &__item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1 1 auto;
+    min-width: 0;
+    .typography {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      &--overline {
+        color: typography.emphasis("text", "medium");
+      }
+      &--subtitle1 {
+        color: typography.emphasis("text", "high");
+      }
+      &--caption {
+        color: typography.emphasis("text", "medium");
+        @at-root .list--three-line
+            .list__item-text--no-overline
+            .typography--caption {
+          @supports (-webkit-line-clamp: 2) {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            white-space: normal;
+          }
+        }
+      }
+    }
+  }
+  .image {
+    flex-shrink: 0;
+    height: 56px;
+    width: auto;
+    &--sixteen-nine {
+      height: 64px;
+      @include util.reflexive-box("margin", -16px);
+    }
+  }
+  &__icon {
+    flex-shrink: 0;
+    color: typography.emphasis("text", "medium");
+  }
+}

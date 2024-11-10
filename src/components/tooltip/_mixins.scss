@@ -1,0 +1,33 @@
+$x-placements: (
+  "left": right,
+  "right": left,
+  // RAC doesn't flip in RTL, so we won't either
+  "start": right,
+  "end": left,
+);
+
+$y-placements: (
+  "top": bottom,
+  "bottom": top,
+);
+
+@mixin placement-origins {
+  @each $x-placement, $x-opposite in $x-placements {
+    &[data-placement="#{$x-placement}"] {
+      transform-origin: #{$x-opposite};
+    }
+    @each $y-placement, $y-opposite in $y-placements {
+      &[data-placement="#{$x-placement} #{$y-placement}"] {
+        transform-origin: #{$x-opposite} #{$y-opposite};
+      }
+      &[data-placement="#{$y-placement} #{$x-placement}"] {
+        transform-origin: #{$y-opposite} #{$x-opposite};
+      }
+    }
+  }
+  @each $y-placement, $y-opposite in $y-placements {
+    &[data-placement="#{$y-placement}"] {
+      transform-origin: #{$y-opposite};
+    }
+  }
+}

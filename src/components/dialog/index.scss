@@ -1,0 +1,85 @@
+@use "~/theme";
+@use "~/theme/animation";
+@use "~/theme/elevation";
+@use "~/theme/layout";
+@use "~/theme/typography";
+@use "~/util";
+
+.dialog {
+  &:focus-visible {
+    outline: none;
+  }
+  &-overlay {
+    --overlay-rgb: var(--black-rgb);
+    --background-alpha: 0.5;
+    z-index: 100000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(var(--overlay-rgb), var(--background-alpha));
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @keyframes overlay-fade {
+      from {
+        background-color: rgba(var(--overlay-rgb), 0);
+      }
+      to {
+        background-color: rgba(var(--overlay-rgb), var(--background-alpha));
+      }
+    }
+
+    &[data-entering] {
+      animation: overlay-fade 300ms;
+    }
+    &[data-exiting] {
+      animation: overlay-fade 300ms reverse;
+    }
+  }
+  &-modal {
+    position: relative;
+    border-radius: var(--border-radius-x-large);
+    background-color: var(--surface);
+    color: typography.emphasis("text", "high");
+    max-height: calc(100% - 32px);
+    min-width: 280px;
+    max-width: 600px;
+    @include elevation.shadow(8);
+    @include layout.breakpoint("phone", "only") {
+      max-width: calc(100vw - 32px);
+    }
+    &[data-entering] {
+      animation:
+        fade-in 300ms,
+        dialog-enter 150ms ease-in forwards;
+      @include animation.spring-in("dialog-enter", 150ms);
+    }
+    &[data-exiting] {
+      animation:
+        fade-in 300ms reverse,
+        shrink-back 150ms ease-out forwards;
+    }
+  }
+  [slot="title"] {
+    padding: 8px 16px;
+  }
+  &__content {
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    white-space: pre-wrap;
+  }
+  [slot="actions"] {
+    padding: 8px 16px;
+    gap: 8px;
+  }
+  .button--text,
+  .button--outlined {
+    background-color: rgba(var(--surface-rgb), 0.75);
+  }
+}

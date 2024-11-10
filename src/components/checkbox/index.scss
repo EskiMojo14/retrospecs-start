@@ -1,0 +1,130 @@
+@use "~/theme";
+@use "~/theme/typography";
+@use "~/util";
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  transition: opacity 200ms;
+
+  @include typography.style("body2");
+}
+
+.checkbox-group__item {
+  @include typography.style("subtitle1");
+  @include theme.ripple(var(--text), " .checkbox__item-ripple");
+}
+
+.checkbox-container,
+.checkbox-group__item {
+  --selected-color: var(--shade-500);
+  --selected-color-pressed: var(--shade-300);
+  --checkmark-color: var(--shade-50);
+  --border-color: #{typography.emphasis("text", "medium")};
+  --border-color-pressed: #{typography.emphasis("text", "high")};
+
+  --ripple: var(--text);
+
+  @include theme.ripple(var(--ripple), " .checkbox__ripple");
+
+  @include theme.dark {
+    --selected-color: var(--shade-300);
+    --selected-color-pressed: var(--shade-200);
+    --checkmark-color: var(--black);
+  }
+
+  .checkbox {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-color);
+    transition: all 200ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-xx-small);
+
+    &__target {
+      width: 40px;
+      height: 40px;
+      margin: 4px;
+      position: relative;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &__checkmark {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: var(--checkmark-color);
+      stroke-width: 2.75px;
+      stroke-dasharray: 22px;
+      stroke-dashoffset: 66;
+      transition: all 200ms;
+    }
+  }
+
+  &[data-pressed] .checkbox {
+    border-color: var(--border-color-pressed);
+  }
+
+  &[data-selected],
+  &[data-indeterminate] {
+    --ripple: var(--selected-color);
+    .checkbox {
+      border-color: var(--selected-color);
+      background: var(--selected-color);
+    }
+
+    &[data-pressed] .checkbox {
+      border-color: var(--selected-color-pressed);
+      background: var(--selected-color-pressed);
+    }
+
+    .checkbox__checkmark {
+      stroke-dashoffset: 44;
+    }
+    .symbol {
+      --fill: 1;
+      --wght: 600;
+    }
+  }
+
+  &[data-indeterminate] {
+    & svg {
+      stroke: none;
+      fill: var(--checkmark-color);
+    }
+  }
+
+  &[data-disabled] {
+    opacity: var(--typography-emphasis-disabled);
+  }
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  &__error-message {
+    font-weight: var(--typography-weight-semi-bold);
+    color: var(--red-700);
+    @include theme.dark {
+      color: var(--red-200);
+    }
+  }
+  &__description {
+    white-space: pre-wrap;
+    color: typography.emphasis("text", "medium");
+  }
+}
+
+.checkbox__item-container {
+  &--end {
+    @include util.reflexive-box("margin", auto);
+  }
+}

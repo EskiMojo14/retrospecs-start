@@ -1,0 +1,109 @@
+@use "~/theme/typography";
+@use "~/theme";
+
+.tabs {
+  &__list {
+    display: flex;
+  }
+  &__tab {
+    border-radius: var(--border-radius-full);
+    position: relative;
+    flex: 1 1 0px;
+    width: 0;
+    height: 48px;
+    @include typography.style("subtitle1");
+    transition:
+      font-weight 200ms,
+      opacity 200ms,
+      color 200ms,
+      background-color 200ms;
+    color: typography.emphasis("text", "high");
+    --ripple: var(--text);
+    @include theme.ripple(var(--ripple), " .tabs__tab-ripple");
+    &:focus {
+      outline: none;
+    }
+    &--with-icon {
+      height: 64px;
+    }
+    .tabs__list--inline-icons &--with-icon {
+      height: 48px;
+    }
+    &[data-hovered] {
+      font-weight: var(--typography-weight-semi-bold);
+      .symbol {
+        --wght: 500;
+      }
+    }
+    &[data-selected] {
+      font-weight: var(--typography-weight-extra-bold);
+      &.tabs__tab--outlined {
+        color: var(--shade-500);
+        --border-color-rgb: var(--shade-500-rgb);
+        @include theme.dark {
+          color: var(--shade-300);
+          --border-color-rgb: var(--shade-300-rgb);
+        }
+        @include theme.light {
+          &.color-green,
+          &.color-amber,
+          &.color-orange,
+          &.color-blue {
+            color: var(--shade-600);
+            --border-color-rgb: var(--shade-600-rgb);
+          }
+        }
+      }
+      &.tabs__tab--filled {
+        color: var(--shade-50);
+        --ripple: var(--shade-50);
+        background-color: var(--shade-900);
+        --border-color-rgb: var(--shade-50-rgb);
+        @include theme.dark {
+          color: var(--shade-900);
+          background-color: var(--shade-200);
+          --border-color-rgb: var(--shade-900-rgb);
+        }
+      }
+      .symbol {
+        --wght: 700;
+        --fill: 1;
+      }
+      &::before {
+        --border-width: var(--outline-width);
+        --border-alpha: 1;
+      }
+    }
+    &[data-disabled] {
+      opacity: 0.5;
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      border-radius: inherit;
+      inset: var(--outline-width);
+      --border-width: 0;
+      --border-alpha: 0;
+      border: var(--border-width) solid
+        rgba(var(--border-color-rgb), var(--border-alpha));
+      transition: border 200ms;
+      @include theme.dark {
+        --border-color-rgb: var(--shade-300-rgb);
+      }
+    }
+  }
+  &__tab-content {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 8px;
+    .tabs__list--inline-icons & {
+      flex-direction: row;
+      gap: 8px;
+    }
+  }
+}

@@ -1,0 +1,156 @@
+@use "sass:map";
+@use "sass:meta";
+@use "@material/ripple";
+@use "~/util";
+
+@mixin rgb-var($name, $color) {
+  --#{$name}-rgb: var(--#{$color}-rgb);
+  --#{$name}: rgb(var(--#{$name}-rgb));
+}
+
+@mixin color-var($name, $color) {
+  --#{$name}-rgb: #{util.get-rgb($color)};
+  --#{$name}: rgb(var(--#{$name}-rgb));
+}
+
+@mixin dark {
+  [data-theme="dark"] &,
+  &[data-theme="dark"] {
+    @content;
+  }
+  [data-theme="system"] &,
+  &[data-theme="system"] {
+    @media (prefers-color-scheme: dark) {
+      @content;
+    }
+  }
+}
+
+@mixin light {
+  [data-theme="light"] &,
+  &[data-theme="light"] {
+    @content;
+  }
+  [data-theme="system"] &,
+  &[data-theme="system"] {
+    @media (prefers-color-scheme: light) {
+      @content;
+    }
+  }
+}
+
+@mixin dark-root {
+  [data-theme="dark"] {
+    @content;
+  }
+  [data-theme="system"] {
+    @media (prefers-color-scheme: dark) {
+      @content;
+    }
+  }
+}
+
+@function focus-ring-transition($duration: 0.15s) {
+  @return outline $duration, outline-offset $duration;
+}
+
+@mixin focus-ring {
+  &[data-focus-visible] {
+    z-index: 9999;
+    outline: var(--outline-width) solid var(--focus-ring-color);
+    outline-offset: var(--outline-width);
+  }
+}
+
+@mixin inner-focus-ring {
+  &[data-focus-visible] {
+    outline: var(--outline-width) solid var(--focus-ring-color);
+    outline-offset: calc(var(--outline-width) * -1);
+  }
+}
+
+@mixin outline(
+  $border-radius-size: full,
+  $outline-border-radius:
+    calc(var(--border-radius-#{$border-radius-size}) - var(--outline-width))
+) {
+  --outline-border-radius: #{$outline-border-radius};
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--outline-width);
+    left: var(--outline-width);
+    right: var(--outline-width);
+    bottom: var(--outline-width);
+    border: var(--outline-width) solid var(--outline-color);
+    border-radius: var(--outline-border-radius);
+    pointer-events: none;
+  }
+}
+
+$state-opacities: (
+  hover: 0.08,
+  focus: 0.24,
+  press: 0.24,
+  selected: 0.2,
+  activated: 0.24,
+);
+
+@function states-opacity($state, $opacity-modifier: 0) {
+  @return map.get($state-opacities, $state) + $opacity-modifier;
+}
+
+@mixin ripple($ripple-color, $surface: "") {
+  position: relative;
+  &[data-hovered]#{$surface}::before {
+    opacity: states-opacity("hover");
+  }
+  &[data-focused]#{$surface}::before {
+    opacity: states-opacity("focus");
+    transition-duration: 75ms;
+  }
+  &[data-pressed]#{$surface}::before {
+    opacity: #{states-opacity("press")};
+  }
+  #{if($surface != '', $surface, &)} {
+    border-radius: inherit;
+    @include ripple.target-common;
+    @include ripple.surface;
+    &::before,
+    &::after {
+      background-color: $ripple-color;
+    }
+    &::after {
+      --mdc-ripple-fg-opacity: #{states-opacity("press")};
+    }
+    $unbounded-class: #{& + --unbounded};
+    &:not(#{$unbounded-class}) {
+      overflow: hidden;
+      @include ripple.radius-bounded(50%);
+    }
+    &--unbounded {
+      @include ripple.radius-unbounded;
+    }
+  }
+}
+
+@mixin ripple-selected($ripple-color, $surface: "") {
+  $selected-opacity: states-opacity("selected");
+  &[data-selected] {
+    &#{$surface}::before {
+      opacity: $selected-opacity;
+    }
+    &[data-hovered]#{$surface}::before {
+      opacity: states-opacity("hover", $selected-opacity);
+    }
+    &[data-focused]#{$surface}::before {
+      opacity: states-opacity("focus", $selected-opacity);
+      transition-duration: 75ms;
+    }
+    &[data-pressed]#{$surface}::before {
+      opacity: states-opacity("press", $selected-opacity);
+    }
+  }
+}
+
+@include ripple.common;

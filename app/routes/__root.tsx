@@ -5,6 +5,7 @@ import {
 } from "@tanstack/react-router";
 import { Body, Head, Html, Meta, Scripts } from "@tanstack/start";
 import type { ReactNode } from "react";
+import "~/index.scss";
 
 export const Route = createRootRoute({
   meta: () => [
@@ -35,6 +36,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
     <Html>
       <Head>
         <Meta />
+        <link rel="icon" href="/assets/retrospecs.png" />
       </Head>
       <Body>
         {children}

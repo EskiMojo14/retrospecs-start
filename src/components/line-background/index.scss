@@ -1,0 +1,73 @@
+$background-size: 128px;
+
+.line-background {
+  --scale: 1;
+  --size: calc(#{$background-size} * var(--scale));
+  --vertical-img: url("/assets/lines/vert.svg");
+  --horizontal-img: url("/assets/lines/horiz.svg");
+  --corner-img: url("/assets/lines/corner.svg");
+  --whorl-img: url("/assets/lines/whorl.svg");
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+  @each $color in ("blue", "red", "green") {
+    &--#{$color} {
+      --vertical-img: url("/assets/lines/#{$color}_vert.svg");
+      --horizontal-img: url("/assets/lines/#{$color}_horiz.svg");
+      --corner-img: url("/assets/lines/#{$color}_corner.svg");
+      --whorl-img: url("/assets/lines/#{$color}_whorl.svg");
+    }
+  }
+  &__line {
+    flex: 1 1 auto;
+    background-position: center;
+    &:nth-child(2) {
+      flex-basis: 50%;
+    }
+    &--vertical {
+      width: var(--size);
+      background-image: var(--vertical-img);
+      background-repeat: repeat-y;
+      background-size: var(--size) var(--size);
+    }
+    &--horizontal {
+      height: var(--size);
+      background-image: var(--horizontal-img);
+      background-repeat: repeat-x;
+      background-size: var(--size) var(--size);
+    }
+  }
+  &__bottom-row {
+    display: flex;
+    flex: 0 0 auto;
+    height: var(--size);
+  }
+  &__corner,
+  &__whorl {
+    height: var(--size);
+    width: var(--size);
+    flex: 0 0 auto;
+    background-position: center;
+    background-size: var(--size) var(--size);
+  }
+  &__corner {
+    background-image: var(--corner-img);
+  }
+  &__whorl {
+    background-image: var(--whorl-img);
+  }
+  &-content {
+    position: relative;
+  }
+}
+
+[data-groove="none"] .line-background {
+  display: none;
+}

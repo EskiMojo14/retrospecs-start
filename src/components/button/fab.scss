@@ -1,0 +1,72 @@
+@use "sass:map";
+@use "~/theme/elevation";
+@use "~/util";
+@use "./variables";
+
+@mixin common {
+  transition:
+    opacity 200ms,
+    outline 200ms,
+    outline-offset 200ms,
+    box-shadow 200ms,
+    translate 200ms,
+    scale 300ms ease-in;
+  @include elevation.shadow(6);
+  &[data-hovered] {
+    translate: calc(var(--outline-width) * -1) calc(var(--outline-width) * -1);
+    @include elevation.shadow(8);
+  }
+  &[data-focus-visible],
+  &[data-pressed] {
+    translate: var(--outline-width) var(--outline-width);
+    @include elevation.shadow(4);
+  }
+  &--exited {
+    transition:
+      opacity 200ms,
+      outline 200ms,
+      outline-offset 200ms,
+      box-shadow 200ms,
+      translate 200ms,
+      scale 200ms ease-out;
+    opacity: 0;
+    scale: 0;
+  }
+  &--corner {
+    position: fixed;
+    bottom: 16px;
+    transform-origin: bottom right;
+    @include util.reflexive-position(right, 16px);
+    @include util.rtl {
+      transform-origin: bottom left;
+    }
+  }
+  &--center {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    transform-origin: bottom left; // left is actually center, because of the transform
+  }
+}
+
+.fab {
+  @include common;
+  @each $size, $map in variables.$fab-sizes {
+    &--#{$size} {
+      width: map.get($map, size);
+      height: map.get($map, size);
+      --button-radius: var(--border-radius-#{map.get($map, radius)});
+      padding: map.get($map, padding);
+    }
+  }
+}
+
+.extended-fab {
+  $map: map.get(variables.$fab-sizes, medium);
+  height: map.get($map, size);
+  min-width: variables.$extended-fab-min-width;
+  --button-radius: var(--border-radius-#{map.get($map, radius)});
+  padding: 0 map.get($map, padding);
+  @include common;
+}

@@ -7,6 +7,7 @@ import hooksPlugin from "eslint-plugin-react-hooks";
 import storybook from "eslint-plugin-storybook";
 import globals from "globals";
 import tseslint from "typescript-eslint";
+import vitest from "eslint-plugin-vitest";
 
 export default tseslint.config(
   {
@@ -51,7 +52,7 @@ export default tseslint.config(
   {
     rules: {
       "@typescript-eslint/array-type": ["error", { default: "generic" }],
-      "@typescript-eslint/ban-types": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/restrict-template-expressions": [
         "error",
@@ -105,5 +106,9 @@ export default tseslint.config(
         { fixStyle: "separate-type-imports" },
       ],
     },
+  },
+  {
+    files: ["**/*.test.{js,mjs,cjs,ts,jsx,tsx}"],
+    ...vitest.configs.recommended,
   },
 );

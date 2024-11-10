@@ -1,0 +1,71 @@
+@use "sass:list";
+@use "sass:map";
+@use "sass:meta";
+@use "sass-map-get-next-prev/map-get-functions";
+@use "~/util";
+
+$breakpoints: (
+  phone: (
+    min: 0,
+    columns: 4,
+    margin-x: 16px,
+    margin-y: 16px,
+    max-width: none,
+  ),
+  tablet-s: (
+    min: 600px,
+    columns: 8,
+    margin-x: 32px,
+    margin-y: 32px,
+    max-width: none,
+  ),
+  tablet-l: (
+    min: 905px,
+    columns: 12,
+    margin-x: auto,
+    margin-y: 32px,
+    max-width: 840px,
+  ),
+  laptop: (
+    min: 1240px,
+    columns: 12,
+    margin-x: 200px,
+    margin-y: 32px,
+    max-width: none,
+  ),
+  desktop: (
+    min: 1440px,
+    columns: 12,
+    margin-x: auto,
+    margin-y: 32px,
+    max-width: 1040px,
+  ),
+);
+
+$last-breakpoint: list.nth(map.keys($breakpoints), -1);
+
+@function breakpoint-prop($breakpoint, $prop) {
+  @return map.get($breakpoints, $breakpoint, $prop);
+}
+
+@mixin breakpoint($breakpoint, $direction) {
+  @if $direction == "only" {
+    @if $breakpoint == $last-breakpoint {
+      @media (min-width: map.get($breakpoints, $breakpoint, min)) {
+        @content;
+      }
+    } @else {
+      @media (min-width: map.get($breakpoints, $breakpoint, min)) and (max-width: map.get(map-get-functions.map-get-next($breakpoints, $breakpoint), min)) {
+        @content;
+      }
+    }
+  } @else if $direction == "above" {
+    @media (min-width: map.get($breakpoints, $breakpoint, min)) {
+      @content;
+    }
+  } @else if $direction == "below" {
+    @media (max-width: map.get($breakpoints, $breakpoint, min)) {
+      @content;
+    }
+  }
+}

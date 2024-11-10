@@ -1,0 +1,129 @@
+@use "sass:list";
+@use "sass:map";
+@use "sass:math";
+@use "~/util";
+@use "~/theme/typography";
+@use "~/theme/shape";
+@use "~/theme/palette";
+@use "~/theme";
+
+@import "normalize.css";
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
+
+@font-face {
+  font-family: "Super Dream";
+  font-display: swap;
+  src:
+    local("Super Dream"),
+    url("/assets/fonts/Super\ Dream.ttf") format("truetype");
+}
+
+:root {
+  --focus-ring-color: var(--blue-400);
+  --outline-width: 2px;
+
+  @each $name, $radius in shape.$border-radius {
+    --border-radius-#{$name}: #{$radius};
+  }
+
+  @each $color, $stops in palette.$palette {
+    @each $stop, $value in $stops {
+      @include theme.color-var(#{$color}-#{$stop}, $value);
+    }
+  }
+
+  @each $color, $value in palette.$standards {
+    @include theme.color-var(#{$color}, $value);
+  }
+
+  @each $name, $weight in map.get(typography.$weights, "light") {
+    --typography-weight-#{$name}: #{$weight};
+  }
+
+  @each $emphasis, $opacity in typography.$emphasis-map {
+    --typography-emphasis-#{$emphasis}: #{$opacity};
+  }
+  @each $prop, $value in typography.$defaults {
+    --typography-default-#{$prop}: #{$value};
+  }
+  @each $style, $props in typography.$type-scale {
+    @each $prop, $value in $props {
+      --typography-#{$style}-#{$prop}: #{$value};
+    }
+  }
+
+  @include theme.rgb-var("background", "sand");
+  @include theme.rgb-var("surface", "white");
+  @include theme.rgb-var("text", "black");
+
+  --selection-color: var(--gold-500);
+  --selection-text-color: var(--white);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@include theme.dark-root {
+  @each $name, $weight in map.get(typography.$weights, "dark") {
+    --typography-weight-#{$name}: #{$weight};
+  }
+  --typography-default-font-weight: #{map.get(
+      typography.$defaults,
+      "font-weight"
+    )};
+  @each $style, $props in typography.$type-scale {
+    --typography-#{$style}-font-weight: #{map.get($props, "font-weight")};
+  }
+  @include theme.rgb-var("background", "brown-900");
+  @include theme.rgb-var("surface", "brown-800");
+  @include theme.rgb-var("text", "white");
+
+  --selection-color: var(--gold-300);
+  --selection-text-color: var(--black);
+  --focus-ring-color: var(--blue-200);
+  --grad: -25;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  @include typography.defaults;
+  ::selection {
+    background-color: var(--selection-color);
+    color: var(--selection-text-color);
+  }
+  main {
+    flex: 1;
+    position: relative;
+  }
+}
+
+@each $color, $shades in palette.$palette {
+  .color-#{$color} {
+    @each $shade, $value in $shades {
+      @include theme.rgb-var("shade-#{$shade}", "#{$color}-#{$shade}");
+    }
+  }
+}
+
+@keyframes shrink-back {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.9);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

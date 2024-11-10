@@ -1,0 +1,49 @@
+@use "sass:map";
+@use "~/theme/typography";
+@use "~/theme";
+
+.sideBySide {
+  display: flex;
+  gap: 1rem;
+  > div {
+    width: 50%;
+    min-height: 100vh;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background);
+    color: var(--text);
+    &.demo {
+      white-space: pre-wrap;
+      .buttonContainer {
+        margin: 1rem 0;
+      }
+      :global {
+        .typography--overline {
+          color: typography.emphasis("text", "medium");
+        }
+        .typography--headline2 {
+          color: typography.emphasis("text", "high");
+          margin: 0.5rem 0;
+        }
+        .typography--subtitle1 {
+          color: typography.emphasis("text", "medium");
+          margin: 0.5rem 0;
+        }
+        .typography--body2 {
+          color: typography.emphasis("text", "high");
+        }
+        img {
+          margin-top: 1rem;
+        }
+        .typography--caption {
+          color: typography.emphasis("text", "medium");
+          margin: 0.5rem 0;
+        }
+      }
+    }
+    &.all {
+      justify-content: space-evenly;
+    }
+  }
+}

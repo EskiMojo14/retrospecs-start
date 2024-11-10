@@ -1,0 +1,6 @@
+@use "~/util";
+
+$padding: 14px;
+$normal-size: util.to-rem(48px);
+$border-radius: var(--border-radius-full);
+$outline-border-radius: calc(var(--border-radius-full) - var(--outline-width));

@@ -1,0 +1,105 @@
+@use "~/theme";
+@use "~/theme/elevation";
+
+$hover-time: 0.2s;
+
+.card {
+  --card-outer: var(--shade-700);
+  --card-mid: var(--shade-300);
+  --card-bg: var(--shade-100);
+
+  --card-radius: var(--border-radius-medium);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--card-radius);
+  position: relative;
+  transition:
+    background-color $hover-time,
+    box-shadow $hover-time,
+    theme.focus-ring-transition();
+  @include theme.focus-ring;
+  @include theme.dark {
+    --card-outer: var(--shade-300);
+    --card-mid: var(--shade-500);
+    --card-bg: var(--shade-900);
+  }
+  &::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    bottom: 2px;
+    left: 8px;
+    right: 8px;
+    border-radius: calc(var(--card-radius) + 2px);
+    transition: background-color $hover-time;
+    background-color: var(--card-mid);
+  }
+  &--filled,
+  &--raised {
+    background-color: var(--card-outer);
+    color: var(--text);
+    .card__bg {
+      background-color: var(--card-bg);
+    }
+  }
+  &--raised {
+    @include elevation.shadow(4);
+    &:hover {
+      @include elevation.shadow(6);
+    }
+  }
+  &__bg {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 16px;
+    right: 16px;
+    border-radius: calc(var(--card-radius) + 4px);
+    transition: background-color $hover-time;
+  }
+  &__content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  &__section {
+    padding: 4px 16px;
+    border: none;
+    &--primary-action {
+      background-color: unset;
+      color: unset;
+      @include theme.ripple(var(--text), " .card__section-ripple");
+      @at-root button#{&} {
+        appearance: none;
+        &:focus {
+          outline: none;
+        }
+      }
+      &:first-child {
+        border-top-left-radius: var(--card-radius);
+        border-top-right-radius: var(--card-radius);
+      }
+      &:last-child {
+        border-bottom-left-radius: var(--card-radius);
+        border-bottom-right-radius: var(--card-radius);
+      }
+    }
+    &--actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 52px;
+      .icon-button {
+        margin: -6px 0;
+      }
+    }
+    &-ripple {
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+    }
+  }
+}

@@ -1,0 +1,262 @@
+@use "sass:map";
+@use "~/theme";
+@use "~/theme/typography";
+@use "~/theme/elevation";
+@use "~/theme/layout";
+@use "~/util";
+@use "./variables";
+
+.button {
+  --button-radius: var(--border-radius-full);
+  @include theme.rgb-var("button-text", "shade-500");
+  @include theme.rgb-var("button-outline", "shade-500");
+  @include theme.rgb-var("button-fill", "shade-900");
+  @include theme.rgb-var("button-filled-text", "shade-50");
+  @include theme.rgb-var("button-filled-outline", "shade-50");
+  --outline-color: var(--button-outline);
+  color: var(--button-text);
+  text-wrap: nowrap;
+  padding: variables.$padding;
+  min-height: variables.$min-height;
+  border-radius: var(--button-radius);
+  transition:
+    opacity 200ms,
+    outline 200ms,
+    outline-offset 200ms,
+    box-shadow 100ms,
+    translate 100ms;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+  position: relative;
+  @include typography.style("button");
+
+  @include theme.ripple(var(--button-text), " .button__ripple");
+  @include theme.ripple-selected(var(--button-text), " .button__ripple");
+
+  @include theme.dark {
+    --button-text-rgb: var(--shade-300-rgb);
+    --button-outline-rgb: var(--shade-300-rgb);
+    --button-fill-rgb: var(--shade-200-rgb);
+    --button-filled-text-rgb: var(--shade-900-rgb);
+    --button-filled-outline-rgb: var(--shade-900-rgb);
+  }
+
+  @include theme.light {
+    &.color-green,
+    &.color-amber,
+    &.color-orange,
+    &.color-blue {
+      --button-text-rgb: var(--shade-600-rgb);
+      --button-outline-rgb: var(--shade-600-rgb);
+    }
+  }
+
+  &.color-inherit {
+    --button-text-rgb: var(--text-rgb);
+    --button-text: #{typography.emphasis("button-text", "high")};
+    --button-outline-rgb: var(--text-rgb);
+    --button-outline: #{typography.emphasis("button-outline", "high")};
+    --button-fill-rgb: var(--surface-rgb);
+    --button-filled-text-rgb: var(--text-rgb);
+    --button-filled-text: #{typography.emphasis("button-filled-text", "high")};
+    --button-filled-outline-rgb: var(--text-rgb);
+    --button-filled-outline: #{typography.emphasis(
+        "button-filled-outline",
+        "high"
+      )};
+  }
+
+  @at-root button#{&} {
+    appearance: none;
+    border: none;
+    &:focus {
+      outline: none;
+    }
+  }
+  @at-root a#{&} {
+    text-decoration: none;
+  }
+  &:focus {
+    outline: none;
+  }
+
+  &--text,
+  &--outlined {
+    background: none;
+  }
+
+  &--outlined,
+  &--filled,
+  &--elevated {
+    @include theme.outline(
+      $outline-border-radius: calc(var(--button-radius) - var(--outline-width))
+    );
+  }
+  &--filled,
+  &--elevated {
+    --button-text: var(--button-filled-text);
+    --outline-color: var(--button-filled-outline);
+    --background: var(--button-fill);
+    background: var(--background);
+  }
+  &--elevated {
+    --solid-shadow: var(--background);
+    @include elevation.shadow(2);
+    translate: -2px -2px;
+    &[data-hovered] {
+      translate: -4px -4px;
+      @include elevation.shadow(4);
+    }
+    &[data-focus-visible],
+    &[data-pressed] {
+      translate: 0 0;
+      @include elevation.shadow(0);
+    }
+  }
+  &[data-disabled] {
+    opacity: map.get(typography.$emphasis-map, disabled);
+    &.button--elevated {
+      translate: 0 0;
+      @include elevation.shadow(0);
+    }
+  }
+  &[data-selected] {
+    font-weight: var(--typography-weight-black);
+    &.button--elevated {
+      translate: 0 0;
+      @include elevation.shadow(0);
+      &[data-hovered]:not(.toggle-button--changed) {
+        translate: -2px -2px;
+        @include elevation.shadow(2);
+      }
+      &[data-pressed] {
+        translate: 0 0;
+        @include elevation.shadow(0);
+      }
+    }
+    .symbol {
+      --fill: 1;
+      --wght: 600;
+    }
+  }
+  &__content {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    vertical-align: middle;
+    gap: variables.$spacing;
+  }
+  &__icon {
+    position: relative;
+    vertical-align: middle;
+  }
+  &--loading {
+    &[data-disabled] {
+      opacity: 1;
+    }
+  }
+  .progress {
+    --progress-color-rgb: var(--button-text-rgb);
+    --circular-progress-size: 24px;
+    @at-root .button {
+      &.button--filled,
+      &.button--elevated {
+        .progress {
+          --progress-color-rgb: var(--button-filled-text-rgb);
+        }
+      }
+    }
+    &--cassette {
+      margin: 2px -14px;
+      .progress__cassette {
+        height: variables.$min-height - 4px;
+        border: none;
+        border-radius: var(--button-radius);
+      }
+    }
+  }
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  &__buttons {
+    gap: 0;
+    .button {
+      border-radius: 0;
+      &::before {
+        border-radius: 0;
+      }
+      &:first-child {
+        border-radius: var(--button-radius) 0 0 var(--button-radius);
+        &::before {
+          border-radius: var(--outline-border-radius) 0 0
+            var(--outline-border-radius);
+        }
+      }
+      &:last-child {
+        border-radius: 0 var(--button-radius) var(--button-radius) 0;
+        &::before {
+          border-radius: 0 var(--outline-border-radius)
+            var(--outline-border-radius) 0;
+        }
+      }
+    }
+    @include util.rtl {
+      .button {
+        &:first-child {
+          border-radius: 0 var(--button-radius) var(--button-radius) 0;
+          &::before {
+            border-radius: 0 var(--outline-border-radius)
+              var(--outline-border-radius) 0;
+          }
+        }
+        &:last-child {
+          border-radius: var(--button-radius) 0 0 var(--button-radius);
+          &::before {
+            border-radius: var(--outline-border-radius) 0 0
+              var(--outline-border-radius);
+          }
+        }
+      }
+    }
+    .button-group[data-orientation="vertical"] & {
+      flex-direction: column;
+      align-items: stretch;
+      .button {
+        --segmented-button-radius: min(
+          #{variables.$min-height * 0.5},
+          var(--button-radius)
+        );
+        --outline-border-radius: calc(
+          var(--segmented-button-radius) - var(--outline-width)
+        );
+        &:first-child {
+          border-radius: var(--segmented-button-radius)
+            var(--segmented-button-radius) 0 0;
+          &::before {
+            border-radius: var(--outline-border-radius)
+              var(--outline-border-radius) 0 0;
+          }
+        }
+        &:last-child {
+          border-radius: 0 0 var(--segmented-button-radius)
+            var(--segmented-button-radius);
+          &::before {
+            border-radius: 0 0 var(--outline-border-radius)
+              var(--outline-border-radius);
+          }
+        }
+      }
+    }
+  }
+  &__description {
+    white-space: pre-wrap;
+    color: typography.emphasis("text", "medium");
+  }
+}

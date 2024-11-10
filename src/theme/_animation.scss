@@ -1,0 +1,18 @@
+@use "sass:math";
+@use "~/util";
+
+@mixin spring-in($name, $duration) {
+  @keyframes #{$name} {
+    from {
+      transform: scale(0.9);
+    }
+    // go too far, then spring back
+    $percentage: 100 - (math.div(75, util.strip-units($duration)) * 100);
+    #{$percentage + "%"} {
+      transform: scale(1.05);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+}

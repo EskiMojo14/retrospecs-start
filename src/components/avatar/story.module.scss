@@ -1,0 +1,16 @@
+.dialog,
+.popover,
+.popover :global(.line-background-content) {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog:focus {
+  outline: none;
+}
+
+.list {
+  overflow-x: hidden;
+  overflow-y: auto;
+}

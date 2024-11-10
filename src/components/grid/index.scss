@@ -1,0 +1,60 @@
+@use "sass:math";
+@use "sass:map";
+@use "sass:meta";
+@use "~/theme/layout";
+@use "~/theme/typography";
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gutter, 16px);
+  @each $breakpoint, $props in layout.$breakpoints {
+    @include layout.breakpoint($breakpoint, "only") {
+      max-width: map.get($props, max-width);
+      margin: map.get($props, margin-y) map.get($props, margin-x);
+      margin-top: map.get($props, margin-y);
+      &__inner {
+        display: grid;
+        grid-template-columns: repeat(map.get($props, columns), minmax(0, 1fr));
+        gap: var(--gutter, 16px);
+      }
+    }
+  }
+
+  &__cell {
+    grid-column-start: var(--start, auto);
+    grid-column-end: span var(--span, 1);
+    @each $breakpoint in map.keys(layout.$breakpoints) {
+      @include layout.breakpoint($breakpoint, "only") {
+        grid-column-start: var(--start-#{$breakpoint}, var(--start, auto));
+        grid-column-end: span var(--span-#{$breakpoint}, var(--span, 1));
+        &--span-full,
+        &.grid__cell--span-full-#{$breakpoint} {
+          grid-column-end: span
+            map.get(layout.$breakpoints, $breakpoint, columns);
+        }
+        &--span-half,
+        &.grid__cell--span-half-#{$breakpoint} {
+          grid-column-end: span
+            math.div(map.get(layout.$breakpoints, $breakpoint, columns), 2);
+        }
+      }
+    }
+  }
+}
+
+.breakpoint-display::before {
+  z-index: 100000;
+  position: fixed;
+  top: 64px;
+  right: 0;
+  background-color: var(--red-500);
+  color: var(--white);
+  padding: 4px 8px;
+  @include typography.style("caption");
+  @each $breakpoint in map.keys(layout.$breakpoints) {
+    @include layout.breakpoint($breakpoint, "above") {
+      content: "#{$breakpoint}";
+    }
+  }
+}

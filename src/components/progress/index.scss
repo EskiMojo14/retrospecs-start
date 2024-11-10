@@ -1,0 +1,400 @@
+@use "sass:map";
+@use "sass:math";
+@use "~/theme";
+@use "~/theme/typography";
+@use "~/theme/palette";
+@use "~/util";
+
+.progress {
+  --circular-progress-size: 48px;
+  --progress-color-rgb: var(--shade-500-rgb);
+  --progress-indicator-color: rgb(var(--progress-color-rgb));
+  --progress-track-alpha: #{map.get(typography.$emphasis-map, "disabled")};
+  --progress-track-color: rgba(
+    var(--progress-color-rgb),
+    var(--progress-track-alpha)
+  );
+  --determinate-duration: 250ms;
+  --progress-thickness: 4px;
+  margin: 4px;
+  @include theme.dark {
+    --progress-color-rgb: var(--shade-300-rgb);
+  }
+  &[data-hidden] {
+    &.progress--linear .progress__bar {
+      height: 0;
+    }
+    &.progress--circular {
+      .progress__bar,
+      .progress__track,
+      .progress__stop {
+        stroke-width: 0;
+      }
+    }
+    &.progress--cassette {
+      display: none;
+    }
+  }
+  &--linear {
+    min-width: 80px;
+    @include util.rtl {
+      transform: scaleX(-1);
+    }
+    .progress__bar {
+      direction: ltr;
+      position: relative;
+      display: flex;
+      height: var(--progress-thickness);
+      border-radius: var(--border-radius-full);
+      overflow: hidden;
+      transition: height 200ms ease;
+      &::before {
+        content: "";
+        order: 2;
+        width: calc((100% - var(--pct, 0%)) - var(--progress-thickness));
+        height: var(--progress-thickness);
+        max-height: 100%;
+        border-radius: inherit;
+        background-color: var(--progress-track-color);
+        transition: width var(--determinate-duration) ease;
+        @include util.reflexive-box(margin, auto);
+      }
+      &::after {
+        content: "";
+        order: 1;
+        height: var(--progress-thickness);
+        width: var(--pct, 0%);
+        max-height: 100%;
+        border-radius: inherit;
+        background-color: var(--progress-indicator-color);
+        transition: width var(--determinate-duration) ease;
+      }
+      &-stop {
+        position: absolute;
+        height: var(--progress-thickness);
+        max-height: 100%;
+        width: var(--progress-thickness);
+        background-color: var(--progress-indicator-color);
+        border-radius: inherit;
+        bottom: 0;
+        right: 0;
+      }
+    }
+  }
+  &--circular {
+    --progress-thickness-pct: 10;
+    width: var(--circular-progress-size);
+    height: var(--circular-progress-size);
+    position: relative;
+
+    // note, these value come from the m2 version but match current gm3 values.
+    // Constants:
+    //       ARCSIZE     = 270 degrees (amount of circle the arc takes up)
+    //       ARCTIME     = 1333ms (time it takes to expand and contract arc)
+    //       ARCSTARTROT = 216 degrees (how much the start location of the arc
+    //                                 should rotate each time, 216 gives us a
+    //                                 5 pointed star shape (it's 360/5 * 3).
+    //                                 For a 7 pointed star, we might do
+    //                                 360/7 * 3 = 154.286)
+    // ARCTIME
+    --arc-duration: 1333ms;
+    // 4 * ARCTIME
+    --cycle-duration: calc(4 * var(--arc-duration));
+    // ARCTIME * 360 / (ARCSTARTROT + (360-ARCSIZE))
+    --linear-rotate-duration: calc(var(--arc-duration) * 360 / 306);
+
+    $indeterminate-easing: cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:not([aria-valuenow]) {
+      animation: linear infinite linear-rotate;
+      animation-duration: var(--linear-rotate-duration);
+      @keyframes linear-rotate {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      svg {
+        position: absolute;
+        inset: 0;
+      }
+      circle {
+        transform-origin: center center;
+        cx: 50%;
+        cy: 50%;
+        r: calc(50% * (1 - var(--progress-thickness-pct) / 100));
+        fill: rgba(0, 0, 0, 0);
+        stroke-dasharray: calc(50 - (var(--progress-thickness-pct) * 0.2))
+          calc(50 + (var(--progress-thickness-pct) * 0.2));
+        stroke: var(--progress-indicator-color);
+        stroke-width: calc(var(--progress-thickness-pct) * 1%);
+        stroke-linecap: round;
+        animation: expand-arc;
+        animation-iteration-count: infinite;
+        animation-fill-mode: both;
+        animation-duration: var(--arc-duration), var(--cycle-duration);
+        animation-timing-function: $indeterminate-easing;
+        @keyframes expand-arc {
+          0% {
+            transform: rotate(265deg);
+          }
+          50% {
+            transform: rotate(130deg);
+          }
+          100% {
+            transform: rotate(265deg);
+          }
+        }
+      }
+    }
+
+    .progress__spinner {
+      position: absolute;
+      inset: 0;
+      animation: infinite both rotate-arc var(--cycle-duration)
+        $indeterminate-easing;
+      @keyframes rotate-arc {
+        12.5% {
+          transform: rotate(135deg);
+        }
+        25% {
+          transform: rotate(270deg);
+        }
+        37.5% {
+          transform: rotate(405deg);
+        }
+        50% {
+          transform: rotate(540deg);
+        }
+        62.5% {
+          transform: rotate(675deg);
+        }
+        75% {
+          transform: rotate(810deg);
+        }
+        87.5% {
+          transform: rotate(945deg);
+        }
+        100% {
+          transform: rotate(1080deg);
+        }
+      }
+    }
+
+    .progress__left {
+      position: absolute;
+      overflow: hidden;
+      inset: 0 50% 0 0;
+    }
+
+    .progress__right {
+      position: absolute;
+      overflow: hidden;
+      inset: 0 0 0 50%;
+    }
+
+    .progress__left svg {
+      inset: 0 -100% 0 0;
+    }
+
+    .progress__right svg {
+      rotate: 100deg - 135deg;
+      inset: 0 0 0 -100%;
+      circle {
+        animation-delay: calc(-0.5 * var(--arc-duration)), 0ms;
+      }
+    }
+
+    .progress__track,
+    .progress__bar {
+      position: absolute;
+      inset: 0;
+    }
+    &[aria-valuenow] {
+      svg {
+        transform: rotate(-90deg);
+        position: absolute;
+        inset: 4px;
+      }
+      circle {
+        cx: 50%;
+        cy: 50%;
+        r: calc(50% * (1 - var(--progress-thickness-pct) / 100));
+        fill: rgba(0, 0, 0, 0);
+      }
+    }
+    $gap: 10;
+    .progress__track {
+      stroke: var(--progress-track-color);
+      stroke-width: calc(var(--progress-thickness-pct) * 1%);
+      stroke-linecap: round;
+      stroke-dasharray: max(calc((100 - var(--pct, 0)) - #{$gap * 2}), 0)
+        min(calc(var(--pct, 0) + $gap * 2), 100);
+      stroke-dashoffset: calc(100 - (var(--pct, 0) + $gap));
+      transition:
+        stroke-width 200ms ease,
+        stroke-dashoffset var(--determinate-duration) ease,
+        stroke-dasharray var(--determinate-duration) ease;
+    }
+    .progress__bar {
+      stroke: var(--progress-indicator-color);
+      stroke-width: calc(var(--progress-thickness-pct) * 1%);
+      stroke-linecap: round;
+      stroke-dashoffset: calc(100 - var(--pct, 0));
+      stroke-dasharray: 100;
+      transition:
+        stroke-dashoffset var(--determinate-duration) ease,
+        stroke-width 200ms ease;
+    }
+    .progress__stop {
+      stroke: var(--progress-indicator-color);
+      stroke-width: calc(var(--progress-thickness-pct) * 1%);
+      stroke-linecap: round;
+      stroke-dashoffset: 0;
+      stroke-dasharray: 0 100;
+      transition: stroke-width 200ms ease;
+    }
+  }
+  &--cassette {
+    $size: 64px;
+    $border-size: math.div($size - 24px, 2);
+    $increment: 3.6deg;
+    .progress {
+      &__cassette {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 24px;
+        height: 36px;
+        width: 96px;
+        border-radius: var(--border-radius-full);
+        overflow: hidden;
+        border: 2px solid var(--progress-indicator-color);
+        position: relative;
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 36px;
+          height: 4px;
+          background-color: var(--progress-indicator-color);
+          border-radius: 0 0 var(--border-radius-full) var(--border-radius-full);
+        }
+      }
+      &__wheel {
+        height: 64px;
+        width: 64px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        &::before {
+          box-sizing: border-box;
+          content: "";
+          position: absolute;
+          border-radius: inherit;
+          transform: translate(-50%, -50%);
+          top: 50%;
+          left: 50%;
+          border: 0 solid var(--progress-track-color);
+          transition:
+            border-width 200ms ease,
+            height 200ms ease,
+            width 200ms ease;
+        }
+        .symbol {
+          position: relative;
+          color: var(--progress-indicator-color);
+          transition: transform 200ms ease;
+        }
+      }
+    }
+    &[aria-valuenow] {
+      .progress__wheel {
+        &:first-child::before {
+          --border-size: calc(#{$border-size} * (100 - var(--pct, 0)) / 100);
+          --size: calc(24px + (var(--border-size) * 2));
+          height: var(--size);
+          width: var(--size);
+          border-width: calc(var(--border-size) + 2px);
+        }
+        &:last-child::before {
+          --border-size: calc(#{$border-size} * (var(--pct, 0) / 100));
+          --size: calc(24px + (var(--border-size) * 2));
+          height: var(--size);
+          width: var(--size);
+          border-width: calc(var(--border-size) + 2px);
+        }
+        .symbol {
+          transform: rotate(calc(var(--pct, 0) * $increment));
+          @include util.rtl {
+            transform: rotate(calc(360deg - var(--pct, 0) * $increment));
+          }
+        }
+      }
+    }
+    &:not([aria-valuenow]) {
+      $indeterminate-duration: 2s;
+      .progress__wheel {
+        &:first-child::before {
+          animation: cassette-grow-left $indeterminate-duration infinite
+            ease-in-out;
+          @keyframes cassette-grow-left {
+            0% {
+              height: 24px;
+              width: 24px;
+              border-width: 2px;
+            }
+            50% {
+              height: $size;
+              width: $size;
+              border-width: $border-size + 2px;
+            }
+            to {
+              height: 24px;
+              width: 24px;
+              border-width: 2px;
+            }
+          }
+        }
+        &:last-child::before {
+          animation: cassette-grow-right $indeterminate-duration infinite
+            ease-in-out;
+          @keyframes cassette-grow-right {
+            0% {
+              height: $size;
+              width: $size;
+              border-width: $border-size + 2px;
+            }
+            50% {
+              height: 24px;
+              width: 24px;
+              border-width: 2px;
+            }
+            to {
+              height: $size;
+              width: $size;
+              border-width: $border-size + 2px;
+            }
+          }
+        }
+        .symbol {
+          animation: cassette-spin $indeterminate-duration infinite ease-in-out;
+          @keyframes cassette-spin {
+            from {
+              transform: rotate($increment * 100);
+            }
+            50% {
+              transform: rotate(0);
+            }
+            to {
+              transform: rotate($increment * 100);
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,78 @@
+@use "sass:color";
+@use "sass:map";
+@use "sass:math";
+
+@function get-rgb($color) {
+  @return color.channel($color, "red"), color.channel($color, "green"),
+    color.channel($color, "blue");
+}
+
+$base-size: 16px;
+@function to-rem($px) {
+  @return math.div($px, $base-size) * 1rem;
+}
+
+@mixin rtl {
+  [dir="rtl"] &,
+  &[dir="rtl"] {
+    @content;
+  }
+}
+
+@mixin ltr {
+  [dir="ltr"] &,
+  &[dir="ltr"] {
+    @content;
+  }
+}
+
+@mixin reflexive-box($prop, $start, $end: 0) {
+  & {
+    #{$prop}-left: $start;
+    #{$prop}-right: $end;
+  }
+  @include rtl {
+    #{$prop}-left: $end;
+    #{$prop}-right: $start;
+  }
+}
+
+@mixin reflexive-position($prop, $start, $end: unset) {
+  $opposite: if($prop == "right", "left", "right");
+  & {
+    #{$prop}: $start;
+    #{$opposite}: $end;
+  }
+  @include rtl {
+    #{$prop}: $end;
+    #{$opposite}: $start;
+  }
+}
+
+@mixin text-stroke($color) {
+  text-shadow:
+    -1px -1px 0 $color,
+    1px -1px 0 $color,
+    -1px 1px 0 $color,
+    1px 1px 0 $color;
+}
+
+@function strip-units($number) {
+  @return math.div($number, ($number * 0 + 1));
+}
+
+@mixin visually-hidden {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  position: absolute;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 1px;
+}
+
+@mixin ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

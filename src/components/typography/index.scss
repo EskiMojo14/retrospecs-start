@@ -1,0 +1,17 @@
+@use "sass:map";
+@use "sass:meta";
+@use "sass:string";
+@use "~/theme/typography";
+@use "~/util";
+
+.typography {
+  @include typography.defaults;
+  @each $style, $props in typography.$type-scale {
+    &--#{$style} {
+      @include typography.style($style, $no-defaults: true);
+    }
+  }
+  &--no-margin {
+    margin: 0;
+  }
+}

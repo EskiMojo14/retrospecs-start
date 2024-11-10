@@ -1,0 +1,23 @@
+@use "~/util";
+
+.symbol {
+  height: 1em;
+  width: 1em;
+  justify-content: center;
+  align-items: center;
+  font-variation-settings:
+    "wght" var(--wght, 400),
+    "GRAD" var(--grad, 0),
+    "FILL" var(--fill, 0),
+    "opsz" var(--opsz, 24);
+  --transition-duration: 250ms;
+  transition: font-variation-settings var(--transition-duration);
+  &.material-symbols-sharp {
+    display: inline-flex;
+  }
+  &--flip-rtl {
+    @include util.rtl {
+      transform: scaleX(-1);
+    }
+  }
+}

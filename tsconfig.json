@@ -10,16 +10,17 @@
     "paths": {
       "~/*": ["./src/*"],
       "@/*": ["./app/*"]
-    }
+    },
+    "noEmit": true
   },
   "include": [
-    "app/**/*",
-    "src/**/*",
-    ".storybook/**/*",
-    "types/**/*",
+    "app",
+    "src",
+    ".storybook",
+    "types",
     "app.config.ts",
     "eslint.config.mts",
     "vite.config.ts",
-    "postcss.config.ts"
+    "postcss.config.js"
   ]
 }

@@ -1,0 +1,120 @@
+@use "sass:map";
+@use "sass:string";
+@use "~/util";
+
+$weights: (
+  light: (
+    "thin": 100,
+    "extra-light": 200,
+    "light": 300,
+    "regular": 400,
+    "medium": 500,
+    "semi-bold": 600,
+    "bold": 700,
+    "extra-bold": 800,
+    "black": 900,
+  ),
+  dark: (
+    // 100 is the minimum available weight
+    "thin": 100,
+    "extra-light": 150,
+    "light": 250,
+    "regular": 350,
+    "medium": 450,
+    "semi-bold": 550,
+    "bold": 650,
+    "extra-bold": 750,
+    "black": 850,
+  ),
+);
+
+$defaults: (
+  font-family: string.unquote("Raleway"),
+  font-size: util.to-rem(16px),
+  font-weight: var(--typography-weight-medium),
+  text-transform: none,
+  font-variant-numeric: lining-nums,
+  font-feature-settings: '"lnum" 1',
+);
+
+@mixin defaults {
+  @each $prop, $value in $defaults {
+    #{$prop}: var(--typography-default-#{$prop});
+  }
+}
+
+$type-scale: (
+  headline1: (
+    font-size: util.to-rem(99px),
+    font-weight: var(--typography-weight-light),
+  ),
+  headline2: (
+    font-size: util.to-rem(62px),
+    font-weight: var(--typography-weight-regular),
+  ),
+  headline3: (
+    font-size: util.to-rem(49px),
+    font-weight: var(--typography-weight-regular),
+  ),
+  headline4: (
+    font-size: util.to-rem(35px),
+    font-weight: var(--typography-weight-regular),
+  ),
+  headline5: (
+    font-size: util.to-rem(25px),
+    font-weight: var(--typography-weight-regular),
+  ),
+  headline6: (
+    font-size: util.to-rem(21px),
+  ),
+  body1: (
+    font-size: util.to-rem(16px),
+    font-variant-numeric: oldstyle-nums,
+    font-feature-settings: '"lnum" 0, "onum" 1',
+  ),
+  body2: (
+    font-size: util.to-rem(14px),
+    font-variant-numeric: oldstyle-nums,
+    font-feature-settings: '"lnum" 0, "onum" 1',
+  ),
+  subtitle1: (
+    font-size: util.to-rem(16px),
+  ),
+  subtitle2: (
+    font-size: util.to-rem(14px),
+  ),
+  button: (
+    font-size: util.to-rem(14px),
+    font-weight: var(--typography-weight-bold),
+    text-transform: uppercase,
+    line-height: 1,
+  ),
+  overline: (
+    font-size: util.to-rem(10px),
+    text-transform: uppercase,
+    font-weight: var(--typography-weight-bold),
+  ),
+  caption: (
+    font-size: util.to-rem(12px),
+  ),
+);
+
+$emphasis-map: (
+  high: 0.87,
+  medium: 0.6,
+  disabled: 0.38,
+  divider: 0.25,
+);
+
+@function emphasis($color, $emphasis) {
+  @return rgba(var(--#{$color}-rgb), var(--typography-emphasis-#{$emphasis}));
+}
+
+@mixin style($style, $no-defaults: false) {
+  @if not $no-defaults {
+    @include defaults;
+  }
+  @each $prop in map.keys(map.get($type-scale, $style)) {
+    #{$prop}: var(--typography-#{$style}-#{$prop});
+  }
+}

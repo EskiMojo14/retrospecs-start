@@ -1,0 +1,14 @@
+@use "~/theme/typography";
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 256px;
+  &:focus {
+    outline: none;
+  }
+  .content {
+    color: typography.emphasis("text", "medium");
+  }
+}
