@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/start";
 import { getRequestURL } from "vinxi/http";
-import { createServerClient } from "~/db/client.server";
+import { createServerClient } from "~/db/server";
 
 const authCallback = createServerFn("POST", async () => {
   const url = getRequestURL();

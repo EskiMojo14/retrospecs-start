@@ -41,7 +41,7 @@ export type OneOf<
   // stored here to avoid distribution - don't provide this parameter yourself
   AllKeys extends KeyofUnion<Union> = KeyofUnion<Union>,
 > = Union extends infer Item
-  ? Compute<Item & { [K in Exclude<AllKeys, keyof Item>]?: never }>
+  ? Compute<Item & Partial<Record<Exclude<AllKeys, keyof Item>, never>>>
   : never;
 
 export type DistributiveOmit<T, K extends keyof any> = T extends any

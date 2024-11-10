@@ -5,7 +5,7 @@ import {
   defaultStreamHandler,
 } from "@tanstack/start/server";
 
-import { createServerClient } from "~/db/client.server";
+import { createServerClient } from "~/db/server";
 import { createRouterCreator } from "./router";
 
 export default createStartHandler({

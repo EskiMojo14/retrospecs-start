@@ -97,6 +97,9 @@ body {
     background-color: var(--selection-color);
     color: var(--selection-text-color);
   }
+  div#root {
+    display: contents;
+  }
   main {
     flex: 1;
     position: relative;
