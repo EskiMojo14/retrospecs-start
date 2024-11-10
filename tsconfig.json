@@ -19,6 +19,7 @@
     "types/**/*",
     "app.config.ts",
     "eslint.config.mts",
-    "vite.config.ts"
+    "vite.config.ts",
+    "postcss.config.ts"
   ]
 }
