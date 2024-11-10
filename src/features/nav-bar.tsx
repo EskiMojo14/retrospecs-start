@@ -11,7 +11,9 @@ import { Symbol } from "~/components/symbol";
 import { Toolbar } from "~/components/toolbar";
 import { useSupabase } from "~/db/provider";
 import { useIsomorphicLayoutEffect } from "~/hooks/use-isomorphic-layout-effect";
+import { Invites } from "./invites/invites";
 import { Logo } from "./logo";
+import { PreferencesDialog } from "./user_config/dialog";
 import styles from "./nav-bar.module.scss";
 
 function useNavBarScroll() {
@@ -100,7 +102,7 @@ export function NavBar({ breadcrumbs = [], actions }: NavBarProps) {
           </Breadcrumbs>
         </Toolbar>
         <Toolbar slot="actions">
-          {actions}
+          {actions ?? <Invites />}
           <ConfirmationDialog
             trigger={
               <IconButton slot="action" tooltip="Sign out">
@@ -119,6 +121,7 @@ export function NavBar({ breadcrumbs = [], actions }: NavBarProps) {
                 .then(() => router.navigate({ to: "/sign-in" }));
             }}
           />
+          <PreferencesDialog />
         </Toolbar>
       </AppBarRow>
     </AppBar>

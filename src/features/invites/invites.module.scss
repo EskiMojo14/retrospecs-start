@@ -1,0 +1,31 @@
+@use "~/theme/typography";
+
+.popover {
+  display: flex;
+  overflow: hidden;
+  :global(.line-background-content) {
+    display: flex;
+    overflow: hidden;
+  }
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  &:focus {
+    outline: none;
+  }
+  .title {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: typography.emphasis("text", "high");
+  }
+  .list {
+    overflow-y: auto;
+    max-width: 512px;
+    &[data-empty] {
+      min-width: 128px;
+    }
+  }
+}

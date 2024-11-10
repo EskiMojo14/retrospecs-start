@@ -1,0 +1,13 @@
+@use "~/theme/typography";
+@use "~/theme";
+@use "~/util";
+
+.invite {
+  transition: background 200ms;
+  &:focus-visible {
+    outline: none;
+  }
+  &[data-focus-visible] {
+    background-color: rgba(var(--gold-500-rgb), theme.states-opacity("focus"));
+  }
+}

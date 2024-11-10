@@ -1,3 +1,4 @@
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { NavigateOptions, ToOptions } from "@tanstack/react-router";
 import {
   Outlet,
@@ -9,7 +10,9 @@ import { Body, Head, Html, Meta, Scripts } from "@tanstack/start";
 import type { ReactNode } from "react";
 import { RouterProvider } from "react-aria-components";
 import { ForeEauFore } from "~/404";
-import { SupabaseProvider } from "~/db/provider";
+import { BreakpointDisplay } from "~/components/grid";
+import { GlobalToastRegion } from "~/components/toast/toast-region";
+import { SessionProvider } from "~/db/provider";
 import { ErrorPage } from "~/error-page";
 import type { AppContext } from "~/util/supabase-query";
 import "~/index.scss";
@@ -53,11 +56,17 @@ function RootComponent() {
       navigate={(to, options) => void router.navigate({ to, ...options })}
       useHref={(to) => router.buildLocation({ to }).href}
     >
-      <SupabaseProvider>
+      <SessionProvider>
         <RootDocument>
           <Outlet />
+          <GlobalToastRegion aria-label="Notifications" />
+          <ReactQueryDevtools
+            buttonPosition="bottom-left"
+            initialIsOpen={false}
+          />
+          <BreakpointDisplay />
         </RootDocument>
-      </SupabaseProvider>
+      </SessionProvider>
     </RouterProvider>
   );
 }

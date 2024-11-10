@@ -1,24 +1,10 @@
 import type { Session } from "@supabase/supabase-js";
+import { useRouter } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createRequiredContext } from "required-react-context";
-import { createBrowserClient } from "./client";
-import type { AppSupabaseClient } from ".";
 
-export const { SupabaseProvider: OriginalSupabaseProvider, useSupabase } =
-  createRequiredContext<AppSupabaseClient>().with({ name: "supabase" });
-
-export function SupabaseProvider({ children }: { children: ReactNode }) {
-  const clientRef = useRef<AppSupabaseClient | null>(null);
-  if (!clientRef.current) {
-    clientRef.current = createBrowserClient();
-  }
-  return (
-    <OriginalSupabaseProvider supabase={clientRef.current}>
-      {children}
-    </OriginalSupabaseProvider>
-  );
-}
+export const useSupabase = () => useRouter().options.context.supabase;
 
 export const { useSession, SessionProvider: OriginalSessionProvider } =
   createRequiredContext<Session | null>().with({

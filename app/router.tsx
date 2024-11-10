@@ -1,26 +1,30 @@
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { routerWithQueryClient } from "@tanstack/react-router-with-query";
-import { createBrowserClient } from "~/db/client";
+import type { AppSupabaseClient } from "~/db";
 import { makeQueryClient } from "~/db/query";
 import { routeTree } from "./routeTree.gen";
 
-export function createRouter() {
-  const supabase = createBrowserClient();
-  const queryClient = makeQueryClient();
+export function createRouterCreator(
+  makeSupabaseClient: () => AppSupabaseClient,
+) {
+  return function createRouter() {
+    const supabase = makeSupabaseClient();
+    const queryClient = makeQueryClient();
 
-  const router = routerWithQueryClient(
-    createTanStackRouter({
-      routeTree,
-      context: { supabase, queryClient },
-    }),
-    queryClient,
-  );
+    const router = routerWithQueryClient(
+      createTanStackRouter({
+        routeTree,
+        context: { supabase, queryClient },
+      }),
+      queryClient,
+    );
 
-  return router;
+    return router;
+  };
 }
 
 declare module "@tanstack/react-router" {
   interface Register {
-    router: ReturnType<typeof createRouter>;
+    router: ReturnType<ReturnType<typeof createRouterCreator>>;
   }
 }

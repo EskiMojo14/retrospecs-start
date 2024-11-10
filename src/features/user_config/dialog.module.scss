@@ -1,0 +1,48 @@
+@use "~/theme/palette";
+@use "~/theme/typography";
+@use "~/theme";
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  .profileInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-grow: 1;
+    .email {
+      color: typography.emphasis("text", "medium");
+    }
+  }
+}
+
+.selectItem,
+.selectValue {
+  @each $color in palette.$colors {
+    &.#{$color} {
+      --selected-background-rgb: var(--#{$color}-500-rgb);
+      --selected-text-rgb: var(--#{$color}-900-rgb);
+      :global(.input-group__icon) {
+        color: var(--#{$color}-500);
+      }
+      @include theme.dark {
+        --selected-background-rgb: var(--#{$color}-300-rgb);
+        --selected-text-rgb: var(--#{$color}-50-rgb);
+        :global(.input-group__icon) {
+          color: var(--#{$color}-300);
+        }
+      }
+    }
+  }
+}
+.selectValue {
+  display: contents;
+  color: typography.emphasis("text", "high");
+}

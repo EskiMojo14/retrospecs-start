@@ -1,9 +1,10 @@
 /// <reference types="vinxi/types/client" />
 import { StartClient } from "@tanstack/start";
 import { hydrateRoot } from "react-dom/client";
-import { createRouter } from "./router";
+import { createBrowserClient } from "~/db/client";
+import { createRouterCreator } from "./router";
 
-const router = createRouter();
+const router = createRouterCreator(createBrowserClient)();
 
 const root = document.getElementById("root");
 if (!root) {
