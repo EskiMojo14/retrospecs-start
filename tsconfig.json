@@ -6,13 +6,19 @@
     "target": "ES2022",
     "skipLibCheck": true,
     "strict": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "paths": {
+      "~/*": ["./src/*"],
+      "@/*": ["./app/*"]
+    }
   },
   "include": [
     "app/**/*",
+    "src/**/*",
     ".storybook/**/*",
     "types/**/*",
     "app.config.ts",
-    "eslint.config.mts"
+    "eslint.config.mts",
+    "vite.config.ts"
   ]
 }

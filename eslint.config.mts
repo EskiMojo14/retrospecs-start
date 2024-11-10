@@ -10,7 +10,7 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: ["eslint.config.mts", "!.storybook"],
+    ignores: ["eslint.config.mts", "!.storybook", "app/routeTree.gen.ts"],
   },
   {
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
