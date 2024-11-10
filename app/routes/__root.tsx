@@ -1,3 +1,4 @@
+import type { QueryClient } from "@tanstack/react-query";
 import type { NavigateOptions, ToOptions } from "@tanstack/react-router";
 import {
   Outlet,
@@ -21,6 +22,7 @@ declare module "react-aria-components" {
 
 interface AppRouterContext {
   supabase: AppSupabaseClient;
+  queryClient: QueryClient;
 }
 
 export const Route = createRootRouteWithContext<AppRouterContext>()({
