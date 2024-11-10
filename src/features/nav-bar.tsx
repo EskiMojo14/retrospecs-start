@@ -9,6 +9,7 @@ import { IconButton } from "~/components/icon-button";
 import { Link } from "~/components/link";
 import { Symbol } from "~/components/symbol";
 import { Toolbar } from "~/components/toolbar";
+import { useSupabase } from "~/db/provider";
 import { useIsomorphicLayoutEffect } from "~/hooks/use-isomorphic-layout-effect";
 import { Logo } from "./logo";
 import styles from "./nav-bar.module.scss";
@@ -83,6 +84,7 @@ export interface NavBarProps {
 export function NavBar({ breadcrumbs = [], actions }: NavBarProps) {
   const navBarRef = useNavBarScroll();
   const router = useRouter();
+  const supabase = useSupabase();
 
   return (
     <AppBar ref={navBarRef} className={styles.navBar}>
@@ -112,10 +114,9 @@ export function NavBar({ breadcrumbs = [], actions }: NavBarProps) {
               color: "red",
             }}
             onConfirm={() => {
-              void router.navigate({
-                // TODO
-                //to: "/sign-out",
-              });
+              void supabase.auth
+                .signOut()
+                .then(() => router.navigate({ to: "/sign-in" }));
             }}
           />
         </Toolbar>

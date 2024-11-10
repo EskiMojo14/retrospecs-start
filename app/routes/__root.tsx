@@ -1,13 +1,29 @@
+import type { NavigateOptions, ToOptions } from "@tanstack/react-router";
 import {
   Outlet,
   ScrollRestoration,
-  createRootRoute,
+  createRootRouteWithContext,
+  useRouter,
 } from "@tanstack/react-router";
 import { Body, Head, Html, Meta, Scripts } from "@tanstack/start";
 import type { ReactNode } from "react";
+import { RouterProvider } from "react-aria-components";
+import type { AppSupabaseClient } from "~/db";
+import { SupabaseProvider } from "~/db/provider";
 import "~/index.scss";
 
-export const Route = createRootRoute({
+declare module "react-aria-components" {
+  interface RouterConfig {
+    href: ToOptions["to"];
+    routerOptions: Omit<NavigateOptions, keyof ToOptions>;
+  }
+}
+
+interface AppRouterContext {
+  supabase: AppSupabaseClient;
+}
+
+export const Route = createRootRouteWithContext<AppRouterContext>()({
   meta: () => [
     {
       charSet: "utf-8",
@@ -20,14 +36,23 @@ export const Route = createRootRoute({
       title: "TanStack Start Starter",
     },
   ],
+  links: () => [{ rel: "icon", href: "/assets/retrospecs.png" }],
   component: RootComponent,
 });
 
 function RootComponent() {
+  const router = useRouter();
   return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
+    <RouterProvider
+      navigate={(to, options) => void router.navigate({ to, ...options })}
+      useHref={(to) => router.buildLocation({ to }).href}
+    >
+      <SupabaseProvider>
+        <RootDocument>
+          <Outlet />
+        </RootDocument>
+      </SupabaseProvider>
+    </RouterProvider>
   );
 }
 
@@ -36,7 +61,6 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
     <Html>
       <Head>
         <Meta />
-        <link rel="icon" href="/assets/retrospecs.png" />
       </Head>
       <Body>
         {children}

@@ -39,6 +39,7 @@
     "react-dom": "^18.3.1",
     "react-redux": "^9.1.2",
     "remix-utils": "^7.7.0",
+    "required-react-context": "^1.4.1",
     "valibot": "1.0.0-beta.3",
     "vinxi": "^0.4.3"
   },

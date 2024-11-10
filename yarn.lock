@@ -10788,6 +10788,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"required-react-context@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "required-react-context@npm:1.4.1"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 10c0/2624e0f6282d7ea2c39976e29c14abbf0d4eb56363e8a6254bd285076445610b5f6b24efa4df7b43760f5fb04cd5b204a741d314420988d5500386a69cd8ef24
+  languageName: node
+  linkType: hard
+
 "requires-port@npm:^1.0.0":
   version: 1.0.0
   resolution: "requires-port@npm:1.0.0"
@@ -10925,6 +10934,7 @@ __metadata:
     react-dom: "npm:^18.3.1"
     react-redux: "npm:^9.1.2"
     remix-utils: "npm:^7.7.0"
+    required-react-context: "npm:^1.4.1"
     sass-embedded: "npm:^1.80.6"
     sass-map-get-next-prev: "npm:^1.0.0"
     storybook: "npm:8.4.2"

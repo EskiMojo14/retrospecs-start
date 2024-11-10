@@ -54,6 +54,7 @@ export default tseslint.config(
       "@typescript-eslint/array-type": ["error", { default: "generic" }],
       "@typescript-eslint/no-empty-object-type": "off",
       "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/only-throw-error": "off",
       "@typescript-eslint/restrict-template-expressions": [
         "error",
         { allowNumber: true },

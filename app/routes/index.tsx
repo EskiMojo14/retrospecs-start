@@ -2,6 +2,7 @@ import * as fs from "node:fs";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/start";
 import { Button } from "~/components/button";
+import { Layout } from "~/features/layout";
 
 const filePath = "count.txt";
 
@@ -30,15 +31,17 @@ function Home() {
   const state = Route.useLoaderData();
 
   return (
-    <Button
-      variant="elevated"
-      onPress={() => {
-        updateCount(1).then(() => {
-          router.invalidate();
-        });
-      }}
-    >
-      Add 1 to {state}?
-    </Button>
+    <Layout>
+      <Button
+        variant="elevated"
+        onPress={() => {
+          updateCount(1).then(() => {
+            router.invalidate();
+          });
+        }}
+      >
+        Add 1 to {state}?
+      </Button>
+    </Layout>
   );
 }
