@@ -1,0 +1,33 @@
+{
+  "name": "retrospecs-start",
+  "version": "1.0.0",
+  "description": "A simple app for sprint retrospectives.",
+  "repository": "https://github.com/EskiMojo14/retrospecs-start.git",
+  "author": "Ben Durrant <ben.j.durrant@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start"
+  },
+  "packageManager": "yarn@4.5.1",
+  "prettier": {},
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@tanstack/react-router": "^1.81.1",
+    "@tanstack/start": "^1.81.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vinxi": "^0.4.3"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "typescript": "^5.6.3"
+  }
+}
