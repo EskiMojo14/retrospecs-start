@@ -49,7 +49,7 @@ export function PreferencesDialog() {
   );
   const handleProfileChange = useCallback(
     (update: Partial<Profile>) => {
-      userId && updateProfileFn({ ...update, user_id: userId });
+      if (userId) updateProfileFn({ ...update, user_id: userId });
     },
     [userId, updateProfileFn],
   );
@@ -61,7 +61,7 @@ export function PreferencesDialog() {
     useOptionsCreator(updateUserConfig),
   );
   const handleConfigChange = (update: Partial<UserConfig>) => {
-    userId && updateConfig({ ...update, user_id: userId });
+    if (userId) updateConfig({ ...update, user_id: userId });
   };
   const theme = config?.theme ?? "system";
   const groove = config?.groove ?? "heavy";
