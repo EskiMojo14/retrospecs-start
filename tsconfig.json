@@ -7,5 +7,12 @@
     "skipLibCheck": true,
     "strict": true,
     "noUncheckedIndexedAccess": true
-  }
+  },
+  "include": [
+    "app/**/*",
+    ".storybook/**/*",
+    "types/**/*",
+    "app.config.ts",
+    "eslint.config.mts"
+  ]
 }
