@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import { Link } from ".";
+import { ExternalLink } from ".";
 
 const meta = {
-  title: "Components/Link",
-  component: Link,
-  args: { onPress: fn(), children: "Link", href: "#" },
-} satisfies Meta<typeof Link>;
+  title: "Components/ExternalLink",
+  component: ExternalLink,
+  args: { onPress: fn(), children: "ExternalLink", href: "#" },
+} satisfies Meta<typeof ExternalLink>;
 
 export default meta;
 

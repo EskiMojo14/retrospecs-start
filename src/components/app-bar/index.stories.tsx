@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Badge } from "~/components/badge";
 import { Breadcrumb, Breadcrumbs } from "~/components/breadcrumbs";
 import { IconButton } from "~/components/icon-button";
-import { Link } from "~/components/link";
+import { ExternalLink } from "~/components/link";
 import { Symbol } from "~/components/symbol";
 import { Toolbar } from "~/components/toolbar";
 import { Logo } from "~/features/logo";
@@ -23,7 +23,7 @@ const meta = {
                 <Logo href="/" aria-label="Home" />
               </Breadcrumb>
               <Breadcrumb>
-                <Link href="/about">About</Link>
+                <ExternalLink href="/about">About</ExternalLink>
               </Breadcrumb>
             </Breadcrumbs>
           </Toolbar>

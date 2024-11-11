@@ -1,14 +1,11 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import type { NavigateOptions, ToOptions } from "@tanstack/react-router";
 import {
   Outlet,
   ScrollRestoration,
   createRootRouteWithContext,
-  useRouter,
 } from "@tanstack/react-router";
 import { Body, Head, Html, Meta, Scripts } from "@tanstack/start";
 import type { ReactNode } from "react";
-import { RouterProvider } from "react-aria-components";
 import { lazily } from "react-lazily";
 import { ForeEauFore } from "~/404";
 import { BreakpointDisplay } from "~/components/grid";
@@ -30,13 +27,6 @@ const { TanStackRouterDevtools } =
   process.env.NODE_ENV === "development"
     ? lazily(() => import("@tanstack/router-devtools"))
     : { TanStackRouterDevtools: () => null };
-
-declare module "react-aria-components" {
-  interface RouterConfig {
-    href: ToOptions["to"];
-    routerOptions: Omit<NavigateOptions, keyof ToOptions>;
-  }
-}
 
 interface RootLoaderResponse {
   config?: UserConfig | null;
@@ -84,22 +74,16 @@ export const Route = createRootRouteWithContext<AppContext>()({
 });
 
 function RootComponent() {
-  const router = useRouter();
   return (
-    <RouterProvider
-      navigate={(to, options) => void router.navigate({ to, ...options })}
-      useHref={(to) => router.buildLocation({ to }).href}
-    >
-      <SessionProvider>
-        <RootDocument>
-          <Outlet />
-          <GlobalToastRegion aria-label="Notifications" />
-          <ReactQueryDevtools buttonPosition="bottom-left" />
-          <TanStackRouterDevtools position="bottom-right" />
-          <BreakpointDisplay />
-        </RootDocument>
-      </SessionProvider>
-    </RouterProvider>
+    <SessionProvider>
+      <RootDocument>
+        <Outlet />
+        <GlobalToastRegion aria-label="Notifications" />
+        <ReactQueryDevtools buttonPosition="bottom-left" />
+        <TanStackRouterDevtools position="bottom-right" />
+        <BreakpointDisplay />
+      </RootDocument>
+    </SessionProvider>
   );
 }
 

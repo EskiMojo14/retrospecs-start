@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Link } from "~/components/link";
+import { ExternalLink } from "~/components/link";
 import { Breadcrumbs, Breadcrumb } from ".";
 
 const meta = {
@@ -7,13 +7,13 @@ const meta = {
   render: (args) => (
     <Breadcrumbs {...args}>
       <Breadcrumb>
-        <Link href="/">Home</Link>
+        <ExternalLink href="/">Home</ExternalLink>
       </Breadcrumb>
       <Breadcrumb>
-        <Link href="/products">Products</Link>
+        <ExternalLink href="/products">Products</ExternalLink>
       </Breadcrumb>
       <Breadcrumb>
-        <Link href="/products/123">Product 123</Link>
+        <ExternalLink href="/products/123">Product 123</ExternalLink>
       </Breadcrumb>
     </Breadcrumbs>
   ),

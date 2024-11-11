@@ -1,5 +1,5 @@
 import { EmptyState } from "~/components/empty";
-import { Link } from "~/components/link";
+import { ExternalLink } from "~/components/link";
 import "./footer.scss";
 
 export function Footer() {
@@ -10,11 +10,15 @@ export function Footer() {
         title={
           <>
             Created by{" "}
-            <Link href="https://github.com/EskiMojo14/">eskimojo</Link>
+            <ExternalLink href="https://github.com/EskiMojo14/">
+              eskimojo
+            </ExternalLink>
           </>
         }
         description={
-          <Link href="https://github.com/EskiMojo14/retrospecs">Github</Link>
+          <ExternalLink href="https://github.com/EskiMojo14/retrospecs">
+            Github
+          </ExternalLink>
         }
       />
     </footer>

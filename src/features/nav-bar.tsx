@@ -6,7 +6,7 @@ import { AppBar, AppBarRow } from "~/components/app-bar";
 import { Breadcrumb, Breadcrumbs } from "~/components/breadcrumbs";
 import { ConfirmationDialog } from "~/components/dialog/confirmation";
 import { IconButton } from "~/components/icon-button";
-import { Link } from "~/components/link";
+import { ExternalLink } from "~/components/link";
 import { Symbol } from "~/components/symbol";
 import { Toolbar } from "~/components/toolbar";
 import { useSupabase } from "~/db/provider";
@@ -96,7 +96,7 @@ export function NavBar({ breadcrumbs = [], actions }: NavBarProps) {
           <Breadcrumbs items={breadcrumbs}>
             {({ href, label, id = href }) => (
               <Breadcrumb id={id}>
-                <Link href={href}>{label}</Link>
+                <ExternalLink href={href}>{label}</ExternalLink>
               </Breadcrumb>
             )}
           </Breadcrumbs>
