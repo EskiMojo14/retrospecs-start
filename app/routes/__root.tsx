@@ -9,6 +9,7 @@ import {
 import { Body, Head, Html, Meta, Scripts } from "@tanstack/start";
 import type { ReactNode } from "react";
 import { RouterProvider } from "react-aria-components";
+import { lazily } from "react-lazily";
 import { ForeEauFore } from "~/404";
 import { BreakpointDisplay } from "~/components/grid";
 import { GlobalToastRegion } from "~/components/toast/toast-region";
@@ -24,6 +25,11 @@ import { getUrl } from "~/util/isomorphic";
 import { promiseOwnProperties } from "~/util/ponyfills";
 import type { AppContext } from "~/util/supabase-query";
 import "~/index.scss";
+
+const { TanStackRouterDevtools } =
+  process.env.NODE_ENV === "development"
+    ? lazily(() => import("@tanstack/router-devtools"))
+    : { TanStackRouterDevtools: () => null };
 
 declare module "react-aria-components" {
   interface RouterConfig {
@@ -88,10 +94,8 @@ function RootComponent() {
         <RootDocument>
           <Outlet />
           <GlobalToastRegion aria-label="Notifications" />
-          <ReactQueryDevtools
-            buttonPosition="bottom-left"
-            initialIsOpen={false}
-          />
+          <ReactQueryDevtools buttonPosition="bottom-left" />
+          <TanStackRouterDevtools position="bottom-right" />
           <BreakpointDisplay />
         </RootDocument>
       </SessionProvider>
