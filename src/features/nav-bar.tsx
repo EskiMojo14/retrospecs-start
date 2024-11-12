@@ -1,4 +1,5 @@
 import { MDCTopAppBarFoundation } from "@material/top-app-bar";
+import type { LinkProps } from "@tanstack/react-router";
 import { useRouter } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
@@ -6,7 +7,7 @@ import { AppBar, AppBarRow } from "~/components/app-bar";
 import { Breadcrumb, Breadcrumbs } from "~/components/breadcrumbs";
 import { ConfirmationDialog } from "~/components/dialog/confirmation";
 import { IconButton } from "~/components/icon-button";
-import { ExternalLink } from "~/components/link";
+import { InternalLink } from "~/components/link";
 import { Symbol } from "~/components/symbol";
 import { Toolbar } from "~/components/toolbar";
 import { useSupabase } from "~/db/provider";
@@ -73,7 +74,7 @@ function useNavBarScroll() {
 
 export interface NavItem {
   label: ReactNode;
-  href: string;
+  to: NonNullable<LinkProps["to"]>;
   // defaults to href
   id?: string;
 }
@@ -92,11 +93,13 @@ export function NavBar({ breadcrumbs = [], actions }: NavBarProps) {
     <AppBar ref={navBarRef} className={styles.navBar}>
       <AppBarRow className={styles.mainRow}>
         <Toolbar as="nav" slot="nav" aria-label="Breadcrumbs">
-          <Logo href="/" />
+          <InternalLink to="/">
+            <Logo aria-label="Home" />
+          </InternalLink>
           <Breadcrumbs items={breadcrumbs}>
-            {({ href, label, id = href }) => (
+            {({ to, label, id = to }) => (
               <Breadcrumb id={id}>
-                <ExternalLink href={href}>{label}</ExternalLink>
+                <InternalLink to={to}>{label}</InternalLink>
               </Breadcrumb>
             )}
           </Breadcrumbs>
