@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/start";
 import { getRequestURL } from "vinxi/http";
 import { createServerClient } from "~/db/server";
 
-const authCallback = createServerFn("POST", async () => {
+const authCallback = createServerFn().handler(async () => {
   const url = getRequestURL();
   const error = url.searchParams.get("error") ?? undefined;
   const errorDescription =

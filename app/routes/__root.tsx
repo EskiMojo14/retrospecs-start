@@ -4,7 +4,7 @@ import {
   ScrollRestoration,
   createRootRouteWithContext,
 } from "@tanstack/react-router";
-import { Body, Head, Html, Meta, Scripts } from "@tanstack/start";
+import { Meta, Scripts } from "@tanstack/start";
 import type { ReactNode } from "react";
 import { lazily } from "react-lazily";
 import { ForeEauFore } from "~/404";
@@ -21,6 +21,7 @@ import { useIsomorphicLayoutEffect } from "~/hooks/use-isomorphic-layout-effect"
 import { getUrl } from "~/util/isomorphic";
 import { promiseOwnProperties } from "~/util/ponyfills";
 import type { AppContext } from "~/util/supabase-query";
+import type { Nullish } from "~/util/types";
 import "~/index.scss";
 
 const { TanStackRouterDevtools } =
@@ -87,22 +88,30 @@ function RootComponent() {
   );
 }
 
+const applyConfig = (el: HTMLElement, config: Nullish<UserConfig>) => {
+  el.dataset.groove = config?.groove ?? "heavy";
+  el.dataset.theme = config?.theme ?? "system";
+};
+
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   const { config } = Route.useLoaderData();
   useIsomorphicLayoutEffect(() => {
-    document.documentElement.dataset.groove = config?.groove ?? "heavy";
-    document.documentElement.dataset.theme = config?.theme ?? "system";
+    applyConfig(document.documentElement, config);
   }, [config]);
   return (
-    <Html>
-      <Head>
+    <html
+      ref={(ref) => {
+        if (ref) applyConfig(ref, config);
+      }}
+    >
+      <head>
         <Meta />
-      </Head>
-      <Body>
+      </head>
+      <body>
         {children}
         <ScrollRestoration />
         <Scripts />
-      </Body>
-    </Html>
+      </body>
+    </html>
   );
 }
