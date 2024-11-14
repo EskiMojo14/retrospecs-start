@@ -4,18 +4,17 @@ import { getRequestURL } from "vinxi/http";
 import { createServerClient } from "~/db/server";
 
 const authCallback = createServerFn().handler(async () => {
-  const url = getRequestURL();
-  const error = url.searchParams.get("error") ?? undefined;
-  const errorDescription =
-    url.searchParams.get("error_description") ?? undefined;
+  const { searchParams } = getRequestURL();
+  const error = searchParams.get("error") ?? undefined;
+  const errorDescription = searchParams.get("error_description") ?? undefined;
   if (error ?? errorDescription) {
     throw redirect({
       to: `/sign-in`,
       search: { error, error_description: errorDescription },
     });
   }
-  const code = url.searchParams.get("code");
-  const next = url.searchParams.get("next") ?? "/";
+  const code = searchParams.get("code");
+  const next = searchParams.get("next") ?? "/";
   const supabase = createServerClient();
   if (code) {
     try {
