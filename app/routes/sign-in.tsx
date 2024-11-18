@@ -36,7 +36,9 @@ export const Route = createFileRoute("/sign-in")({
   validateSearch: signinSearchSchema,
   loader: () => ({ url: getURL() }),
   component: SignIn,
-  meta: () => [{ title: "RetroSpecs - Sign In" }],
+  head: () => ({
+    meta: [{ title: "RetroSpecs - Sign In" }],
+  }),
 });
 
 function SignIn() {

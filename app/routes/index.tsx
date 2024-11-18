@@ -19,13 +19,15 @@ export const Route = createFileRoute("/")({
     );
     return { orgs };
   },
-  meta: () => [
-    { title: "RetroSpecs - Organisations" },
-    {
-      name: "description",
-      content: "View your organizations",
-    },
-  ],
+  head: () => ({
+    meta: [
+      { title: "RetroSpecs - Organisations" },
+      {
+        name: "description",
+        content: "View your organizations",
+      },
+    ],
+  }),
   component: Home,
 });
 

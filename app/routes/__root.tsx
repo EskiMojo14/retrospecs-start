@@ -53,16 +53,18 @@ export const Route = createRootRouteWithContext<AppContext>()({
       })),
     };
   },
-  meta: () => [
-    {
-      charSet: "utf-8",
-    },
-    {
-      name: "viewport",
-      content: "width=device-width, initial-scale=1",
-    },
-  ],
-  links: () => [{ rel: "icon", href: "/assets/retrospecs.png" }],
+  head: () => ({
+    meta: [
+      {
+        charSet: "utf-8",
+      },
+      {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
+      },
+    ],
+    links: [{ rel: "icon", href: "/assets/retrospecs.png" }],
+  }),
   component: RootComponent,
   notFoundComponent: () => <ForeEauFore />,
   errorComponent: ({ error, info }) => (
