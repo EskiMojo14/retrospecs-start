@@ -20,17 +20,17 @@ const authCallback = createServerFn().handler(async () => {
     try {
       const { error } = await supabase.auth.exchangeCodeForSession(code);
       if (!error) {
-        return redirect({
+        throw redirect({
           to: next,
         });
       }
-      return redirect({
+      throw redirect({
         to: `/sign-in`,
         search: { error: error.message },
       });
     } catch (error) {
       console.error(error);
-      return redirect({
+      throw redirect({
         to: `/sign-in`,
         search: {
           error: error instanceof Error ? error.message : String(error),

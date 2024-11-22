@@ -29,10 +29,10 @@
     "@supabase/supabase-js": "^2.46.1",
     "@tanstack/react-query": "^5.59.20",
     "@tanstack/react-query-devtools": "^5.59.20",
-    "@tanstack/react-router": "^1.82.0",
-    "@tanstack/react-router-with-query": "^1.82.0",
+    "@tanstack/react-router": "^1.82.2",
+    "@tanstack/react-router-with-query": "^1.82.2",
     "@tanstack/router-devtools": "^1.82.0",
-    "@tanstack/start": "1.82.0",
+    "@tanstack/start": "1.82.5",
     "clsx": "^2.1.1",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",
@@ -45,7 +45,7 @@
     "react-redux": "^9.1.2",
     "remix-utils": "^7.7.0",
     "required-react-context": "^1.4.1",
-    "valibot": "1.0.0-beta.5",
+    "valibot": "1.0.0-beta.8",
     "vinxi": "^0.4.3"
   },
   "devDependencies": {
@@ -58,7 +58,7 @@
     "@storybook/react-vite": "8.4.2",
     "@storybook/test": "8.4.2",
     "@svgr/cli": "^8.1.0",
-    "@tanstack/eslint-plugin-router": "^1.79.0",
+    "@tanstack/eslint-plugin-router": "^1.81.9",
     "@types/lodash": "^4",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
@@ -83,7 +83,7 @@
     "typescript-eslint": "^8.13.0",
     "vitest": "^2.1.4"
   },
-  "packageManager": "yarn@4.5.1",
+  "packageManager": "yarn@4.5.2",
   "prettier": {},
   "engines": {
     "node": ">=20.0.0"
