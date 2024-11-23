@@ -44,6 +44,15 @@ const getOrgData = createServerFn({ method: "GET" })
 export const Route = createFileRoute("/orgs_/$orgId")({
   component: RouteComponent,
   loader: ({ params: { orgId } }) => getOrgData({ data: { orgId } }),
+  head: ({ loaderData }) => ({
+    meta: [
+      { title: `RetroSpecs - ${loaderData?.org.name ?? "Org"}` },
+      {
+        name: "description",
+        content: "View and manage your organization and its teams",
+      },
+    ],
+  }),
 });
 
 function RouteComponent() {
