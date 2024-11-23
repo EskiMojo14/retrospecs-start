@@ -58,7 +58,6 @@ export const Route = createFileRoute("/orgs_/$orgId")({
 function RouteComponent() {
   const orgId = Route.useParams({ select: ({ orgId }) => Number(orgId) });
   const loaderData = Route.useLoaderData();
-  console.log(loaderData);
   const { data: org } = useQuery({
     ...useOptionsCreator(getOrg, orgId),
     initialData: loaderData.org,
