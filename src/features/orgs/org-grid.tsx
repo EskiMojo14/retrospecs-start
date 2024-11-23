@@ -98,7 +98,7 @@ function OrgCard({ id: orgId }: OrgCardProps) {
         <Toolbar slot="buttons">
           <LinkButton
             variant="outlined"
-            //href={`/orgs/${orgId}/members`}
+            href={`/orgs/${orgId}/members`}
             slot="action"
           >
             <Symbol slot="leading">group</Symbol>

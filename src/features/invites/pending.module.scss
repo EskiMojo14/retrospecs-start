@@ -1,0 +1,30 @@
+@use "~/theme/elevation";
+@use "~/theme/layout";
+
+.pendingContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  grid-column: span 8;
+  @include layout.breakpoint("tablet-l", "above") {
+    grid-column: span 6;
+    &:only-child {
+      grid-column: 3 / span 8;
+    }
+  }
+}
+
+.pendingCard {
+  :global(.card__content) {
+    padding: 4px 16px;
+  }
+}
+
+.pending {
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+}
+
+.actions {
+  flex: 0 0 auto;
+}

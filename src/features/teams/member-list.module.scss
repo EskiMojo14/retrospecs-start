@@ -1,0 +1,33 @@
+@use "~/theme/elevation";
+@use "~/theme/layout";
+@use "~/theme/typography";
+@use "~/theme";
+@use "~/util";
+
+.memberListContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  grid-column: span 8;
+  @include layout.breakpoint("tablet-l", "above") {
+    grid-column: span 6;
+    &:only-child {
+      grid-column: 3 / span 8;
+    }
+  }
+}
+
+.memberListCard {
+  :global(.card__content) {
+    padding: 4px 16px;
+  }
+}
+
+.memberList {
+  border-radius: var(--border-radius-medium);
+}
+
+.actions {
+  flex: 0 0 auto;
+  gap: 16px;
+}
