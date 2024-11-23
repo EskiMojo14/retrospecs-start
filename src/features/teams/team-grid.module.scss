@@ -1,0 +1,31 @@
+@use "~/theme/typography" as typography;
+
+.teamCard {
+  min-width: 0;
+  .primaryAction {
+    flex-grow: 1;
+    align-items: flex-start;
+    padding: 8px 24px;
+    text-decoration: none;
+    &:focus {
+      outline: none;
+    }
+    :global(.card__section-content) {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      text-transform: none;
+    }
+  }
+  .sprintCount,
+  .creator {
+    color: typography.emphasis("text", "medium");
+  }
+  .sprintCount {
+    margin-bottom: 0.125rem;
+  }
+  .title {
+    color: typography.emphasis("text", "high");
+    margin-bottom: 0.25rem;
+  }
+}

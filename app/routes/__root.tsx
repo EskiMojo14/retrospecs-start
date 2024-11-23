@@ -100,11 +100,11 @@ const applyConfig = (el: HTMLElement, config: Nullish<UserConfig>) => {
 };
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
-  const { config: prefetchConfig } = Route.useLoaderData();
+  const loaderData = Route.useLoaderData();
   const session = useSession();
   const { data: config } = useQuery({
     ...useOptionsCreator(getUserConfig, session?.user.id),
-    initialData: prefetchConfig,
+    initialData: loaderData.config,
   });
   useIsomorphicLayoutEffect(() => {
     applyConfig(document.documentElement, config);

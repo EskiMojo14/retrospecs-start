@@ -78,7 +78,7 @@ function OrgCard({ id: orgId }: OrgCardProps) {
     >
       <CardPrimaryAction
         as={Link}
-        //href={`/orgs/${orgId}`}
+        href={`/orgs/${orgId}`}
         className={styles.primaryAction}
       >
         <Typography variant="overline" className={styles.teamCount}>

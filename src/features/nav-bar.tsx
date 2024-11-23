@@ -74,7 +74,7 @@ function useNavBarScroll() {
 
 export interface NavItem {
   label: ReactNode;
-  to: NonNullable<LinkProps["to"]>;
+  to?: NonNullable<LinkProps["to"]>;
   // defaults to href
   id?: string;
 }
