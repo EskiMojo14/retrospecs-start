@@ -14,12 +14,14 @@ import { Logo } from "~/features/logo";
 import SvgGithub from "~/icons/github";
 import styles from "./sign-in.module.scss";
 
+const defaultURL = "http://localhost:3000/";
+
 const getURL = () => {
-  if (typeof process === "undefined") return "http://localhost:5173/";
+  if (typeof process === "undefined") return defaultURL;
   let url =
     process.env.SITE_URL ??
     process.env.VERCEL_URL ?? // Automatically set by Vercel.
-    "http://localhost:3000/";
+    defaultURL;
   // Make sure to include `https://` when not localhost.
   url = url.startsWith("http") ? url : `https://${url}`;
   // Make sure to include a trailing `/`.
