@@ -285,7 +285,7 @@ export const AlignGroup: Story = {
 
 function LoadingDemo(args: StoryProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(
     () => () => {
       if (timeoutRef.current) {

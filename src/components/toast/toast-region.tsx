@@ -28,7 +28,7 @@ export function ToastRegion({ state, ...props }: ToastRegionProps) {
 export function GlobalToastRegion(props: Omit<ToastRegionProps, "state">) {
   const state = useToastQueue(toastQueue);
 
-  return state.visibleToasts.length > 0 && typeof document !== "undefined"
-    ? createPortal(<ToastRegion {...props} state={state} />, document.body)
-    : null;
+  return state.visibleToasts.length > 0 && typeof document !== "undefined" ? (
+    <>{createPortal(<ToastRegion {...props} state={state} />, document.body)}</>
+  ) : null;
 }

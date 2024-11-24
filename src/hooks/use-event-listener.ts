@@ -33,7 +33,7 @@ export function useEventListener<
   T extends EventTarget,
   EventName extends EventTypes<T>,
 >(
-  target: RefObject<T> | T | (() => T),
+  target: RefObject<T | null> | T | (() => T),
   type: EventName,
   callback: (event: EventForType<T, EventName>) => void,
   config: UseEventListenerConfig = {},

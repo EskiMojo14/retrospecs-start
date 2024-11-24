@@ -145,10 +145,7 @@ export const withNewDefault = <
   const Component = forwardRef<
     ComponentRef<NewComponent>,
     Overwrite<GenericComponentProps<NewComponent>, ReceivedProps>
-  >((props, ref) => (
-    // @ts-expect-error this breaks here for some reason
-    <GenericComponent as={as} {...props} ref={ref} />
-  ));
+  >((props, ref) => <GenericComponent as={as} {...props} ref={ref} />);
   Component.displayName = displayName;
   return Component as GenericComponent<
     NewComponent,

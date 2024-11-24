@@ -49,7 +49,7 @@ function SignIn() {
   const supabase = useSupabase();
   const { error, error_description: errorDescription } = Route.useSearch();
 
-  const toastKeyRef = useRef<string>();
+  const toastKeyRef = useRef<string>(undefined);
 
   useEffect(() => {
     if ((error || errorDescription) && !toastKeyRef.current) {

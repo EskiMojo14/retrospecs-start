@@ -4486,9 +4486,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/start@npm:1.82.5":
-  version: 1.82.5
-  resolution: "@tanstack/start@npm:1.82.5"
+"@tanstack/start@npm:1.82.7":
+  version: 1.82.7
+  resolution: "@tanstack/start@npm:1.82.7"
   dependencies:
     "@tanstack/react-cross-context": "npm:^1.81.9"
     "@tanstack/react-router": "npm:^1.82.2"
@@ -4509,7 +4509,7 @@ __metadata:
   peerDependencies:
     react: ">=18.0.0 || >=19.0.0"
     react-dom: ">=18.0.0 || >=19.0.0"
-  checksum: 10c0/905f1c6135f7f9f32ae7b2a7ef57935c66b246e104992e5151f48e60c2cdf8f3927a150064eece66244032c10a591ae4d5bbfe5819e0157785e1975b0b2eaadb
+  checksum: 10c0/f5d5887160f00bfbff02d4ff850d9ed40cf710ef6b10f9c2a9a3e79d9da38afe4b815076d5478e7b6d73971ec49c38165385e92bddd18f6e927f21e5f76ecaa7
   languageName: node
   linkType: hard
 
@@ -4764,22 +4764,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.3.1":
-  version: 18.3.1
-  resolution: "@types/react-dom@npm:18.3.1"
+"@types/react-dom@npm:types-react-dom@rc":
+  version: 19.0.0-rc.1
+  resolution: "types-react-dom@npm:19.0.0-rc.1"
   dependencies:
     "@types/react": "npm:*"
-  checksum: 10c0/8b416551c60bb6bd8ec10e198c957910cfb271bc3922463040b0d57cf4739cdcd24b13224f8d68f10318926e1ec3cd69af0af79f0291b599a992f8c80d47f1eb
+  checksum: 10c0/a6b3aea0ad4cd3b08afde28e869b30f4759a84ea8edf549c2e99d38328f07697f21b792842ef352e086e964b3fb947a54746390ae76ca586ae1a913338f94c1e
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.3.12":
+"@types/react@npm:*":
   version: 18.3.12
   resolution: "@types/react@npm:18.3.12"
   dependencies:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
   checksum: 10c0/8bae8d9a41619804561574792e29112b413044eb0d53746dde2b9720c1f9a59f71c895bbd7987cd8ce9500b00786e53bc032dced38cddf42910458e145675290
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:types-react@rc":
+  version: 19.0.0-rc.1
+  resolution: "types-react@npm:19.0.0-rc.1"
+  dependencies:
+    csstype: "npm:^3.0.2"
+  checksum: 10c0/408cd9f3f960e806d510f7a9a3569f92a7f1cff3c57f5465fab4c139f0020c88dc7a08e6f357d2a116bd2c76e641851ce84527cb765f36824a6e818e0d477bbc
   languageName: node
   linkType: hard
 
@@ -10643,7 +10652,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^16.8.0 || ^17.0.0 || ^18.0.0, react-dom@npm:^18.3.1":
+"react-dom@npm:19.0.0-rc.1":
+  version: 19.0.0-rc.1
+  resolution: "react-dom@npm:19.0.0-rc.1"
+  dependencies:
+    scheduler: "npm:0.25.0-rc.1"
+  peerDependencies:
+    react: 19.0.0-rc.1
+  checksum: 10c0/26fba423f41c8b3c7a47278ea490146506333175028e111e49eb39310110b6bda956cc772c77412abc8a7f28244eea80ebade15ec5b4382d79e2ac1b39bd2d0c
+  languageName: node
+  linkType: hard
+
+"react-dom@npm:^16.8.0 || ^17.0.0 || ^18.0.0":
   version: 18.3.1
   resolution: "react-dom@npm:18.3.1"
   dependencies:
@@ -10745,7 +10765,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^16.8.0 || ^17.0.0 || ^18.0.0, react@npm:^18.3.1":
+"react@npm:19.0.0-rc.1":
+  version: 19.0.0-rc.1
+  resolution: "react@npm:19.0.0-rc.1"
+  checksum: 10c0/8f453ee0ff05ec4b11701cf4240fb0039217e73f576d2a9b871a91e34ff17d66e16294ebd0fc72c237918a3a997cc42f0328c860bc0a2cfa18e6a41f49a1c871
+  languageName: node
+  linkType: hard
+
+"react@npm:^16.8.0 || ^17.0.0 || ^18.0.0":
   version: 18.3.1
   resolution: "react@npm:18.3.1"
   dependencies:
@@ -11082,10 +11109,10 @@ __metadata:
     "@tanstack/react-router": "npm:^1.82.2"
     "@tanstack/react-router-with-query": "npm:^1.82.2"
     "@tanstack/router-devtools": "npm:^1.82.0"
-    "@tanstack/start": "npm:1.82.5"
+    "@tanstack/start": "npm:1.82.7"
     "@types/lodash": "npm:^4"
-    "@types/react": "npm:^18.3.12"
-    "@types/react-dom": "npm:^18.3.1"
+    "@types/react": "npm:types-react@rc"
+    "@types/react-dom": "npm:types-react-dom@rc"
     "@vitejs/plugin-react": "npm:^4.3.3"
     autoprefixer: "npm:^10.4.20"
     clsx: "npm:^2.1.1"
@@ -11103,10 +11130,10 @@ __metadata:
     normalize.css: "npm:^8.0.1"
     postcss-load-config: "npm:^6.0.1"
     prettier: "npm:^3.3.3"
-    react: "npm:^18.3.1"
+    react: "npm:19.0.0-rc.1"
     react-aria-components: "npm:^1.4.1"
     react-bem-helper: "npm:^1.4.1"
-    react-dom: "npm:^18.3.1"
+    react-dom: "npm:19.0.0-rc.1"
     react-lazily: "npm:^0.9.2"
     react-redux: "npm:^9.1.2"
     remix-utils: "npm:^7.7.0"
@@ -11520,6 +11547,13 @@ __metadata:
   version: 1.0.0
   resolution: "sass-map-get-next-prev@npm:1.0.0"
   checksum: 10c0/8face84c2366b92536cb74ffb45b6a24444efd0e0d3c605e7f4660885aff6dd95631c9d59ac20633b4be6d6bd105fb1284a052d539632c149e75ef447a43a431
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:0.25.0-rc.1":
+  version: 0.25.0-rc.1
+  resolution: "scheduler@npm:0.25.0-rc.1"
+  checksum: 10c0/dd4549eeb54cf3019c04257c622c4bbee12ef99dc547c4a96e1d5da8985ae44534111275ebcc4fea84b0d1299197b69071f912928adc5da4cab1e8168d09a44d
   languageName: node
   linkType: hard
 
