@@ -1,0 +1,45 @@
+@use "~/theme/typography";
+@use "~/theme/layout";
+
+.toolbar {
+  flex-grow: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gutter, 16px);
+}
+
+@include layout.breakpoint("phone", "only") {
+  .section {
+    margin: 0;
+    background-color: rgba(var(--surface-rgb), 0.5);
+    border-bottom: 1px solid typography.emphasis("text", "divider");
+    :global {
+      .card {
+        display: contents;
+        &::before {
+          content: none;
+        }
+        &__bg {
+          display: none;
+        }
+        &__section {
+          padding: 0;
+        }
+      }
+    }
+  }
+  .container {
+    padding-top: var(--gutter, 16px);
+  }
+  .list {
+    background: none;
+    border: none;
+    border-radius: 0;
+  }
+  .title {
+    padding: 0 var(--gutter, 16px);
+  }
+}
