@@ -1,0 +1,69 @@
+@use "~/theme";
+@use "~/theme/elevation";
+
+.list {
+  position: relative;
+  flex: 1 1 100%;
+  background-color: var(--gold-100);
+  header {
+    color: var(--gold-900);
+    --shim-rgb: var(--gold-100-rgb);
+    --shim-alpha: 1;
+    --shim-offset: 50%;
+    background: linear-gradient(
+      180deg,
+      rgba(var(--shim-rgb), var(--shim-alpha)) var(--shim-offset),
+      rgba(var(--shim-rgb), 0) 100%
+    );
+    padding: 16px;
+  }
+  @include theme.dark {
+    background-color: var(--gold-900);
+    header {
+      color: var(--gold-50);
+      --shim-rgb: var(--gold-900-rgb);
+    }
+  }
+}
+
+[data-groove="heavy"] .list {
+  background-size: 256px 256px;
+  background-position: center;
+  background-image: url("/assets/bg.svg");
+  header {
+    color: var(--gold-50);
+    --shim-offset: 20%;
+    --shim-rgb: var(--black-rgb);
+    --shim-alpha: 0.7;
+  }
+  :global(.line-background) {
+    display: none;
+  }
+}
+
+@include theme.dark-root {
+  &[data-groove="heavy"] .list {
+    background-image: url("/assets/bg_dark.svg");
+  }
+}
+
+.tabs {
+  background-color: var(--surface);
+  margin: 0 8px;
+  border-radius: var(--border-radius-full);
+  @include elevation.shadow(4);
+  overflow: hidden;
+  :global {
+    .tabs __tab {
+      border-radius: var(--border-radius-full);
+      @include theme.ripple-selected(var(--ripple), " .tabs__tab-ripple");
+      &[data-selected] {
+        --ripple-rgb: var(--gold-500-rgb);
+        --ripple: rgb(var(--ripple-rgb));
+        @include theme.dark {
+          --ripple-rgb: var(--gold-300-rgb);
+        }
+      }
+    }
+  }
+}

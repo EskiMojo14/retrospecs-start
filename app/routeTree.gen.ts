@@ -17,6 +17,8 @@ import { Route as OrgsOrgIdImport } from './routes/orgs_.$orgId'
 import { Route as AuthCallbackImport } from './routes/auth.callback'
 import { Route as OrgsOrgIdMembersImport } from './routes/orgs_.$orgId_.members'
 import { Route as OrgsOrgIdTeamsTeamIdImport } from './routes/orgs_.$orgId_.teams_.$teamId'
+import { Route as OrgsOrgIdTeamsTeamIdMembersImport } from './routes/orgs_.$orgId_.teams_.$teamId_.members'
+import { Route as OrgsOrgIdTeamsTeamIdSprintsSprintIdImport } from './routes/orgs_.$orgId_.teams_.$teamId_.sprints_.$sprintId'
 
 // Create/Update Routes
 
@@ -55,6 +57,20 @@ const OrgsOrgIdTeamsTeamIdRoute = OrgsOrgIdTeamsTeamIdImport.update({
   path: '/orgs/$orgId/teams/$teamId',
   getParentRoute: () => rootRoute,
 } as any)
+
+const OrgsOrgIdTeamsTeamIdMembersRoute =
+  OrgsOrgIdTeamsTeamIdMembersImport.update({
+    id: '/orgs_/$orgId_/teams_/$teamId_/members',
+    path: '/orgs/$orgId/teams/$teamId/members',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const OrgsOrgIdTeamsTeamIdSprintsSprintIdRoute =
+  OrgsOrgIdTeamsTeamIdSprintsSprintIdImport.update({
+    id: '/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId',
+    path: '/orgs/$orgId/teams/$teamId/sprints/$sprintId',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -102,6 +118,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrgsOrgIdTeamsTeamIdImport
       parentRoute: typeof rootRoute
     }
+    '/orgs_/$orgId_/teams_/$teamId_/members': {
+      id: '/orgs_/$orgId_/teams_/$teamId_/members'
+      path: '/orgs/$orgId/teams/$teamId/members'
+      fullPath: '/orgs/$orgId/teams/$teamId/members'
+      preLoaderRoute: typeof OrgsOrgIdTeamsTeamIdMembersImport
+      parentRoute: typeof rootRoute
+    }
+    '/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId': {
+      id: '/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId'
+      path: '/orgs/$orgId/teams/$teamId/sprints/$sprintId'
+      fullPath: '/orgs/$orgId/teams/$teamId/sprints/$sprintId'
+      preLoaderRoute: typeof OrgsOrgIdTeamsTeamIdSprintsSprintIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -114,6 +144,8 @@ export interface FileRoutesByFullPath {
   '/orgs/$orgId': typeof OrgsOrgIdRoute
   '/orgs/$orgId/members': typeof OrgsOrgIdMembersRoute
   '/orgs/$orgId/teams/$teamId': typeof OrgsOrgIdTeamsTeamIdRoute
+  '/orgs/$orgId/teams/$teamId/members': typeof OrgsOrgIdTeamsTeamIdMembersRoute
+  '/orgs/$orgId/teams/$teamId/sprints/$sprintId': typeof OrgsOrgIdTeamsTeamIdSprintsSprintIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -123,6 +155,8 @@ export interface FileRoutesByTo {
   '/orgs/$orgId': typeof OrgsOrgIdRoute
   '/orgs/$orgId/members': typeof OrgsOrgIdMembersRoute
   '/orgs/$orgId/teams/$teamId': typeof OrgsOrgIdTeamsTeamIdRoute
+  '/orgs/$orgId/teams/$teamId/members': typeof OrgsOrgIdTeamsTeamIdMembersRoute
+  '/orgs/$orgId/teams/$teamId/sprints/$sprintId': typeof OrgsOrgIdTeamsTeamIdSprintsSprintIdRoute
 }
 
 export interface FileRoutesById {
@@ -133,6 +167,8 @@ export interface FileRoutesById {
   '/orgs_/$orgId': typeof OrgsOrgIdRoute
   '/orgs_/$orgId_/members': typeof OrgsOrgIdMembersRoute
   '/orgs_/$orgId_/teams_/$teamId': typeof OrgsOrgIdTeamsTeamIdRoute
+  '/orgs_/$orgId_/teams_/$teamId_/members': typeof OrgsOrgIdTeamsTeamIdMembersRoute
+  '/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId': typeof OrgsOrgIdTeamsTeamIdSprintsSprintIdRoute
 }
 
 export interface FileRouteTypes {
@@ -144,6 +180,8 @@ export interface FileRouteTypes {
     | '/orgs/$orgId'
     | '/orgs/$orgId/members'
     | '/orgs/$orgId/teams/$teamId'
+    | '/orgs/$orgId/teams/$teamId/members'
+    | '/orgs/$orgId/teams/$teamId/sprints/$sprintId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -152,6 +190,8 @@ export interface FileRouteTypes {
     | '/orgs/$orgId'
     | '/orgs/$orgId/members'
     | '/orgs/$orgId/teams/$teamId'
+    | '/orgs/$orgId/teams/$teamId/members'
+    | '/orgs/$orgId/teams/$teamId/sprints/$sprintId'
   id:
     | '__root__'
     | '/'
@@ -160,6 +200,8 @@ export interface FileRouteTypes {
     | '/orgs_/$orgId'
     | '/orgs_/$orgId_/members'
     | '/orgs_/$orgId_/teams_/$teamId'
+    | '/orgs_/$orgId_/teams_/$teamId_/members'
+    | '/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId'
   fileRoutesById: FileRoutesById
 }
 
@@ -170,6 +212,8 @@ export interface RootRouteChildren {
   OrgsOrgIdRoute: typeof OrgsOrgIdRoute
   OrgsOrgIdMembersRoute: typeof OrgsOrgIdMembersRoute
   OrgsOrgIdTeamsTeamIdRoute: typeof OrgsOrgIdTeamsTeamIdRoute
+  OrgsOrgIdTeamsTeamIdMembersRoute: typeof OrgsOrgIdTeamsTeamIdMembersRoute
+  OrgsOrgIdTeamsTeamIdSprintsSprintIdRoute: typeof OrgsOrgIdTeamsTeamIdSprintsSprintIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -179,6 +223,9 @@ const rootRouteChildren: RootRouteChildren = {
   OrgsOrgIdRoute: OrgsOrgIdRoute,
   OrgsOrgIdMembersRoute: OrgsOrgIdMembersRoute,
   OrgsOrgIdTeamsTeamIdRoute: OrgsOrgIdTeamsTeamIdRoute,
+  OrgsOrgIdTeamsTeamIdMembersRoute: OrgsOrgIdTeamsTeamIdMembersRoute,
+  OrgsOrgIdTeamsTeamIdSprintsSprintIdRoute:
+    OrgsOrgIdTeamsTeamIdSprintsSprintIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -196,7 +243,9 @@ export const routeTree = rootRoute
         "/auth/callback",
         "/orgs_/$orgId",
         "/orgs_/$orgId_/members",
-        "/orgs_/$orgId_/teams_/$teamId"
+        "/orgs_/$orgId_/teams_/$teamId",
+        "/orgs_/$orgId_/teams_/$teamId_/members",
+        "/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId"
       ]
     },
     "/": {
@@ -216,6 +265,12 @@ export const routeTree = rootRoute
     },
     "/orgs_/$orgId_/teams_/$teamId": {
       "filePath": "orgs_.$orgId_.teams_.$teamId.tsx"
+    },
+    "/orgs_/$orgId_/teams_/$teamId_/members": {
+      "filePath": "orgs_.$orgId_.teams_.$teamId_.members.tsx"
+    },
+    "/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId": {
+      "filePath": "orgs_.$orgId_.teams_.$teamId_.sprints_.$sprintId.tsx"
     }
   }
 }

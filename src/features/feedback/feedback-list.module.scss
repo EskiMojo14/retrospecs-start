@@ -1,0 +1,60 @@
+@use "~/theme";
+
+$color-map: (
+  good: "green",
+  improvement: "red",
+  neutral: "blue",
+);
+
+.list {
+  position: relative;
+  flex: 1 1 100%;
+  header {
+    --shim-rgb: var(--black-rgb);
+    --shim-alpha: 0.7;
+    --shim-offset: 20%;
+    background: linear-gradient(
+      180deg,
+      rgba(var(--shim-rgb), var(--shim-alpha)) var(--shim-offset),
+      rgba(var(--shim-rgb), 0) 100%
+    );
+    padding: 16px;
+  }
+  @each $key, $value in $color-map {
+    &.#{$key} {
+      background-color: var(--#{$value}-100);
+      header {
+        color: var(--#{$value}-900);
+        --shim-rgb: var(--#{$value}-100-rgb);
+        --shim-alpha: 1;
+        --shim-offset: 50%;
+      }
+      @include theme.dark {
+        background-color: var(--#{$value}-900);
+        header {
+          color: var(--#{$value}-50);
+          --shim-rgb: var(--#{$value}-900-rgb);
+        }
+      }
+    }
+  }
+}
+
+[data-groove="heavy"] .list {
+  background-size: 256px 256px;
+  background-position: center;
+  @each $key, $value in $color-map {
+    &.#{$key} {
+      background-image: url("/assets/#{$value}_bg.svg");
+      header {
+        color: var(--#{$value}-50);
+        --shim-offset: 20%;
+        --shim-rgb: var(--black-rgb);
+        --shim-alpha: 0.7;
+      }
+    }
+  }
+  :global(.line-background) {
+    display: none;
+  }
+}
