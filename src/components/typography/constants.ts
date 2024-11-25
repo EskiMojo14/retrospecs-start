@@ -30,7 +30,7 @@ export const variantMapping = {
   button: "span",
   overline: "p",
   caption: "p",
-} satisfies Record<TypographyVariant, keyof JSX.IntrinsicElements>;
+} satisfies Record<TypographyVariant, keyof React.JSX.IntrinsicElements>;
 
 export const levelMapping: {
   [K in TypographyVariant as (typeof variantMapping)[K] extends `h${number}`

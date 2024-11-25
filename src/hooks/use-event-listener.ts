@@ -47,7 +47,7 @@ export function useEventListener<
         : "current" in target
           ? target.current
           : target;
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+     
     if (disabled || !el) return;
     const ac = new AbortController();
     el.addEventListener(type, callback as never, {

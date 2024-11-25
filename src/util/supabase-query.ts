@@ -52,7 +52,7 @@ export function supabaseFn<FnData, TData = FnData, TVariables = void>(
   return async (context: TVariables) => {
     const { data, error, count, status, statusText } = await queryFn(context);
     const meta: PostgrestMeta = { count, status, statusText };
-    // eslint-disable-next-line @typescript-eslint/only-throw-error
+     
     if (error) throw { ...error, meta };
     return transformResponse(data, meta);
   };
