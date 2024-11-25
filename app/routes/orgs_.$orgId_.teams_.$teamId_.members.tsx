@@ -62,17 +62,20 @@ function RouteComponent() {
         {
           label: org.name,
           id: "org",
-          //href: `/orgs/${orgId}`
+          to: "/orgs/$orgId",
+          params: { orgId: String(orgId) },
         },
         {
           label: team.name,
           id: "team",
-          //href: `/orgs/${orgId}/teams/${teamId}`,
+          to: "/orgs/$orgId/teams/$teamId",
+          params: { orgId: String(orgId), teamId: String(teamId) },
         },
         {
           label: "Members",
           id: "members",
-          //href: `/orgs/${orgId}/teams/${teamId}/members`,
+          to: "/orgs/$orgId/teams/$teamId/members",
+          params: { orgId: String(orgId), teamId: String(teamId) },
         },
       ]}
     >

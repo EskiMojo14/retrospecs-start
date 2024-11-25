@@ -73,7 +73,9 @@ function RouteComponent() {
     <Layout
       breadcrumbs={[
         {
-          label: org.name /*, to: '/orgs/$orgId', params: { orgId } */,
+          label: org.name,
+          to: "/orgs/$orgId",
+          params: { orgId: String(orgId) },
           id: "org",
         },
       ]}

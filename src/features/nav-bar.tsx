@@ -72,9 +72,8 @@ function useNavBarScroll() {
   return setNavBarRef;
 }
 
-export interface NavItem {
+export interface NavItem extends Omit<LinkProps, "children"> {
   label: ReactNode;
-  to?: NonNullable<LinkProps["to"]>;
   // defaults to href
   id?: string;
 }
@@ -97,9 +96,11 @@ export function NavBar({ breadcrumbs = [], actions }: NavBarProps) {
             <Logo aria-label="Home" />
           </InternalLink>
           <Breadcrumbs items={breadcrumbs}>
-            {({ to, label, id = to }) => (
+            {({ to, label, id = to, ...props }) => (
               <Breadcrumb id={id}>
-                <InternalLink to={to}>{label}</InternalLink>
+                <InternalLink to={to} {...(props as any)}>
+                  {label}
+                </InternalLink>
               </Breadcrumb>
             )}
           </Breadcrumbs>
