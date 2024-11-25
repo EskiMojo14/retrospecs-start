@@ -1,12 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import type { NavigateOptions, ToOptions } from "@tanstack/react-router";
 import {
   Outlet,
   ScrollRestoration,
   createRootRouteWithContext,
+  useRouter,
 } from "@tanstack/react-router";
 import { createServerFn, Meta, Scripts } from "@tanstack/start";
 import type { ReactNode } from "react";
+import { RouterProvider } from "react-aria-components";
 import { lazily } from "react-lazily";
 import { ensureAuthenticatedMw } from "@/middleware/auth";
 import { queryClientMw } from "@/middleware/query-client";
@@ -79,18 +82,38 @@ export const Route = createRootRouteWithContext<AppContext>()({
     />
   ),
 });
+declare module "react-aria-components" {
+  interface RouterConfig {
+    href: ToOptions["to"] | (string & {});
+    routerOptions: Omit<NavigateOptions, keyof ToOptions>;
+  }
+}
 
 function RootComponent() {
+  const router = useRouter();
   return (
-    <SessionProvider>
-      <RootDocument>
-        <Outlet />
-        <GlobalToastRegion aria-label="Notifications" />
-        <ReactQueryDevtools buttonPosition="bottom-left" />
-        <TanStackRouterDevtools position="bottom-right" />
-        <BreakpointDisplay />
-      </RootDocument>
-    </SessionProvider>
+    <RouterProvider
+      navigate={(to, options) => {
+        if (to?.startsWith("http")) {
+          window.location.href = to;
+        } else {
+          void router.navigate({ to, ...options });
+        }
+      }}
+      useHref={(to) =>
+        to?.startsWith("http") ? to : router.buildLocation({ to }).href
+      }
+    >
+      <SessionProvider>
+        <RootDocument>
+          <Outlet />
+          <GlobalToastRegion aria-label="Notifications" />
+          <ReactQueryDevtools buttonPosition="bottom-left" />
+          <TanStackRouterDevtools position="bottom-right" />
+          <BreakpointDisplay />
+        </RootDocument>
+      </SessionProvider>
+    </RouterProvider>
   );
 }
 
