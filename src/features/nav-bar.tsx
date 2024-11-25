@@ -1,5 +1,5 @@
 import { MDCTopAppBarFoundation } from "@material/top-app-bar";
-import type { LinkProps } from "@tanstack/react-router";
+import type { LinkProps, RegisteredRouter } from "@tanstack/react-router";
 import { useRouter } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
@@ -72,18 +72,24 @@ function useNavBarScroll() {
   return setNavBarRef;
 }
 
-export interface NavItem extends Omit<LinkProps, "children"> {
+export type NavItem<TTo extends string | undefined = "."> = Omit<
+  LinkProps<"a", RegisteredRouter, string, TTo>,
+  "children"
+> & {
   label: ReactNode;
   // defaults to href
   id?: string;
-}
+};
 
-export interface NavBarProps {
-  breadcrumbs?: Array<NavItem>;
+export interface NavBarProps<TTos extends ReadonlyArray<string | undefined>> {
+  breadcrumbs?: { [I in keyof TTos]: NavItem<TTos[I]> };
   actions?: ReactNode;
 }
 
-export function NavBar({ breadcrumbs = [], actions }: NavBarProps) {
+export function NavBar<TTos extends ReadonlyArray<string | undefined> = []>({
+  breadcrumbs = [] as never,
+  actions,
+}: NavBarProps<TTos>) {
   const navBarRef = useNavBarScroll();
   const router = useRouter();
   const supabase = useSupabase();
