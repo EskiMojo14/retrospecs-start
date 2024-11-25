@@ -76,7 +76,6 @@ function RouteComponent() {
           label: org.name,
           to: "/orgs/$orgId",
           params: { orgId: String(orgId) },
-          id: "org",
         },
       ]}
       actions={

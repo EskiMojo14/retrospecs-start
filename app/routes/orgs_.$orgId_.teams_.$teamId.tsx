@@ -90,13 +90,11 @@ function RouteComponent() {
       breadcrumbs={[
         {
           label: org.name,
-          id: "org",
           to: "/orgs/$orgId",
           params: { orgId: String(orgId) },
         },
         {
           label: team.name,
-          id: "team",
           to: "/orgs/$orgId/teams/$teamId",
           params: { orgId: String(orgId), teamId: String(teamId) },
         },

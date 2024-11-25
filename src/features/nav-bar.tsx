@@ -16,6 +16,7 @@ import { Invites } from "./invites/invites";
 import { Logo } from "./logo";
 import { PreferencesDialog } from "./user_config/dialog";
 import styles from "./nav-bar.module.scss";
+import { PickRequired } from "~/util/types";
 
 function useNavBarScroll() {
   const [navBarRef, setNavBarRef] = useState<HTMLElement | null>(null);
@@ -73,7 +74,7 @@ function useNavBarScroll() {
 }
 
 export type NavItem<TTo extends string | undefined = "."> = Omit<
-  LinkProps<"a", RegisteredRouter, string, TTo>,
+  PickRequired<LinkProps<"a", RegisteredRouter, string, TTo>, "to">,
   "children"
 > & {
   label: ReactNode;
