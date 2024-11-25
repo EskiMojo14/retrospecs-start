@@ -89,19 +89,23 @@ declare module "react-aria-components" {
   }
 }
 
+function isAbsoluteUrl(url: string) {
+  return new RegExp(`(^|:)//`).test(url);
+}
+
 function RootComponent() {
   const router = useRouter();
   return (
     <RouterProvider
       navigate={(to, options) => {
-        if (to?.startsWith("http")) {
+        if (to && isAbsoluteUrl(to)) {
           window.location.href = to;
         } else {
           void router.navigate({ to, ...options });
         }
       }}
       useHref={(to) =>
-        to?.startsWith("http") ? to : router.buildLocation({ to }).href
+        to && isAbsoluteUrl(to) ? to : router.buildLocation({ to }).href
       }
     >
       <SessionProvider>
