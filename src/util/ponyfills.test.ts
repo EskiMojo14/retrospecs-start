@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
-  mapEmplace,
+  mapGetOrInsert,
+  mapGetOrInsertComputed,
   mapGroupBy,
   objectGroupBy,
   promiseFromEntries,
@@ -9,61 +10,74 @@ import {
 } from "./ponyfills";
 
 describe("utils > ponyfills", () => {
-  describe("mapEmplace", () => {
+  describe("mapGetOrInsert", () => {
     it("should insert a value if it does not exist", () => {
       const map = new Map<string, number>();
       const key = "foo";
       const value = 42;
       expect(map.has(key)).toBe(false);
 
-      const insert = vi.fn(() => value);
-
-      const result = mapEmplace(map, key, {
-        insert,
-      });
+      const result = mapGetOrInsert(map, key, value);
 
       expect(map.get(key)).toBe(value);
       expect(result).toBe(value);
-      expect(insert).toHaveBeenCalledWith(key, map);
     });
-    it("should update a value if it exists", () => {
+    it("should return the value if it exists", () => {
       const map = new Map<string, number>([["foo", 42]]);
       const key = "foo";
       const value = 42;
       expect(map.has(key)).toBe(true);
 
-      const update = vi.fn((n: number) => ++n);
-
-      const result = mapEmplace(map, key, {
-        update,
-      });
-
-      expect(result).toBe(value + 1);
-      expect(map.get(key)).toBe(value + 1);
-      expect(update).toHaveBeenCalledWith(value, key, map);
-    });
-    it("should throw an error if the key is not found and no insert handler is provided", () => {
-      const map = new Map<string, number>();
-      const key = "foo";
-      expect(map.has(key)).toBe(false);
-
-      expect(() => mapEmplace(map, key, {})).toThrowErrorMatchingInlineSnapshot(
-        `[Error: No insert provided for key not already in map]`,
-      );
-    });
-    it("should return the value if it exists, even if no update handler is provided", () => {
-      const map = new Map<string, number>([["foo", 42]]);
-      const key = "foo";
-      const value = 42;
-      expect(map.has(key)).toBe(true);
-
-      const result = mapEmplace(map, key, {});
+      const result = mapGetOrInsert(map, key, 0);
 
       expect(result).toBe(value);
+    });
+    it("should work with weakmaps", () => {
+      const map = new WeakMap<object, number>();
+      const key = {};
+      const value = 42;
+      expect(map.has(key)).toBe(false);
+
+      const result = mapGetOrInsert(map, key, value);
+
+      expect(map.get(key)).toBe(value);
+      expect(result).toBe(value);
+
+      const result2 = mapGetOrInsert(map, key, 0);
+
+      expect(map.get(key)).toBe(value);
+      expect(result2).toBe(value);
     });
   });
-  describe("mapEmplace (WeakMap)", () => {
+  describe("mapGetOrInsertComputed", () => {
     it("should insert a value if it does not exist", () => {
+      const map = new Map<string, number>();
+      const key = "foo";
+      const value = 42;
+      expect(map.has(key)).toBe(false);
+
+      const insert = vi.fn(() => value);
+
+      const result = mapGetOrInsertComputed(map, key, insert);
+
+      expect(map.get(key)).toBe(value);
+      expect(result).toBe(value);
+      expect(insert).toHaveBeenCalledWith(key);
+    });
+    it("should return the value if it exists", () => {
+      const map = new Map<string, number>([["foo", 42]]);
+      const key = "foo";
+      const value = 42;
+      expect(map.has(key)).toBe(true);
+
+      const insert = vi.fn(() => 0);
+
+      const result = mapGetOrInsertComputed(map, key, insert);
+
+      expect(result).toBe(value);
+      expect(insert).not.toHaveBeenCalled();
+    });
+    it("should work with weakmaps", () => {
       const map = new WeakMap<object, number>();
       const key = {};
       const value = 42;
@@ -71,50 +85,16 @@ describe("utils > ponyfills", () => {
 
       const insert = vi.fn(() => value);
 
-      const result = mapEmplace(map, key, {
-        insert,
-      });
+      const result = mapGetOrInsertComputed(map, key, insert);
 
       expect(map.get(key)).toBe(value);
       expect(result).toBe(value);
-      expect(insert).toHaveBeenCalledWith(key, map);
-    });
-    it("should update a value if it exists", () => {
-      const map = new WeakMap<object, number>();
-      const key = {};
-      const value = 42;
-      map.set(key, value);
-      expect(map.has(key)).toBe(true);
+      expect(insert).toHaveBeenCalledWith(key);
 
-      const update = vi.fn((n: number) => ++n);
+      const result2 = mapGetOrInsertComputed(map, key, () => 0);
 
-      const result = mapEmplace(map, key, {
-        update,
-      });
-
-      expect(result).toBe(value + 1);
-      expect(map.get(key)).toBe(value + 1);
-      expect(update).toHaveBeenCalledWith(value, key, map);
-    });
-    it("should throw an error if the key is not found and no insert handler is provided", () => {
-      const map = new WeakMap<object, number>();
-      const key = {};
-      expect(map.has(key)).toBe(false);
-
-      expect(() => mapEmplace(map, key, {})).toThrowErrorMatchingInlineSnapshot(
-        `[Error: No insert provided for key not already in map]`,
-      );
-    });
-    it("should return the value if it exists, even if no update handler is provided", () => {
-      const map = new WeakMap<object, number>();
-      const key = {};
-      const value = 42;
-      map.set(key, value);
-      expect(map.has(key)).toBe(true);
-
-      const result = mapEmplace(map, key, {});
-
-      expect(result).toBe(value);
+      expect(map.get(key)).toBe(value);
+      expect(result2).toBe(value);
     });
   });
   describe("mapGroupBy", () => {

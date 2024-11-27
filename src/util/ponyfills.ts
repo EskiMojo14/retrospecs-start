@@ -17,33 +17,15 @@ declare global {
     // https://github.com/tc39/proposal-promise-with-resolvers
     withResolvers?<T>(): PromiseWithResolvers<T>;
   }
-  interface WeakMapEmplaceHandler<K extends object, V> {
-    /**
-     * Will be called to get value, if no value is currently in map.
-     */
-    insert?(key: K, map: WeakMap<K, V>): V;
-    /**
-     * Will be called to update a value, if one exists already.
-     */
-    update?(previous: V, key: K, map: WeakMap<K, V>): V;
-  }
   interface WeakMap<K extends object, V> {
     // https://github.com/tc39/proposal-upsert
-    emplace?(key: K, handler: WeakMapEmplaceHandler<K, V>): V;
-  }
-  interface MapEmplaceHandler<K, V> {
-    /**
-     * Will be called to get value, if no value is currently in map.
-     */
-    insert?(key: K, map: Map<K, V>): V;
-    /**
-     * Will be called to update a value, if one exists already.
-     */
-    update?(previous: V, key: K, map: Map<K, V>): V;
+    getOrInsert?(key: K, value: V): V;
+    getOrInsertComputed?(key: K, compute: (key: K) => V): V;
   }
   interface Map<K, V> {
     // https://github.com/tc39/proposal-upsert
-    emplace?(key: K, handler: MapEmplaceHandler<K, V>): V;
+    getOrInsert?(key: K, value: V): V;
+    getOrInsertComputed?(key: K, compute: (key: K) => V): V;
   }
   interface ObjectConstructor {
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/groupBy
@@ -101,53 +83,76 @@ function promiseWithResolversPonyfill<T>(): PromiseWithResolvers<T> {
 export const promiseWithResolvers =
   Promise.withResolvers?.bind(Promise) ?? promiseWithResolversPonyfill;
 
-function emplacePonyfill<K, V>(
-  map: Map<K, V>,
-  key: K,
-  handler: MapEmplaceHandler<K, V>,
-): V;
-function emplacePonyfill<K extends object, V>(
+function getOrInsertPonyfill<K extends object, V>(
   map: WeakMap<K, V>,
   key: K,
-  handler: WeakMapEmplaceHandler<K, V>,
+  value: V,
 ): V;
-function emplacePonyfill<K extends object, V>(
-  map: WeakMap<K, V>,
+function getOrInsertPonyfill<K, V>(map: Map<K, V>, key: K, value: V): V;
+function getOrInsertPonyfill<K extends object, V>(
+  map: Map<K, V> | WeakMap<K, V>,
   key: K,
-  handler: WeakMapEmplaceHandler<K, V>,
+  value: V,
 ): V {
-  if (map.has(key)) {
-    let value = map.get(key) as V;
-    if (handler.update) {
-      map.set(key, (value = handler.update(value, key, map)));
-    }
-    return value;
-  }
-  if (!handler.insert)
-    throw new Error("No insert provided for key not already in map");
-  let inserted;
-  map.set(key, (inserted = handler.insert(key, map)));
-  return inserted;
+  if (map.has(key)) return map.get(key) as V;
+
+  return map.set(key, value).get(key) as V;
 }
 
-export function mapEmplace<K, V>(
+export function mapGetOrInsert<K extends object, V>(
+  map: WeakMap<K, V>,
+  key: K,
+  value: V,
+): V;
+export function mapGetOrInsert<K, V>(map: Map<K, V>, key: K, value: V): V;
+export function mapGetOrInsert<K extends object, V>(
+  map: Map<K, V> | WeakMap<K, V>,
+  key: K,
+  value: V,
+): V {
+  return map.getOrInsert
+    ? map.getOrInsert(key, value)
+    : getOrInsertPonyfill(map, key, value);
+}
+
+function getOrInsertComputedPonyfill<K extends object, V>(
+  map: WeakMap<K, V>,
+  key: K,
+  compute: (key: K) => V,
+): V;
+function getOrInsertComputedPonyfill<K, V>(
   map: Map<K, V>,
   key: K,
-  handler: MapEmplaceHandler<K, V>,
+  compute: (key: K) => V,
 ): V;
-export function mapEmplace<K extends object, V>(
-  map: WeakMap<K, V>,
+function getOrInsertComputedPonyfill<K extends object, V>(
+  map: Map<K, V> | WeakMap<K, V>,
   key: K,
-  handler: WeakMapEmplaceHandler<K, V>,
-): V;
-export function mapEmplace<K extends object, V>(
-  map: WeakMap<K, V>,
-  key: K,
-  handler: WeakMapEmplaceHandler<K, V>,
+  compute: (key: K) => V,
 ): V {
-  return map.emplace
-    ? map.emplace(key, handler)
-    : emplacePonyfill(map, key, handler);
+  if (map.has(key)) return map.get(key) as V;
+
+  return map.set(key, compute(key)).get(key) as V;
+}
+
+export function mapGetOrInsertComputed<K extends object, V>(
+  map: WeakMap<K, V>,
+  key: K,
+  compute: (key: K) => V,
+): V;
+export function mapGetOrInsertComputed<K, V>(
+  map: Map<K, V>,
+  key: K,
+  compute: (key: K) => V,
+): V;
+export function mapGetOrInsertComputed<K extends object, V>(
+  map: Map<K, V> | WeakMap<K, V>,
+  key: K,
+  compute: (key: K) => V,
+): V {
+  return map.getOrInsertComputed
+    ? map.getOrInsertComputed(key, compute)
+    : getOrInsertComputedPonyfill(map, key, compute);
 }
 
 function objectGroupByPonyfill<T, K extends PropertyKey>(
@@ -178,14 +183,9 @@ function mapGroupByPonyfill<T, K>(
   const result = new Map<K, Array<T>>();
   let index = 0;
   for (const value of iterable) {
-    const key = callbackFn(value, index++);
-    mapEmplace(result, key, {
-      insert: () => [value],
-      update: (values) => {
-        values.push(value);
-        return values;
-      },
-    });
+    mapGetOrInsertComputed(result, callbackFn(value, index++), () => []).push(
+      value,
+    );
   }
   return result;
 }
