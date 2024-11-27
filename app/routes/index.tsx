@@ -6,6 +6,7 @@ import { queryClientMw } from "@/middleware/query-client";
 import { ExtendedFab } from "~/components/button/fab";
 import { Symbol } from "~/components/symbol";
 import { useSession } from "~/db/provider";
+import { ensureHydrated, withDehydratedState } from "~/db/query";
 import { Layout } from "~/features/layout";
 import { getOrgs, selectAllOrgs, selectOrgIds } from "~/features/orgs";
 import { CreateOrg } from "~/features/orgs/create-org";
@@ -19,11 +20,11 @@ const getRouteData = createServerFn({ method: "GET" })
     await Promise.all(
       selectAllOrgs(orgs).map((org) => prefetchOrgCardData(org, context)),
     );
-    return { orgs };
+    return withDehydratedState({ orgs }, queryClient);
   });
 
 export const Route = createFileRoute("/")({
-  loader: () => getRouteData(),
+  loader: ({ context }) => ensureHydrated(getRouteData(), context),
   head: () => ({
     meta: [
       { title: "RetroSpecs - Organisations" },

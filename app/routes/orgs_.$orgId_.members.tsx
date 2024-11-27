@@ -7,6 +7,7 @@ import { ExtendedFab } from "~/components/button/fab";
 import { Grid } from "~/components/grid";
 import { Symbol } from "~/components/symbol";
 import { ensureCurrentUserPermissions, ensureUserPermissions } from "~/db/auth";
+import { ensureHydrated, withDehydratedState } from "~/db/query";
 import { getInvitesByOrgId } from "~/features/invites";
 import { CreateInvite } from "~/features/invites/create-invite";
 import { PendingInvites } from "~/features/invites/pending";
@@ -33,26 +34,30 @@ const getMembersData = createServerFn({ method: "GET" })
       orgId,
     );
 
-    return promiseOwnProperties({
-      org: queryClient.ensureQueryData(getOrg(context, orgId)),
-      orgMembers,
-      currentUserPermissions,
-      memberPermissions: Promise.all(
-        selectOrgMemberIds(orgMembers).map((memberId) =>
-          ensureUserPermissions(context, orgId, memberId),
+    return withDehydratedState(
+      promiseOwnProperties({
+        org: queryClient.ensureQueryData(getOrg(context, orgId)),
+        orgMembers,
+        currentUserPermissions,
+        memberPermissions: Promise.all(
+          selectOrgMemberIds(orgMembers).map((memberId) =>
+            ensureUserPermissions(context, orgId, memberId),
+          ),
         ),
-      ),
-      invites:
-        currentUserPermissions >= Permission.Admin
-          ? queryClient.ensureQueryData(getInvitesByOrgId(context, orgId))
-          : undefined,
-    });
+        invites:
+          currentUserPermissions >= Permission.Admin
+            ? queryClient.ensureQueryData(getInvitesByOrgId(context, orgId))
+            : undefined,
+      }),
+      queryClient,
+    );
   });
 
 export const Route = createFileRoute("/orgs_/$orgId_/members")({
   component: RouteComponent,
   params: parseNumberParams("orgId"),
-  loader: ({ params }) => getMembersData({ data: params }),
+  loader: ({ params, context }) =>
+    ensureHydrated(getMembersData({ data: params }), context),
   head: ({ loaderData }) => ({
     meta: [
       {

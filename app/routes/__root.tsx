@@ -17,6 +17,7 @@ import { ForeEauFore } from "~/404";
 import { BreakpointDisplay } from "~/components/grid";
 import { GlobalToastRegion } from "~/components/toast/toast-region";
 import { SessionProvider, useSession } from "~/db/provider";
+import { ensureHydrated, withDehydratedState } from "~/db/query";
 import { ErrorPage } from "~/error-page";
 import type { Profile } from "~/features/profiles";
 import { getProfile } from "~/features/profiles";
@@ -42,23 +43,25 @@ interface RootLoaderResponse {
 
 const getUserData = createServerFn({ method: "GET" })
   .middleware([ensureAuthenticatedMw, queryClientMw])
-  .handler(
-    async ({ context, context: { queryClient, user } }) =>
+  .handler(({ context, context: { queryClient, user } }) =>
+    withDehydratedState(
       promiseOwnProperties({
         profile: queryClient.ensureQueryData(getProfile(context, user.id)),
         config: queryClient.ensureQueryData(getUserConfig(context, user.id)),
       }) satisfies Promise<RootLoaderResponse>,
+      queryClient,
+    ),
   );
 
 const noAuthRoutes = new Set(["/sign-in", "/auth/callback"]);
 
 export const Route = createRootRouteWithContext<AppContext>()({
-  loader: async (): Promise<RootLoaderResponse> => {
+  loader: async ({ context }): Promise<RootLoaderResponse> => {
     const url = await getUrl();
     if (noAuthRoutes.has(url.pathname)) {
       return {};
     }
-    return getUserData();
+    return ensureHydrated(getUserData(), context);
   },
   head: () => ({
     meta: [

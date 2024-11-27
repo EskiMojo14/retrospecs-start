@@ -7,6 +7,7 @@ import { Divider } from "~/components/divider";
 import { Symbol } from "~/components/symbol";
 import { Tab, TabList, Tabs } from "~/components/tabs";
 import { ensureCurrentUserPermissions } from "~/db/auth";
+import { ensureHydrated, withDehydratedState } from "~/db/query";
 import { ActionList } from "~/features/actions/actions-list";
 import type { Category } from "~/features/feedback";
 import { FeedbackList } from "~/features/feedback/feedback-list";
@@ -35,7 +36,7 @@ const getSprintData = createServerFn({ method: "GET" })
         sprint: queryClient.ensureQueryData(getSprintById(context, sprintId)),
         permissions: ensureCurrentUserPermissions(context, orgId),
       });
-      return { org, team, sprint };
+      return withDehydratedState({ org, team, sprint }, queryClient);
     },
   );
 
@@ -44,7 +45,8 @@ export const Route = createFileRoute(
 )({
   params: parseNumberParams("orgId", "teamId", "sprintId"),
   component: RouteComponent,
-  loader: ({ params }) => getSprintData({ data: params }),
+  loader: ({ params, context }) =>
+    ensureHydrated(getSprintData({ data: params }), context),
   head: () => ({
     meta: [
       {

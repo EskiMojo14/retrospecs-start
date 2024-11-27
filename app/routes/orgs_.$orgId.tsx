@@ -7,6 +7,7 @@ import { ExtendedFab } from "~/components/button/fab";
 import { LinkIconButton } from "~/components/icon-button";
 import { Symbol } from "~/components/symbol";
 import { ensureCurrentUserPermissions } from "~/db/auth";
+import { ensureHydrated, withDehydratedState } from "~/db/query";
 import { Layout } from "~/features/layout";
 import { getOrg } from "~/features/orgs";
 import { getTeamsByOrg, selectAllTeams, selectTeamIds } from "~/features/teams";
@@ -35,16 +36,20 @@ const getOrgData = createServerFn({ method: "GET" })
         ),
       ),
     });
-    return {
-      org,
-      teams,
-    };
+    return withDehydratedState(
+      {
+        org,
+        teams,
+      },
+      queryClient,
+    );
   });
 
 export const Route = createFileRoute("/orgs_/$orgId")({
   params: parseNumberParams("orgId"),
   component: RouteComponent,
-  loader: ({ params }) => getOrgData({ data: params }),
+  loader: ({ params, context }) =>
+    ensureHydrated(getOrgData({ data: params }), context),
   head: ({ loaderData }) => ({
     meta: [
       { title: `RetroSpecs - ${loaderData?.org.name ?? "Org"}` },

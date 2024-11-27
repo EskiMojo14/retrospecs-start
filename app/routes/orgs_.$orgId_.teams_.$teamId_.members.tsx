@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/start";
 import { ensureAuthenticatedMw } from "@/middleware/auth";
 import { queryClientMw } from "@/middleware/query-client";
+import { ensureHydrated, withDehydratedState } from "~/db/query";
 import { Layout } from "~/features/layout";
 import { getOrg } from "~/features/orgs";
 import { getTeam } from "~/features/teams";
@@ -16,16 +17,20 @@ const getTeamMemberData = createServerFn({ method: "GET" })
   .validator(numberParamsSchema("orgId", "teamId"))
   .handler(
     async ({ context, context: { queryClient }, data: { orgId, teamId } }) =>
-      promiseOwnProperties({
-        org: queryClient.ensureQueryData(getOrg(context, orgId)),
-        team: queryClient.ensureQueryData(getTeam(context, teamId)),
-      }),
+      withDehydratedState(
+        promiseOwnProperties({
+          org: queryClient.ensureQueryData(getOrg(context, orgId)),
+          team: queryClient.ensureQueryData(getTeam(context, teamId)),
+        }),
+        queryClient,
+      ),
   );
 
 export const Route = createFileRoute("/orgs_/$orgId_/teams_/$teamId_/members")({
   params: parseNumberParams("orgId", "teamId"),
   component: RouteComponent,
-  loader: ({ params }) => getTeamMemberData({ data: params }),
+  loader: ({ params, context }) =>
+    ensureHydrated(getTeamMemberData({ data: params }), context),
   head: ({ loaderData }) => ({
     meta: [
       {

@@ -7,6 +7,7 @@ import { ExtendedFab } from "~/components/button/fab";
 import { LinkIconButton } from "~/components/icon-button";
 import { Symbol } from "~/components/symbol";
 import { ensureCurrentUserPermissions } from "~/db/auth";
+import { ensureHydrated, withDehydratedState } from "~/db/query";
 import { Layout } from "~/features/layout";
 import { getOrg } from "~/features/orgs";
 import { getSprintsForTeam, selectSprintIds } from "~/features/sprints";
@@ -34,18 +35,22 @@ const getTeamData = createServerFn({ method: "GET" })
         permissions: ensureCurrentUserPermissions(context, orgId),
       });
 
-      return {
-        org,
-        team,
-        sprints,
-      };
+      return withDehydratedState(
+        {
+          org,
+          team,
+          sprints,
+        },
+        queryClient,
+      );
     },
   );
 
 export const Route = createFileRoute("/orgs_/$orgId_/teams_/$teamId")({
   params: parseNumberParams("orgId", "teamId"),
   component: RouteComponent,
-  loader: ({ params }) => getTeamData({ data: params }),
+  loader: ({ params, context }) =>
+    ensureHydrated(getTeamData({ data: params }), context),
   head: ({ loaderData }) => ({
     meta: [
       { title: `RetroSpecs - ${loaderData?.team.name}` },
