@@ -106,6 +106,7 @@ export default tseslint.config(
         "error",
         { fixStyle: "separate-type-imports" },
       ],
+      "vitest/valid-title": ["error", { allowArguments: true }],
     },
   },
   {

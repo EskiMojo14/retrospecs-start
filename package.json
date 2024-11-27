@@ -16,7 +16,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "typecheck": "tsc",
-    "build-icons": "svgr --icon --out-dir src/icons src/icons/svg"
+    "build-icons": "svgr --icon --out-dir src/icons src/icons/svg",
+    "test": "vitest"
   },
   "dependencies": {
     "@material/ripple": "^14.0.0",
@@ -36,6 +37,7 @@
     "clsx": "^2.1.1",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",
+    "mix-n-matchers": "^1.8.0",
     "normalize.css": "^8.0.1",
     "react": "19.0.0-rc.1",
     "react-aria-components": "^1.4.1",
