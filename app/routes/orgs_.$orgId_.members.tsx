@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/start";
-import { object } from "valibot";
 import { ensureAuthenticatedMw } from "@/middleware/auth";
 import { queryClientMw } from "@/middleware/query-client";
 import { ExtendedFab } from "~/components/button/fab";
@@ -16,13 +15,14 @@ import { getOrg, getOrgMembers, selectOrgMemberIds } from "~/features/orgs";
 import { MemberList } from "~/features/teams/member-list";
 import { useOptionsCreator } from "~/hooks/use-options-creator";
 import { useCurrentUserPermissions } from "~/hooks/use-user-permissions";
+import { parseNumberParams } from "~/util";
 import { Permission } from "~/util/permissions";
 import { promiseOwnProperties } from "~/util/ponyfills";
-import { coerceNumber } from "~/util/valibot";
+import { numberParamsSchema } from "~/util/valibot";
 
 const getMembersData = createServerFn({ method: "GET" })
   .middleware([ensureAuthenticatedMw, queryClientMw])
-  .validator(object({ orgId: coerceNumber("Invalid orgId") }))
+  .validator(numberParamsSchema("orgId"))
   .handler(async ({ context, context: { queryClient }, data: { orgId } }) => {
     const orgMembers = await queryClient.ensureQueryData(
       getOrgMembers(context, orgId),
@@ -51,7 +51,8 @@ const getMembersData = createServerFn({ method: "GET" })
 
 export const Route = createFileRoute("/orgs_/$orgId_/members")({
   component: RouteComponent,
-  loader: ({ params: { orgId } }) => getMembersData({ data: { orgId } }),
+  params: parseNumberParams("orgId"),
+  loader: ({ params }) => getMembersData({ data: params }),
   head: ({ loaderData }) => ({
     meta: [
       {
@@ -62,7 +63,7 @@ export const Route = createFileRoute("/orgs_/$orgId_/members")({
 });
 
 function RouteComponent() {
-  const orgId = Route.useParams({ select: ({ orgId }) => Number(orgId) });
+  const { orgId } = Route.useParams();
   const { org, ...loaderData } = Route.useLoaderData();
   const { data: memberIds } = useQuery({
     ...useOptionsCreator(getOrgMembers, orgId),
@@ -79,12 +80,12 @@ function RouteComponent() {
         {
           label: org.name,
           to: "/orgs/$orgId",
-          params: { orgId: String(orgId) },
+          params: { orgId },
         },
         {
           label: "Members",
           to: "/orgs/$orgId/members",
-          params: { orgId: String(orgId) },
+          params: { orgId },
         },
       ]}
     >

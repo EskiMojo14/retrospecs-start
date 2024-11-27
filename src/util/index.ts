@@ -2,7 +2,7 @@ import { mergeProps } from "@react-aria/utils";
 import type { ForwardedRef, RefCallback } from "react";
 import type { ContextValue } from "react-aria-components";
 import BEMHelper from "react-bem-helper";
-import type { KeysMatchingValue } from "./types";
+import type { KeysMatchingValue, Overwrite } from "./types";
 
 export function assert(
   condition: unknown,
@@ -181,3 +181,31 @@ export const ensureNumber = (value: unknown, message?: string): number => {
   }
   return number;
 };
+
+interface ParamsParser<RawParams extends Record<string, string>, Output> {
+  parse: (params: RawParams) => Output;
+  stringify: (params: Output) => RawParams;
+}
+
+export const parseNumberParams = <
+  Params extends Record<string, string>,
+  const NumberKeys extends keyof Params,
+>(
+  ...keys: Array<NumberKeys>
+): ParamsParser<Params, Overwrite<Params, Record<NumberKeys, number>>> => ({
+  parse(params) {
+    const result: Record<keyof Params, unknown> = { ...params };
+    for (const key of keys) {
+      result[key] = ensureNumber(params[key], `Invalid number: ${String(key)}`);
+    }
+    return result as never;
+  },
+  stringify(params) {
+    const result = { ...params } as Record<keyof Params, unknown>;
+    for (const key of keys) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      result[key] = `${params[key]}`;
+    }
+    return result as never;
+  },
+});

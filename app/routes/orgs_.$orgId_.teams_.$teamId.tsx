@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/start";
-import { object } from "valibot";
 import { ensureAuthenticatedMw } from "@/middleware/auth";
 import { queryClientMw } from "@/middleware/query-client";
 import { ExtendedFab } from "~/components/button/fab";
@@ -16,18 +15,14 @@ import { SprintList } from "~/features/sprints/sprint-list";
 import { getTeam } from "~/features/teams";
 import { useOptionsCreator } from "~/hooks/use-options-creator";
 import { useCurrentUserPermissions } from "~/hooks/use-user-permissions";
+import { parseNumberParams } from "~/util";
 import { Permission } from "~/util/permissions";
 import { promiseOwnProperties } from "~/util/ponyfills";
-import { coerceNumber } from "~/util/valibot";
+import { numberParamsSchema } from "~/util/valibot";
 
 const getTeamData = createServerFn({ method: "GET" })
   .middleware([ensureAuthenticatedMw, queryClientMw])
-  .validator(
-    object({
-      orgId: coerceNumber("Invalid orgId"),
-      teamId: coerceNumber("Invalid teamId"),
-    }),
-  )
+  .validator(numberParamsSchema("orgId", "teamId"))
   .handler(
     async ({ context, context: { queryClient }, data: { orgId, teamId } }) => {
       const { org, team, sprints } = await promiseOwnProperties({
@@ -48,9 +43,9 @@ const getTeamData = createServerFn({ method: "GET" })
   );
 
 export const Route = createFileRoute("/orgs_/$orgId_/teams_/$teamId")({
+  params: parseNumberParams("orgId", "teamId"),
   component: RouteComponent,
-  loader: ({ params: { orgId, teamId } }) =>
-    getTeamData({ data: { orgId, teamId } }),
+  loader: ({ params }) => getTeamData({ data: params }),
   head: ({ loaderData }) => ({
     meta: [
       { title: `RetroSpecs - ${loaderData?.team.name}` },
@@ -63,12 +58,7 @@ export const Route = createFileRoute("/orgs_/$orgId_/teams_/$teamId")({
 });
 
 function RouteComponent() {
-  const { orgId, teamId } = Route.useParams({
-    select: ({ orgId, teamId }) => ({
-      orgId: Number(orgId),
-      teamId: Number(teamId),
-    }),
-  });
+  const { orgId, teamId } = Route.useParams();
   const loaderData = Route.useLoaderData();
   const { data: org } = useQuery({
     ...useOptionsCreator(getOrg, orgId),
@@ -91,12 +81,12 @@ function RouteComponent() {
         {
           label: org.name,
           to: "/orgs/$orgId",
-          params: { orgId: String(orgId) },
+          params: { orgId },
         },
         {
           label: team.name,
           to: "/orgs/$orgId/teams/$teamId",
-          params: { orgId: String(orgId), teamId: String(teamId) },
+          params: { orgId, teamId },
         },
       ]}
       actions={
