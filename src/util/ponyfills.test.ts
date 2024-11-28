@@ -27,19 +27,17 @@ function expectUsesNative<Context extends {}, K extends keyof Ponyfills>(
   {
     setup,
     run,
-    cleanup,
   }: {
-    setup: () => Context;
+    setup: () => { context: Context; cleanup: () => void };
     run: (fn: Ponyfills[K], context: Context) => MaybePromise<void>;
-    cleanup: (context: Context) => void;
   },
 ) {
   // eslint-disable-next-line vitest/expect-expect
   it(`calls native ${nativeName} if available`, async () => {
-    const context = setup();
+    const { context, cleanup } = setup();
     vi.resetModules();
     await run((await import("./ponyfills"))[ponyfillName], context);
-    cleanup(context);
+    cleanup();
   });
 }
 
@@ -90,9 +88,14 @@ describe("utils > ponyfills", () => {
 
         Map.prototype.getOrInsert = mock;
 
-        return { mock, original };
+        return {
+          context: mock,
+          cleanup() {
+            Map.prototype.getOrInsert = original;
+          },
+        };
       },
-      run(mapGetOrInsert, { mock }) {
+      run(mapGetOrInsert, mock) {
         const map = new Map<string, number>();
         const key = "foo";
         const value = 42;
@@ -101,9 +104,6 @@ describe("utils > ponyfills", () => {
 
         expect(mock).toHaveBeenCalledWith(key, value);
         expect(mock).toHaveBeenCalledWithContext(map);
-      },
-      cleanup({ original }) {
-        Map.prototype.getOrInsert = original;
       },
     });
   });
@@ -165,9 +165,14 @@ describe("utils > ponyfills", () => {
 
           Map.prototype.getOrInsertComputed = mock;
 
-          return { mock, original };
+          return {
+            context: mock,
+            cleanup() {
+              Map.prototype.getOrInsertComputed = original;
+            },
+          };
         },
-        run(mapGetOrInsertComputed, { mock }) {
+        run(mapGetOrInsertComputed, mock) {
           const map = new Map<string, number>();
           const key = "foo";
           const value = 42;
@@ -176,9 +181,6 @@ describe("utils > ponyfills", () => {
 
           expect(mock).toHaveBeenCalledWith(key, expect.any(Function));
           expect(mock).toHaveBeenCalledWithContext(map);
-        },
-        cleanup({ original }) {
-          Map.prototype.getOrInsertComputed = original;
         },
       },
     );
@@ -206,18 +208,20 @@ describe("utils > ponyfills", () => {
 
         Map.groupBy = mock;
 
-        return { mock, original };
+        return {
+          context: mock,
+          cleanup() {
+            Map.groupBy = original;
+          },
+        };
       },
-      run(mapGroupBy, { mock }) {
+      run(mapGroupBy, mock) {
         const items = [1];
 
         mapGroupBy(items, (item) => item);
 
         expect(mock).toHaveBeenCalledWith(items, expect.any(Function));
         expect(mock).toHaveBeenCalledWithContext(Map);
-      },
-      cleanup({ original }) {
-        Map.groupBy = original;
       },
     });
   });
@@ -239,18 +243,20 @@ describe("utils > ponyfills", () => {
 
         Object.groupBy = mock;
 
-        return { mock, original };
+        return {
+          context: mock,
+          cleanup() {
+            Object.groupBy = original;
+          },
+        };
       },
-      run(objectGroupBy, { mock }) {
+      run(objectGroupBy, mock) {
         const items = [1];
 
         objectGroupBy(items, (item) => item);
 
         expect(mock).toHaveBeenCalledWith(items, expect.any(Function));
         expect(mock).toHaveBeenCalledWithContext(Object);
-      },
-      cleanup({ original }) {
-        Object.groupBy = original;
       },
     });
   });
@@ -281,18 +287,20 @@ describe("utils > ponyfills", () => {
 
         Promise.fromEntries = mock;
 
-        return { mock, original };
+        return {
+          context: mock,
+          cleanup() {
+            Promise.fromEntries = original;
+          },
+        };
       },
-      async run(promiseFromEntries, { mock }) {
+      async run(promiseFromEntries, mock) {
         const entries = [["foo", 1]] as const;
 
         await promiseFromEntries(entries);
 
         expect(mock).toHaveBeenCalledWith(entries);
         expect(mock).toHaveBeenCalledWithContext(Promise);
-      },
-      cleanup({ original }) {
-        Promise.fromEntries = original;
       },
     });
   });
@@ -323,18 +331,20 @@ describe("utils > ponyfills", () => {
 
         Promise.ownProperties = mock;
 
-        return { mock, original };
+        return {
+          context: mock,
+          cleanup() {
+            Promise.ownProperties = original;
+          },
+        };
       },
-      async run(promiseOwnProperties, { mock }) {
+      async run(promiseOwnProperties, mock) {
         const obj = { foo: 1 };
 
         await promiseOwnProperties(obj);
 
         expect(mock).toHaveBeenCalledWith(obj);
         expect(mock).toHaveBeenCalledWithContext(Promise);
-      },
-      cleanup({ original }) {
-        Promise.ownProperties = original;
       },
     });
   });
@@ -363,16 +373,18 @@ describe("utils > ponyfills", () => {
 
         Promise.withResolvers = mock;
 
-        return { mock, original };
+        return {
+          context: mock,
+          cleanup() {
+            Promise.withResolvers = original;
+          },
+        };
       },
-      run(promiseWithResolvers, { mock }) {
+      run(promiseWithResolvers, mock) {
         promiseWithResolvers();
 
         expect(mock).toHaveBeenCalled();
         expect(mock).toHaveBeenCalledWithContext(Promise);
-      },
-      cleanup({ original }) {
-        Promise.withResolvers = original;
       },
     });
   });
