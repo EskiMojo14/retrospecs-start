@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { describe, expect, it, vi } from "vitest";
-import type * as Ponyfills from "./ponyfills";
 import {
   mapGetOrInsert,
   mapGetOrInsertComputed,
@@ -10,35 +9,17 @@ import {
   promiseOwnProperties,
   promiseWithResolvers,
 } from "./ponyfills";
-import type { MaybePromise } from "./types";
-
-type Ponyfills = typeof Ponyfills;
 
 /**
- * Test that the ponyfill uses the native implementation if available.
- *
- * Calls resetModules before running the test to ensure that the polyfill in setup is used.
- *
- * Anything modified in setup should be restored in cleanup.
+ * Setup a mock, then reimport the module after clearing cache.
+ * Cleanup function returned by setup is called once tests are done.
  */
-function expectUsesNative<Context extends {}, K extends keyof Ponyfills>(
-  nativeName: string,
-  ponyfillName: K,
-  {
-    setup,
-    run,
-  }: {
-    setup: () => { context: Context; cleanup: () => void };
-    run: (fn: Ponyfills[K], context: Context) => MaybePromise<void>;
-  },
-) {
-  // eslint-disable-next-line vitest/expect-expect
-  it(`calls native ${nativeName} if available`, async () => {
-    const { context, cleanup } = setup();
-    vi.resetModules();
-    await run((await import("./ponyfills"))[ponyfillName], context);
-    cleanup();
-  });
+async function importWithMock(setup: () => () => void) {
+  const dispose = setup();
+  vi.resetModules();
+  return Object.assign(await import("./ponyfills"), {
+    [Symbol.dispose]: dispose,
+  } satisfies Disposable);
 }
 
 describe("utils > ponyfills", () => {
@@ -80,31 +61,25 @@ describe("utils > ponyfills", () => {
       expect(map.get(key)).toBe(value);
       expect(result2).toBe(value);
     });
-    expectUsesNative("Map.prototype.getOrInsert", "mapGetOrInsert", {
-      setup() {
+    it("should call native Map.prototype.getOrInsert if available", async () => {
+      using ponyfills = await importWithMock(() => {
         const original = Map.prototype.getOrInsert;
 
-        const mock = vi.fn();
+        Map.prototype.getOrInsert = vi.fn();
 
-        Map.prototype.getOrInsert = mock;
-
-        return {
-          context: mock,
-          cleanup() {
-            Map.prototype.getOrInsert = original;
-          },
+        return () => {
+          Map.prototype.getOrInsert = original;
         };
-      },
-      run(mapGetOrInsert, mock) {
-        const map = new Map<string, number>();
-        const key = "foo";
-        const value = 42;
+      });
 
-        mapGetOrInsert(map, key, value);
+      const map = new Map<string, number>();
+      const key = "foo";
+      const value = 42;
 
-        expect(mock).toHaveBeenCalledWith(key, value);
-        expect(mock).toHaveBeenCalledWithContext(map);
-      },
+      ponyfills.mapGetOrInsert(map, key, value);
+
+      expect(Map.prototype.getOrInsert).toHaveBeenCalledWith(key, value);
+      expect(Map.prototype.getOrInsert).toHaveBeenCalledWithContext(map);
     });
   });
   describe("mapGetOrInsertComputed", () => {
@@ -154,36 +129,31 @@ describe("utils > ponyfills", () => {
       expect(map.get(key)).toBe(value);
       expect(result2).toBe(value);
     });
-    expectUsesNative(
-      "Map.prototype.getOrInsertComputed",
-      "mapGetOrInsertComputed",
-      {
-        setup() {
-          const original = Map.prototype.getOrInsertComputed;
+    it("should call native Map.prototype.getOrInsertComputed if available", async () => {
+      using ponyfills = await importWithMock(() => {
+        const original = Map.prototype.getOrInsertComputed;
 
-          const mock = vi.fn();
+        Map.prototype.getOrInsertComputed = vi.fn();
 
-          Map.prototype.getOrInsertComputed = mock;
+        return () => {
+          Map.prototype.getOrInsertComputed = original;
+        };
+      });
 
-          return {
-            context: mock,
-            cleanup() {
-              Map.prototype.getOrInsertComputed = original;
-            },
-          };
-        },
-        run(mapGetOrInsertComputed, mock) {
-          const map = new Map<string, number>();
-          const key = "foo";
-          const value = 42;
+      const map = new Map<string, number>();
+      const key = "foo";
+      const value = 42;
 
-          mapGetOrInsertComputed(map, key, () => value);
+      ponyfills.mapGetOrInsertComputed(map, key, () => value);
 
-          expect(mock).toHaveBeenCalledWith(key, expect.any(Function));
-          expect(mock).toHaveBeenCalledWithContext(map);
-        },
-      },
-    );
+      expect(Map.prototype.getOrInsertComputed).toHaveBeenCalledWith(
+        key,
+        expect.any(Function),
+      );
+      expect(Map.prototype.getOrInsertComputed).toHaveBeenCalledWithContext(
+        map,
+      );
+    });
   });
   describe("mapGroupBy", () => {
     it("should group by the key", () => {
@@ -200,29 +170,23 @@ describe("utils > ponyfills", () => {
         ]),
       );
     });
-    expectUsesNative("Map.groupBy", "mapGroupBy", {
-      setup() {
-        const mock = vi.fn();
-
+    it("calls native Map.groupBy if available", async () => {
+      using ponyfills = await importWithMock(() => {
         const original = Map.groupBy;
 
-        Map.groupBy = mock;
+        Map.groupBy = vi.fn();
 
-        return {
-          context: mock,
-          cleanup() {
-            Map.groupBy = original;
-          },
+        return () => {
+          Map.groupBy = original;
         };
-      },
-      run(mapGroupBy, mock) {
-        const items = [1];
+      });
 
-        mapGroupBy(items, (item) => item);
+      const items = [1];
 
-        expect(mock).toHaveBeenCalledWith(items, expect.any(Function));
-        expect(mock).toHaveBeenCalledWithContext(Map);
-      },
+      ponyfills.mapGroupBy(items, (item) => item);
+
+      expect(Map.groupBy).toHaveBeenCalledWith(items, expect.any(Function));
+      expect(Map.groupBy).toHaveBeenCalledWithContext(Map);
     });
   });
   describe("objectGroupBy", () => {
@@ -235,29 +199,23 @@ describe("utils > ponyfills", () => {
       const result = objectGroupBy(items, (item) => item.name);
       expect(result).toEqual({ foo: [items[0], items[1]], bar: [items[2]] });
     });
-    expectUsesNative("Object.groupBy", "objectGroupBy", {
-      setup() {
-        const mock = vi.fn();
-
+    it("calls native Object.groupBy if available", async () => {
+      using ponyfills = await importWithMock(() => {
         const original = Object.groupBy;
 
-        Object.groupBy = mock;
+        Object.groupBy = vi.fn();
 
-        return {
-          context: mock,
-          cleanup() {
-            Object.groupBy = original;
-          },
+        return () => {
+          Object.groupBy = original;
         };
-      },
-      run(objectGroupBy, mock) {
-        const items = [1];
+      });
 
-        objectGroupBy(items, (item) => item);
+      const items = [1];
 
-        expect(mock).toHaveBeenCalledWith(items, expect.any(Function));
-        expect(mock).toHaveBeenCalledWithContext(Object);
-      },
+      ponyfills.objectGroupBy(items, (item) => item);
+
+      expect(Object.groupBy).toHaveBeenCalledWith(items, expect.any(Function));
+      expect(Object.groupBy).toHaveBeenCalledWithContext(Object);
     });
   });
   describe("promiseFromEntries", () => {
@@ -279,29 +237,25 @@ describe("utils > ponyfills", () => {
       expect(promise).toBeInstanceOf(Promise);
       await expect(promise).rejects.toThrow("bar");
     });
-    expectUsesNative("Promise.fromEntries", "promiseFromEntries", {
-      setup() {
+    it("should call native Promise.fromEntries if available", async () => {
+      using ponyfills = await importWithMock(() => {
         const original = Promise.fromEntries;
 
         const mock = vi.fn();
 
         Promise.fromEntries = mock;
 
-        return {
-          context: mock,
-          cleanup() {
-            Promise.fromEntries = original;
-          },
+        return () => {
+          Promise.fromEntries = original;
         };
-      },
-      async run(promiseFromEntries, mock) {
-        const entries = [["foo", 1]] as const;
+      });
 
-        await promiseFromEntries(entries);
+      const entries = [["foo", 1]] as const;
 
-        expect(mock).toHaveBeenCalledWith(entries);
-        expect(mock).toHaveBeenCalledWithContext(Promise);
-      },
+      await ponyfills.promiseFromEntries(entries);
+
+      expect(Promise.fromEntries).toHaveBeenCalledWith(entries);
+      expect(Promise.fromEntries).toHaveBeenCalledWithContext(Promise);
     });
   });
   describe("promiseOwnProperties", () => {
@@ -323,29 +277,25 @@ describe("utils > ponyfills", () => {
       expect(promise).toBeInstanceOf(Promise);
       await expect(promise).rejects.toThrow("bar");
     });
-    expectUsesNative("Promise.ownProperties", "promiseOwnProperties", {
-      setup() {
+    it("should call native Promise.ownProperties if available", async () => {
+      using ponyfills = await importWithMock(() => {
         const original = Promise.ownProperties;
 
         const mock = vi.fn();
 
         Promise.ownProperties = mock;
 
-        return {
-          context: mock,
-          cleanup() {
-            Promise.ownProperties = original;
-          },
+        return () => {
+          Promise.ownProperties = original;
         };
-      },
-      async run(promiseOwnProperties, mock) {
-        const obj = { foo: 1 };
+      });
 
-        await promiseOwnProperties(obj);
+      const obj = { foo: 1 };
 
-        expect(mock).toHaveBeenCalledWith(obj);
-        expect(mock).toHaveBeenCalledWithContext(Promise);
-      },
+      await ponyfills.promiseOwnProperties(obj);
+
+      expect(Promise.ownProperties).toHaveBeenCalledWith(obj);
+      expect(Promise.ownProperties).toHaveBeenCalledWithContext(Promise);
     });
   });
   describe("promiseWithResolvers", () => {
@@ -365,27 +315,23 @@ describe("utils > ponyfills", () => {
       reject(new Error("foo"));
       await expect(promise).rejects.toThrow("foo");
     });
-    expectUsesNative("Promise.withResolvers", "promiseWithResolvers", {
-      setup() {
+    it("should call native Promise.withResolvers if available", async () => {
+      using ponyfills = await importWithMock(() => {
         const original = Promise.withResolvers;
 
         const mock = vi.fn();
 
         Promise.withResolvers = mock;
 
-        return {
-          context: mock,
-          cleanup() {
-            Promise.withResolvers = original;
-          },
+        return () => {
+          Promise.withResolvers = original;
         };
-      },
-      run(promiseWithResolvers, mock) {
-        promiseWithResolvers();
+      });
 
-        expect(mock).toHaveBeenCalled();
-        expect(mock).toHaveBeenCalledWithContext(Promise);
-      },
+      ponyfills.promiseWithResolvers();
+
+      expect(Promise.withResolvers).toHaveBeenCalled();
+      expect(Promise.withResolvers).toHaveBeenCalledWithContext(Promise);
     });
   });
 });
