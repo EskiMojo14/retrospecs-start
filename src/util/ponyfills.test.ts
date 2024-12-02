@@ -241,9 +241,7 @@ describe("utils > ponyfills", () => {
       using ponyfills = await importWithMock(() => {
         const original = Promise.fromEntries;
 
-        const mock = vi.fn();
-
-        Promise.fromEntries = mock;
+        Promise.fromEntries = vi.fn();
 
         return () => {
           Promise.fromEntries = original;
@@ -281,9 +279,7 @@ describe("utils > ponyfills", () => {
       using ponyfills = await importWithMock(() => {
         const original = Promise.ownProperties;
 
-        const mock = vi.fn();
-
-        Promise.ownProperties = mock;
+        Promise.ownProperties = vi.fn();
 
         return () => {
           Promise.ownProperties = original;
@@ -319,9 +315,7 @@ describe("utils > ponyfills", () => {
       using ponyfills = await importWithMock(() => {
         const original = Promise.withResolvers;
 
-        const mock = vi.fn();
-
-        Promise.withResolvers = mock;
+        Promise.withResolvers = vi.fn();
 
         return () => {
           Promise.withResolvers = original;
