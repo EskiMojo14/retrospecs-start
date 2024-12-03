@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { NavigateOptions, ToOptions } from "@tanstack/react-router";
 import {
   Outlet,
@@ -8,7 +7,7 @@ import {
   useRouter,
 } from "@tanstack/react-router";
 import { createServerFn, Meta, Scripts } from "@tanstack/start";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { RouterProvider } from "react-aria-components";
 import { lazily } from "react-lazily";
 import { ensureAuthenticatedMw } from "@/middleware/auth";
@@ -35,6 +34,11 @@ const { TanStackRouterDevtools } =
   process.env.NODE_ENV === "development"
     ? lazily(() => import("@tanstack/router-devtools"))
     : { TanStackRouterDevtools: () => null };
+
+const { ReactQueryDevtools } =
+  process.env.NODE_ENV === "development"
+    ? lazily(() => import("@tanstack/react-query-devtools"))
+    : { ReactQueryDevtools: () => null };
 
 interface RootLoaderResponse {
   config?: UserConfig | null;
@@ -115,8 +119,10 @@ function RootComponent() {
         <RootDocument>
           <Outlet />
           <GlobalToastRegion aria-label="Notifications" />
-          <ReactQueryDevtools buttonPosition="bottom-left" />
-          <TanStackRouterDevtools position="bottom-right" />
+          <Suspense>
+            <ReactQueryDevtools buttonPosition="bottom-left" />
+            <TanStackRouterDevtools position="bottom-right" />
+          </Suspense>
           <BreakpointDisplay />
         </RootDocument>
       </SessionProvider>
