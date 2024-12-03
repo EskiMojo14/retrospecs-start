@@ -30,15 +30,15 @@ import type { AppContext } from "~/util/supabase-query";
 import type { Nullish } from "~/util/types";
 import "~/index.scss";
 
-const { TanStackRouterDevtools } =
+const { TanStackRouterDevtools = () => null } =
   process.env.NODE_ENV === "development"
     ? lazily(() => import("@tanstack/router-devtools"))
-    : { TanStackRouterDevtools: () => null };
+    : {};
 
-const { ReactQueryDevtools } =
+const { ReactQueryDevtools = () => null } =
   process.env.NODE_ENV === "development"
     ? lazily(() => import("@tanstack/react-query-devtools"))
-    : { ReactQueryDevtools: () => null };
+    : {};
 
 interface RootLoaderResponse {
   config?: UserConfig | null;
