@@ -26,27 +26,23 @@ $base-size: 16px;
   }
 }
 
-@mixin reflexive-box($prop, $start, $end: 0) {
+@mixin rtl-flip($left-prop, $start-value, $right-prop, $end-value) {
   & {
-    #{$prop}-left: $start;
-    #{$prop}-right: $end;
+    #{$left-prop}: $start-value;
+    #{$right-prop}: $end-value;
   }
   @include rtl {
-    #{$prop}-left: $end;
-    #{$prop}-right: $start;
+    #{$left-prop}: $end-value;
+    #{$right-prop}: $start-value;
   }
 }
 
+@mixin reflexive-box($prop, $start, $end: 0) {
+  @include rtl-flip($prop + "-left", $start, $prop + "-right", $end);
+}
+
 @mixin reflexive-position($prop, $start, $end: unset) {
-  $opposite: if($prop == "right", "left", "right");
-  & {
-    #{$prop}: $start;
-    #{$opposite}: $end;
-  }
-  @include rtl {
-    #{$prop}: $end;
-    #{$opposite}: $start;
-  }
+  @include rtl-flip($prop, $start, if($prop == "right", "left", "right"), $end);
 }
 
 @mixin text-stroke($color) {
