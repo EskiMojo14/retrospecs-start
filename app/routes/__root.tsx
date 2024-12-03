@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { NavigateOptions, ToOptions } from "@tanstack/react-router";
 import {
   Outlet,
@@ -33,11 +34,6 @@ import "~/index.scss";
 const { TanStackRouterDevtools = () => null } =
   process.env.NODE_ENV === "development"
     ? lazily(() => import("@tanstack/router-devtools"))
-    : {};
-
-const { ReactQueryDevtools = () => null } =
-  process.env.NODE_ENV === "development"
-    ? lazily(() => import("@tanstack/react-query-devtools"))
     : {};
 
 interface RootLoaderResponse {
