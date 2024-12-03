@@ -11,6 +11,7 @@ import type {
   QueryKey,
   QueryOptions,
   UndefinedInitialDataOptions,
+  UnusedSkipTokenOptions,
   MutationOptions,
   QueryClient,
 } from "@tanstack/react-query";
@@ -52,7 +53,7 @@ export function supabaseFn<FnData, TData = FnData, TVariables = void>(
   return async (context: TVariables) => {
     const { data, error, count, status, statusText } = await queryFn(context);
     const meta: PostgrestMeta = { count, status, statusText };
-     
+
     if (error) throw { ...error, meta };
     return transformResponse(data, meta);
   };
@@ -71,7 +72,7 @@ export function supabaseQueryOptions<
   getOptions: (
     context: AppContext,
     ...args: Args
-  ) => UndefinedInitialDataOptions<
+  ) => DefinedInitialDataOptions<
     QueryFnData,
     PostgrestErrorWithMeta,
     QueryFnData,
@@ -80,7 +81,7 @@ export function supabaseQueryOptions<
 ): (
   context: AppContext,
   ...args: Args
-) => UndefinedInitialDataOptions<
+) => DefinedInitialDataOptions<
   QueryFnData,
   PostgrestErrorWithMeta,
   QueryFnData,
@@ -96,7 +97,7 @@ export function supabaseQueryOptions<
   getOptions: (
     context: AppContext,
     ...args: Args
-  ) => DefinedInitialDataOptions<
+  ) => UnusedSkipTokenOptions<
     QueryFnData,
     PostgrestErrorWithMeta,
     QueryFnData,
@@ -105,7 +106,32 @@ export function supabaseQueryOptions<
 ): (
   context: AppContext,
   ...args: Args
-) => DefinedInitialDataOptions<
+) => UnusedSkipTokenOptions<
+  QueryFnData,
+  PostgrestErrorWithMeta,
+  QueryFnData,
+  TQueryKey
+> & {
+  queryKey: DataTag<TQueryKey, QueryFnData>;
+};
+export function supabaseQueryOptions<
+  QueryFnData,
+  const TQueryKey extends QueryKey,
+  Args extends Array<any> = [],
+>(
+  getOptions: (
+    context: AppContext,
+    ...args: Args
+  ) => UndefinedInitialDataOptions<
+    QueryFnData,
+    PostgrestErrorWithMeta,
+    QueryFnData,
+    TQueryKey
+  >,
+): (
+  context: AppContext,
+  ...args: Args
+) => UndefinedInitialDataOptions<
   QueryFnData,
   PostgrestErrorWithMeta,
   QueryFnData,
