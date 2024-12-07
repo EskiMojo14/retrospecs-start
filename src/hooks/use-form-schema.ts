@@ -1,24 +1,20 @@
 import type { ValidationErrors } from "@react-types/shared";
 import { useCallback, useState } from "react";
 import type {
-  BaseIssue,
-  BaseSchema,
+  GenericSchema,
   FlatErrors,
   InferIssue,
   SafeParseResult,
 } from "valibot";
 import { flatten, safeParse } from "valibot";
 
-export interface FormErrors<
-  TSchema extends BaseSchema<unknown, unknown, BaseIssue<unknown>>,
-> extends FlatErrors<TSchema> {
+export interface FormErrors<TSchema extends GenericSchema>
+  extends FlatErrors<TSchema> {
   issues: [InferIssue<TSchema>, ...Array<InferIssue<TSchema>>];
   validationErrors: ValidationErrors;
 }
 
-export const useFormSchema = <
-  const TSchema extends BaseSchema<unknown, unknown, BaseIssue<unknown>>,
->(
+export const useFormSchema = <const TSchema extends GenericSchema>(
   schema: TSchema,
 ): [
   FormErrors<TSchema> | undefined,

@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import type { BaseSchema } from "valibot";
+import type { GenericSchema } from "valibot";
 import { nonEmpty, object, pipe, string } from "valibot";
 import type { DialogProps } from "~/components/dialog";
 import { FormDialog } from "~/components/dialog/form";
@@ -10,7 +10,7 @@ import { useOptionsCreator } from "~/hooks/use-options-creator";
 
 const createOrgSchema = object({
   name: pipe(string(), nonEmpty()),
-}) satisfies BaseSchema<any, TablesInsert<"orgs">, any>;
+}) satisfies GenericSchema<any, TablesInsert<"orgs">>;
 
 export function CreateOrg(props: Omit<DialogProps, "children">) {
   const {

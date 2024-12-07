@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import type { BaseSchema } from "valibot";
+import type { GenericSchema } from "valibot";
 import { minLength, object, pipe, string } from "valibot";
 import type { DialogProps } from "~/components/dialog";
 import { FormDialog } from "~/components/dialog/form";
@@ -17,7 +17,7 @@ export interface EditOrgProps extends Omit<DialogProps, "children"> {
 const editSchema = object({
   id: coerceNumber(),
   name: pipe(string(), minLength(1)),
-}) satisfies BaseSchema<any, TablesUpdate<"orgs">, any>;
+}) satisfies GenericSchema<any, TablesUpdate<"orgs">>;
 
 export function EditOrg({ orgId, ...props }: EditOrgProps) {
   const session = useSession();

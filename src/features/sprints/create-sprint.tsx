@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import type { BaseSchema } from "valibot";
+import type { GenericSchema } from "valibot";
 import {
   nonEmpty,
   null_,
@@ -33,7 +33,7 @@ const createSprintSchema = object({
     transform((followsId) => (followsId ? parseInt(followsId, 10) : null)),
     union([number(), null_()]),
   ),
-}) satisfies BaseSchema<any, TablesInsert<"sprints">, any>;
+}) satisfies GenericSchema<any, TablesInsert<"sprints">>;
 
 export interface CreateSprintProps extends Omit<DialogProps, "children"> {
   teamId: number;

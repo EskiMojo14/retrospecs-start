@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import type { BaseSchema } from "valibot";
+import type { GenericSchema } from "valibot";
 import {
   nonEmpty,
   null_,
@@ -38,7 +38,7 @@ const editSprintSchema = object({
     transform((v) => (v === "" ? null : parseInt(v))),
     union([number(), null_()]),
   ),
-}) satisfies BaseSchema<any, TablesUpdate<"sprints">, any>;
+}) satisfies GenericSchema<any, TablesUpdate<"sprints">>;
 
 const selectPreviousSprints = createSelector(
   [

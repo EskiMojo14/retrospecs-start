@@ -3,7 +3,7 @@ import type { FormEvent, ReactNode } from "react";
 import { useRef } from "react";
 import type { ButtonProps as AriaButtonProps } from "react-aria-components";
 import { Form } from "react-aria-components";
-import type { BaseSchema, InferOutput } from "valibot";
+import type { GenericSchema, InferOutput } from "valibot";
 import type { ButtonProps, LoadingButtonProps } from "~/components/button";
 import { Button, LoadingButton } from "~/components/button";
 import { Toolbar } from "~/components/toolbar";
@@ -14,7 +14,7 @@ import type { DialogProps } from ".";
 import { Dialog, DialogContent } from ".";
 import styles from "./form.module.scss";
 
-export interface FormDialogProps<T extends BaseSchema<any, any, any>>
+export interface FormDialogProps<T extends GenericSchema>
   extends Omit<DialogProps, "children"> {
   title: ReactNode;
   schema: T;
@@ -30,7 +30,7 @@ export interface FormDialogProps<T extends BaseSchema<any, any, any>>
   children?: ReactNode;
 }
 
-export const FormDialog = <T extends BaseSchema<any, any, any>>({
+export const FormDialog = <T extends GenericSchema>({
   title,
   formId,
   schema,

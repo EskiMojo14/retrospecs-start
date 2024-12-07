@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import type { BaseSchema } from "valibot";
+import type { GenericSchema } from "valibot";
 import { nonEmpty, object, pipe, string } from "valibot";
 import type { DialogProps } from "~/components/dialog";
 import { FormDialog } from "~/components/dialog/form";
@@ -18,7 +18,7 @@ const editTeamSchema = object({
   name: pipe(string(), nonEmpty()),
   org_id: coerceNumber(),
   id: coerceNumber(),
-}) satisfies BaseSchema<any, TablesUpdate<"teams">, any>;
+}) satisfies GenericSchema<any, TablesUpdate<"teams">>;
 
 export function EditTeam({ orgId, teamId, ...props }: EditTeamProps) {
   const { data: team } = useQuery({
