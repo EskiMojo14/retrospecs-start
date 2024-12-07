@@ -1,4 +1,6 @@
-export const getUrl = async () =>
-  typeof window === "undefined"
-    ? await import("vinxi/http").then(({ getRequestURL }) => getRequestURL())
-    : new URL(window.location.href);
+import { createIsomorphicFn } from "@tanstack/start";
+import { getRequestURL } from "vinxi/http";
+
+export const getUrl = createIsomorphicFn()
+  .server(getRequestURL)
+  .client(() => new URL(window.location.href));

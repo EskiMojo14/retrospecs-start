@@ -28,7 +28,7 @@ import { useOptionsCreator } from "~/hooks/use-options-creator";
 import { getUrl } from "~/util/isomorphic";
 import { promiseOwnProperties } from "~/util/ponyfills";
 import type { AppContext } from "~/util/supabase-query";
-import type { Nullish } from "~/util/types";
+import type { MaybePromise, Nullish } from "~/util/types";
 import "~/index.scss";
 
 const { TanStackRouterDevtools = () => null } =
@@ -56,8 +56,8 @@ const getUserData = createServerFn({ method: "GET" })
 const noAuthRoutes = new Set(["/sign-in", "/auth/callback"]);
 
 export const Route = createRootRouteWithContext<AppContext>()({
-  loader: async ({ context }): Promise<RootLoaderResponse> => {
-    const url = await getUrl();
+  loader: ({ context }): MaybePromise<RootLoaderResponse> => {
+    const url = getUrl();
     if (noAuthRoutes.has(url.pathname)) {
       return {};
     }
