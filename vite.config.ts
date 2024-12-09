@@ -18,4 +18,11 @@ export default defineConfig({
   test: {
     setupFiles: ["./test-setup.ts"],
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: "legacy",
+      },
+    },
+  },
 });
