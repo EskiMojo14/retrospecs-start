@@ -1,5 +1,10 @@
-import type { ComponentPropsWithoutRef, ContextType, ReactNode } from "react";
-import { createContext, forwardRef, useMemo } from "react";
+import type {
+  ComponentPropsWithoutRef,
+  ContextType,
+  ReactNode,
+  RefAttributes,
+} from "react";
+import { createContext, useMemo } from "react";
 import type {
   GridListItemProps,
   GridListProps,
@@ -40,28 +45,29 @@ type ListItemContextValue = ContextValue<
 
 export const ListItemContext = createContext<ListItemContextValue>(null);
 
-export const List = forwardRef<HTMLDivElement, ListProps<any>>(
-  ({ variant, nonInteractive, className, color, ...props }, ref) => {
-    const listItemContextValue = useMemo<ListItemContextValue>(
-      () => ({ nonInteractive, ...(color && { color }) }),
-      [nonInteractive, color],
-    );
-    return (
-      <ListItemContext.Provider value={listItemContextValue}>
-        <GridList
-          ref={ref}
-          {...props}
-          className={cls({
-            modifier: variant,
-            extra: className,
-          })}
-        />
-      </ListItemContext.Provider>
-    );
-  },
-) as (<T>(props: ListProps<T>) => React.JSX.Element) & { displayName?: string };
-
-List.displayName = "List";
+export const List = <T extends object>({
+  variant,
+  nonInteractive,
+  className,
+  color,
+  ...props
+}: ListProps<T>) => {
+  const listItemContextValue = useMemo<ListItemContextValue>(
+    () => ({ nonInteractive, ...(color && { color }) }),
+    [nonInteractive, color],
+  );
+  return (
+    <ListItemContext.Provider value={listItemContextValue}>
+      <GridList
+        {...props}
+        className={cls({
+          modifier: variant,
+          extra: className,
+        })}
+      />
+    </ListItemContext.Provider>
+  );
+};
 
 export interface ListItemProps<T>
   extends Omit<GridListItemProps<T>, "className"> {
@@ -77,77 +83,76 @@ const symbolContextValue: ContextType<typeof SymbolContext> = {
   },
 };
 
-export const ListItem = forwardRef<HTMLDivElement, ListItemProps<any>>(
-  (props, ref) => {
-    [props, ref] = useContextProps(props, ref as never, ListItemContext) as [
-      typeof props,
-      typeof ref,
-    ];
-    const {
-      nonInteractive,
-      className,
-      children,
-      color = "gold",
-      ...rest
-    } = props;
-    const { rootRef, surfaceRef } = useRipple({
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      disabled: props.isDisabled || nonInteractive,
-    });
-    return (
-      <GridListItem
-        ref={mergeRefs(ref, rootRef)}
-        {...rest}
-        className={cls({
-          element: "item",
-          modifiers: {
-            "non-interactive": !!nonInteractive,
-          },
-          extra: ["color-" + color, className ?? ""],
-        })}
-      >
-        {composeRenderProps(children, (children) => (
-          <SymbolContext.Provider value={symbolContextValue}>
-            <div ref={surfaceRef} className={cls("item-ripple")} />
-            <div className={cls("item-content")}>{children}</div>
-          </SymbolContext.Provider>
-        ))}
-      </GridListItem>
-    );
-  },
-) as (<T>(props: ListItemProps<T>) => React.JSX.Element) & {
-  displayName?: string;
+export const ListItem = <T extends object>({
+  ref,
+  ...props
+}: ListItemProps<T> & RefAttributes<HTMLDivElement>) => {
+  [props, ref] = useContextProps(props, ref as never, ListItemContext) as [
+    typeof props,
+    typeof ref,
+  ];
+  const {
+    nonInteractive,
+    className,
+    children,
+    color = "gold",
+    ...rest
+  } = props;
+  const { rootRef, surfaceRef } = useRipple({
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    disabled: props.isDisabled || nonInteractive,
+  });
+  return (
+    <GridListItem
+      ref={mergeRefs(ref, rootRef) as never}
+      {...rest}
+      className={cls({
+        element: "item",
+        modifiers: {
+          "non-interactive": !!nonInteractive,
+        },
+        extra: ["color-" + color, className ?? ""],
+      })}
+    >
+      {composeRenderProps(children, (children) => (
+        <SymbolContext.Provider value={symbolContextValue}>
+          <div ref={surfaceRef} className={cls("item-ripple")} />
+          <div className={cls("item-content")}>{children}</div>
+        </SymbolContext.Provider>
+      ))}
+    </GridListItem>
+  );
 };
 
-ListItem.displayName = "ListItem";
-
 interface ListItemTextProps
-  extends Omit<ComponentPropsWithoutRef<"div">, "children"> {
+  extends Omit<ComponentPropsWithoutRef<"div">, "children">,
+    RefAttributes<HTMLDivElement> {
   headline: ReactNode;
   overline?: ReactNode;
   supporting?: ReactNode;
 }
 
-export const ListItemText = forwardRef<HTMLDivElement, ListItemTextProps>(
-  ({ className, overline, headline, supporting, ...props }, ref) => (
-    <div
-      {...props}
-      ref={ref}
-      className={cls({
-        element: "item-text",
-        modifiers: {
-          "no-overline": !overline,
-        },
-        extra: className,
-      })}
-    >
-      {overline && <Typography variant="overline">{overline}</Typography>}
-      <Typography variant="subtitle1" as={Text} slot="description">
-        {headline}
-      </Typography>
-      {supporting && <Typography variant="caption">{supporting}</Typography>}
-    </div>
-  ),
+export const ListItemText = ({
+  className,
+  overline,
+  headline,
+  supporting,
+  ...props
+}: ListItemTextProps) => (
+  <div
+    {...props}
+    className={cls({
+      element: "item-text",
+      modifiers: {
+        "no-overline": !overline,
+      },
+      extra: className,
+    })}
+  >
+    {!!overline && <Typography variant="overline">{overline}</Typography>}
+    <Typography variant="subtitle1" as={Text} slot="description">
+      {headline}
+    </Typography>
+    {!!supporting && <Typography variant="caption">{supporting}</Typography>}
+  </div>
 );
-
-ListItemText.displayName = "ListItemText";

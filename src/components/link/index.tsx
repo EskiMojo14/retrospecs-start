@@ -1,8 +1,7 @@
 import { filterDOMProps } from "@react-aria/utils";
 import type { LinkComponent } from "@tanstack/react-router";
 import { createLink } from "@tanstack/react-router";
-import type { ComponentPropsWithRef, ReactNode } from "react";
-import { forwardRef } from "react";
+import type { ComponentPropsWithRef, ReactNode, RefAttributes } from "react";
 import type { AriaLinkOptions } from "react-aria";
 import { mergeProps, useFocusRing, useHover, useLink } from "react-aria";
 import type { LinkProps, SlotProps } from "react-aria-components";
@@ -10,25 +9,22 @@ import { Link, LinkContext, useContextProps } from "react-aria-components";
 import { bemHelper } from "~/util";
 import "./index.scss";
 
-export interface ExternalLinkProps extends Omit<LinkProps, "className"> {
+export interface ExternalLinkProps
+  extends Omit<LinkProps, "className">,
+    RefAttributes<HTMLAnchorElement> {
   className?: string;
 }
 
 const cls = bemHelper("link");
 
-export const ExternalLink = forwardRef<HTMLAnchorElement, ExternalLinkProps>(
-  ({ className, ...props }, ref) => (
-    <Link
-      ref={ref}
-      {...props}
-      className={cls({
-        extra: className,
-      })}
-    />
-  ),
+export const ExternalLink = ({ className, ...props }: ExternalLinkProps) => (
+  <Link
+    {...props}
+    className={cls({
+      extra: className,
+    })}
+  />
 );
-
-ExternalLink.displayName = "ExternalLink";
 
 interface _InternalLinkProps
   extends Omit<AriaLinkOptions, "href" | "elementType">,
@@ -54,11 +50,11 @@ const propNames = new Set([
   keyof _InternalLinkProps | keyof ComponentPropsWithRef<"a"> | `data-${string}`
 >);
 
-const _InternalLinkComponent = forwardRef<
-  HTMLAnchorElement,
-  _InternalLinkProps
->((props, ref) => {
-  [props, ref] = useContextProps(props, ref, LinkContext);
+const InternalLinkComponent = ({
+  ref,
+  ...props
+}: _InternalLinkProps & RefAttributes<HTMLAnchorElement>) => {
+  [props, ref] = useContextProps(props, ref as never, LinkContext);
   const { onClick, ...rest } = props as _InternalLinkProps &
     ComponentPropsWithRef<"a">;
   const { isPressed, linkProps } = useLink(rest, ref);
@@ -87,12 +83,10 @@ const _InternalLinkComponent = forwardRef<
       onClick={onClick}
     />
   );
-});
+};
 
-_InternalLinkComponent.displayName = "InternalLink";
+const CreatedLinkComponent = createLink(InternalLinkComponent);
 
-const CreatedLinkComponent = createLink(_InternalLinkComponent);
-
-export const InternalLink: LinkComponent<typeof _InternalLinkComponent> = (
+export const InternalLink: LinkComponent<typeof InternalLinkComponent> = (
   props,
 ) => <CreatedLinkComponent {...props} />;

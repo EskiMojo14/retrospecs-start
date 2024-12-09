@@ -1,6 +1,6 @@
 import { clsx } from "clsx";
-import type { ContextType, ReactNode } from "react";
-import { createContext, forwardRef, useMemo } from "react";
+import type { ContextType, ReactNode, RefAttributes } from "react";
+import { createContext, useMemo } from "react";
 import type {
   MenuProps as AriaMenuProps,
   MenuItemProps as AriaMenuItemProps,
@@ -55,7 +55,10 @@ export const MenuContext = createContext<MenuContextValue>(null);
 
 const cls = bemHelper("menu");
 
-export const Menu = forwardRef<HTMLDivElement, MenuProps<any>>((props, ref) => {
+export const Menu = <T extends object>({
+  ref,
+  ...props
+}: MenuProps<T> & RefAttributes<HTMLElement>) => {
   [props, ref] = useContextProps(props, ref as never, MenuContext) as [
     typeof props,
     typeof ref,
@@ -109,11 +112,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps<any>>((props, ref) => {
       {popover}
     </MenuTrigger>
   );
-}) as (<T extends object>(props: MenuProps<T>) => React.JSX.Element) & {
-  displayName?: string;
 };
-
-Menu.displayName = "Menu";
 
 const symbolContextValue: ContextType<typeof SymbolContext> = {
   slots: {
@@ -137,62 +136,58 @@ export interface MenuItemProps<T extends object>
   className?: string;
 }
 
-export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps<any>>(
-  ({ children, className, ...props }, ref) => {
-    const { surfaceRef, rootRef } = useRipple({ disabled: props.isDisabled });
-    return (
-      <AriaMenuItem
-        {...props}
-        ref={mergeRefs(ref, rootRef)}
-        className={cls({
-          element: "item",
-          extra: className,
-        })}
-      >
-        {composeRenderProps(
-          children,
-          (children, { isSelected, hasSubmenu }) => (
-            <SymbolContext.Provider value={symbolContextValue}>
-              <div ref={surfaceRef} className={cls("item-ripple")} />
-              <div className={cls("item-content")}>
-                {isSelected && <Symbol slot="check">check</Symbol>}
-                {children}
-                {hasSubmenu && (
-                  <Symbol slot="submenu" flipRtl>
-                    chevron_right
-                  </Symbol>
-                )}
-              </div>
-            </SymbolContext.Provider>
-          ),
-        )}
-      </AriaMenuItem>
-    );
-  },
-) as (<T extends object>(props: MenuItemProps<T>) => React.JSX.Element) & {
-  displayName?: string;
+export const MenuItem = <T extends object>({
+  children,
+  className,
+  ref,
+  ...props
+}: MenuItemProps<T> & RefAttributes<HTMLElement>) => {
+  const { surfaceRef, rootRef } = useRipple({ disabled: props.isDisabled });
+  return (
+    <AriaMenuItem
+      {...props}
+      ref={mergeRefs(ref, rootRef) as never}
+      className={cls({
+        element: "item",
+        extra: className,
+      })}
+    >
+      {composeRenderProps(children, (children, { isSelected, hasSubmenu }) => (
+        <SymbolContext.Provider value={symbolContextValue}>
+          <div ref={surfaceRef} className={cls("item-ripple")} />
+          <div className={cls("item-content")}>
+            {isSelected && <Symbol slot="check">check</Symbol>}
+            {children}
+            {hasSubmenu && (
+              <Symbol slot="submenu" flipRtl>
+                chevron_right
+              </Symbol>
+            )}
+          </div>
+        </SymbolContext.Provider>
+      ))}
+    </AriaMenuItem>
+  );
 };
 
-MenuItem.displayName = "MenuItem";
-
-export interface MenuItemTextProps {
+export interface MenuItemTextProps extends RefAttributes<HTMLDivElement> {
   label: ReactNode;
   description?: ReactNode;
 }
 
-export const MenuItemText = forwardRef<HTMLDivElement, MenuItemTextProps>(
-  ({ label, description }, ref) => (
-    <div ref={ref} className={cls("item-text")}>
-      <Typography variant="body1" as={Text} slot="label">
-        {label}
+export const MenuItemText = ({
+  label,
+  description,
+  ref,
+}: MenuItemTextProps) => (
+  <div ref={ref} className={cls("item-text")}>
+    <Typography variant="body1" as={Text} slot="label">
+      {label}
+    </Typography>
+    {!!description && (
+      <Typography variant="caption" as={Text} slot="description">
+        {description}
       </Typography>
-      {description && (
-        <Typography variant="caption" as={Text} slot="description">
-          {description}
-        </Typography>
-      )}
-    </div>
-  ),
+    )}
+  </div>
 );
-
-MenuItemText.displayName = "MenuItemText";

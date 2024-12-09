@@ -140,6 +140,7 @@ export const AvatarGroup = createGenericComponent<
       return itemsAsArray.slice(0, max - 1).reverse();
     }, [itemsAsArray, max]);
     const childrenAsArray = useMemo(
+      // eslint-disable-next-line @eslint-react/no-children-to-array
       () => (typeof children === "function" ? [] : Children.toArray(children)),
       [children],
     );

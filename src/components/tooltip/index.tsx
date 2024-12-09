@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { forwardRef } from "react";
+import type { RefAttributes } from "react";
 import type {
   TooltipProps as AriaTooltipProps,
   TooltipTriggerComponentProps,
@@ -10,19 +10,14 @@ import {
 } from "react-aria-components";
 import "./index.scss";
 
-export interface TooltipProps extends Omit<AriaTooltipProps, "className"> {
+export interface TooltipProps
+  extends Omit<AriaTooltipProps, "className">,
+    RefAttributes<HTMLDivElement> {
   className?: string;
 }
 
-export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
-  ({ className, ...props }, ref) => (
-    <AriaTooltip
-      offset={4}
-      {...props}
-      ref={ref}
-      className={clsx("tooltip", className)}
-    />
-  ),
+export const Tooltip = ({ className, ...props }: TooltipProps) => (
+  <AriaTooltip offset={4} {...props} className={clsx("tooltip", className)} />
 );
 
 Tooltip.displayName = "Tooltip";

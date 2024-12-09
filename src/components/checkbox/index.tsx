@@ -1,5 +1,5 @@
-import type { ReactNode, RefCallback } from "react";
-import { createContext, forwardRef, useMemo } from "react";
+import type { ReactNode, RefAttributes, RefCallback } from "react";
+import { createContext, useMemo } from "react";
 import type {
   CheckboxProps as AriaCheckboxProps,
   CheckboxGroupProps as AriaCheckboxGroupProps,
@@ -47,44 +47,49 @@ const CheckboxTarget = ({
   </div>
 );
 
-export interface CheckboxProps extends Omit<AriaCheckboxProps, "className"> {
+export interface CheckboxProps
+  extends Omit<AriaCheckboxProps, "className">,
+    RefAttributes<HTMLLabelElement> {
   className?: string;
   color?: Color;
 }
 
-export const Checkbox = forwardRef<HTMLLabelElement, CheckboxProps>(
-  ({ children, className, color = "gold", ...props }, ref) => {
-    const { rootRef, surfaceRef } = useRipple({
-      disabled: props.isDisabled,
-      unbounded: true,
-    });
-    return (
-      <AriaCheckbox
-        {...props}
-        ref={mergeRefs(ref, rootRef)}
-        className={containerCls({
-          extra: [className ?? "", "color-" + color],
-        })}
-      >
-        {composeRenderProps(children, (children, { isIndeterminate }) => (
-          <>
-            <CheckboxTarget
-              isIndeterminate={isIndeterminate}
-              rippleRef={surfaceRef}
-            />
-            {children}
-          </>
-        ))}
-      </AriaCheckbox>
-    );
-  },
-);
-
-Checkbox.displayName = "Checkbox";
+export const Checkbox = ({
+  children,
+  className,
+  color = "gold",
+  ref,
+  ...props
+}: CheckboxProps) => {
+  const { rootRef, surfaceRef } = useRipple({
+    disabled: props.isDisabled,
+    unbounded: true,
+  });
+  return (
+    <AriaCheckbox
+      {...props}
+      ref={mergeRefs(ref, rootRef)}
+      className={containerCls({
+        extra: [className ?? "", "color-" + color],
+      })}
+    >
+      {composeRenderProps(children, (children, { isIndeterminate }) => (
+        <>
+          <CheckboxTarget
+            isIndeterminate={isIndeterminate}
+            rippleRef={surfaceRef}
+          />
+          {children}
+        </>
+      ))}
+    </AriaCheckbox>
+  );
+};
 
 interface CheckboxGroupProps
   extends Omit<AriaCheckboxGroupProps, "className">,
-    FormGroupProps {
+    FormGroupProps,
+    RefAttributes<HTMLDivElement> {
   color?: Color;
   className?: string;
 }
@@ -99,146 +104,135 @@ export const CheckboxGroupContext =
 
 const groupCls = bemHelper("checkbox-group");
 
-export const CheckboxGroup = forwardRef<HTMLDivElement, CheckboxGroupProps>(
-  (
-    {
-      children,
-      className,
-      color,
+export const CheckboxGroup = ({
+  children,
+  className,
+  color,
 
-      label,
-      labelProps,
-      description,
-      descriptionProps,
-      errorMessage,
-      errorMessageProps,
+  label,
+  labelProps,
+  description,
+  descriptionProps,
+  errorMessage,
+  errorMessageProps,
 
-      ...props
-    },
-    ref,
-  ) => {
-    const checkboxGroupContextValue = useMemo<CheckboxGroupContextValue>(
-      () => ({ ...(color && { color }) }),
-      [color],
-    );
-    return (
-      <AriaCheckboxGroup
-        {...props}
-        ref={ref}
-        className={groupCls({
-          extra: className,
-        })}
-      >
-        {composeRenderProps(children, (children) => (
-          <CheckboxGroupContext.Provider value={checkboxGroupContextValue}>
+  ...props
+}: CheckboxGroupProps) => {
+  const checkboxGroupContextValue = useMemo<CheckboxGroupContextValue>(
+    () => ({ ...(color && { color }) }),
+    [color],
+  );
+  return (
+    <AriaCheckboxGroup
+      {...props}
+      className={groupCls({
+        extra: className,
+      })}
+    >
+      {composeRenderProps(children, (children) => (
+        <CheckboxGroupContext.Provider value={checkboxGroupContextValue}>
+          <Typography
+            as={Label}
+            variant="subtitle2"
+            {...labelProps}
+            className={groupCls({
+              element: "label",
+              extra: labelProps?.className,
+            })}
+          >
+            {label}
+          </Typography>
+          <div className={listCls({ modifier: "one-line" })}>{children}</div>
+          {description && (
             <Typography
-              as={Label}
-              variant="subtitle2"
-              {...labelProps}
-              className={groupCls({
-                element: "label",
-                extra: labelProps?.className,
-              })}
-            >
-              {label}
-            </Typography>
-            <div className={listCls({ modifier: "one-line" })}>{children}</div>
-            {description && (
-              <Typography
-                as={Text}
-                slot="description"
-                variant="body2"
-                {...descriptionProps}
-                className={groupCls({
-                  element: "description",
-                  extra: descriptionProps?.className,
-                })}
-              >
-                {description}
-              </Typography>
-            )}
-            <Typography
-              as={FieldError}
+              as={Text}
+              slot="description"
               variant="body2"
-              {...errorMessageProps}
+              {...descriptionProps}
               className={groupCls({
-                element: "error-message",
-                extra: errorMessageProps?.className,
+                element: "description",
+                extra: descriptionProps?.className,
               })}
             >
-              {errorMessage}
+              {description}
             </Typography>
-          </CheckboxGroupContext.Provider>
-        ))}
-      </AriaCheckboxGroup>
-    );
-  },
-);
+          )}
+          <Typography
+            as={FieldError}
+            variant="body2"
+            {...errorMessageProps}
+            className={groupCls({
+              element: "error-message",
+              extra: errorMessageProps?.className,
+            })}
+          >
+            {errorMessage}
+          </Typography>
+        </CheckboxGroupContext.Provider>
+      ))}
+    </AriaCheckboxGroup>
+  );
+};
 
-CheckboxGroup.displayName = "CheckboxGroup";
-
-interface CheckboxItemProps extends CheckboxProps {
+interface CheckboxItemProps
+  extends CheckboxProps,
+    RefAttributes<HTMLLabelElement> {
   icon?: ReactNode;
 }
 
-export const CheckboxItem = forwardRef<HTMLLabelElement, CheckboxItemProps>(
-  (props, ref) => {
-    [props, ref] = useContextProps(
-      props,
-      ref as never,
-      CheckboxGroupContext,
-    ) as [typeof props, typeof ref];
-    const { color = "gold", className, children, icon, ...rest } = props;
-    const checkboxRipple = useRipple({
-      disabled: props.isDisabled,
-      unbounded: true,
-    });
-    const itemRipple = useRipple({
-      disabled: props.isDisabled,
-    });
+export const CheckboxItem = ({ ref, ...props }: CheckboxItemProps) => {
+  [props, ref] = useContextProps(props, ref as never, CheckboxGroupContext) as [
+    typeof props,
+    typeof ref,
+  ];
+  const { color = "gold", className, children, icon, ...rest } = props;
+  const checkboxRipple = useRipple({
+    disabled: props.isDisabled,
+    unbounded: true,
+  });
+  const itemRipple = useRipple({
+    disabled: props.isDisabled,
+  });
 
-    return (
-      <AriaCheckbox
-        {...rest}
-        ref={mergeRefs(ref, itemRipple.rootRef)}
-        className={listCls({
-          element: "item",
-          extra: ["color-" + color, className ?? "", groupCls("item")],
-        })}
-      >
-        {composeRenderProps(children, (children, { isIndeterminate }) => (
-          <>
-            <div ref={itemRipple.surfaceRef} className={cls("item-ripple")} />
-            <div className={listCls("item-content")}>
-              {icon ?? (
-                <div
-                  className={cls("item-container", "start")}
-                  ref={checkboxRipple.rootRef}
-                >
-                  <CheckboxTarget
-                    isIndeterminate={isIndeterminate}
-                    rippleRef={checkboxRipple.surfaceRef}
-                  />
-                </div>
-              )}
-              {children}
-              {icon != null && (
-                <div
-                  className={cls("item-container", "end")}
-                  ref={checkboxRipple.rootRef}
-                >
-                  <CheckboxTarget
-                    isIndeterminate={isIndeterminate}
-                    rippleRef={checkboxRipple.surfaceRef}
-                  />
-                </div>
-              )}
-            </div>
-          </>
-        ))}
-      </AriaCheckbox>
-    );
-  },
-);
-
-CheckboxItem.displayName = "CheckboxItem";
+  return (
+    <AriaCheckbox
+      {...rest}
+      ref={mergeRefs(ref, itemRipple.rootRef)}
+      className={listCls({
+        element: "item",
+        extra: ["color-" + color, className ?? "", groupCls("item")],
+      })}
+    >
+      {composeRenderProps(children, (children, { isIndeterminate }) => (
+        <>
+          <div ref={itemRipple.surfaceRef} className={cls("item-ripple")} />
+          <div className={listCls("item-content")}>
+            {icon ?? (
+              <div
+                className={cls("item-container", "start")}
+                ref={checkboxRipple.rootRef}
+              >
+                <CheckboxTarget
+                  isIndeterminate={isIndeterminate}
+                  rippleRef={checkboxRipple.surfaceRef}
+                />
+              </div>
+            )}
+            {children}
+            {icon != null && (
+              <div
+                className={cls("item-container", "end")}
+                ref={checkboxRipple.rootRef}
+              >
+                <CheckboxTarget
+                  isIndeterminate={isIndeterminate}
+                  rippleRef={checkboxRipple.surfaceRef}
+                />
+              </div>
+            )}
+          </div>
+        </>
+      ))}
+    </AriaCheckbox>
+  );
+};

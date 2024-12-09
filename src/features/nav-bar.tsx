@@ -12,11 +12,11 @@ import { Symbol } from "~/components/symbol";
 import { Toolbar } from "~/components/toolbar";
 import { useSupabase } from "~/db/provider";
 import { useIsomorphicLayoutEffect } from "~/hooks/use-isomorphic-layout-effect";
+import type { PickRequired } from "~/util/types";
 import { Invites } from "./invites/invites";
 import { Logo } from "./logo";
 import { PreferencesDialog } from "./user_config/dialog";
 import styles from "./nav-bar.module.scss";
-import { PickRequired } from "~/util/types";
 
 function useNavBarScroll() {
   const [navBarRef, setNavBarRef] = useState<HTMLElement | null>(null);
@@ -87,8 +87,10 @@ export interface NavBarProps<TTos extends ReadonlyArray<string | undefined>> {
   actions?: ReactNode;
 }
 
+const emptyArray: Array<never> = [];
+
 export function NavBar<TTos extends ReadonlyArray<string | undefined> = []>({
-  breadcrumbs = [] as never,
+  breadcrumbs = emptyArray as never,
   actions,
 }: NavBarProps<TTos>) {
   const navBarRef = useNavBarScroll();

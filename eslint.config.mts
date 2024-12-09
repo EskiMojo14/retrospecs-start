@@ -8,6 +8,7 @@ import storybook from "eslint-plugin-storybook";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 import vitest from "eslint-plugin-vitest";
+import react from "@eslint-react/eslint-plugin";
 
 export default tseslint.config(
   {
@@ -39,6 +40,32 @@ export default tseslint.config(
   pluginReact.configs.flat.recommended,
   // @ts-ignore
   pluginReact.configs.flat["jsx-runtime"],
+  {
+    ...react.configs["recommended-type-checked"],
+    settings: {
+      "react-x": {
+        additionalHooks: {
+          useLayoutEffect: ["useIsomorphicLayoutEffect"],
+        },
+        additionalComponents: [
+          {
+            name: "InternalLink",
+            as: "a",
+            attributes: [
+              {
+                name: "to",
+                as: "href",
+              },
+              {
+                name: "rel",
+                defaultValue: "noopener noreferrer",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
   eslintPluginImportX.flatConfigs.recommended,
   eslintPluginImportX.flatConfigs.typescript,
   {
@@ -102,15 +129,20 @@ export default tseslint.config(
         },
       ],
       "react/prop-types": "off",
+      "@eslint-react/no-forward-ref": "error",
+      "@eslint-react/prefer-read-only-props": "off",
       "@typescript-eslint/consistent-type-imports": [
         "error",
         { fixStyle: "separate-type-imports" },
       ],
-      "vitest/valid-title": ["error", { allowArguments: true }],
     },
   },
   {
     files: ["**/*.test.{js,mjs,cjs,ts,jsx,tsx}"],
     ...vitest.configs.recommended,
+    rules: {
+      ...vitest.configs.recommended.rules,
+      "vitest/valid-title": ["error", { allowArguments: true }],
+    },
   },
 );

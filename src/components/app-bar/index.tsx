@@ -1,4 +1,4 @@
-import { forwardRef, type ContextType, type ReactNode } from "react";
+import type { ComponentProps, ContextType, ReactNode } from "react";
 import { DEFAULT_SLOT, TooltipContext } from "react-aria-components";
 import { ButtonContext } from "~/components/button";
 import { Provider } from "~/components/provider";
@@ -7,10 +7,7 @@ import { LogoContext } from "~/features/logo";
 import { bemHelper } from "~/util";
 import "./index.scss";
 
-export interface AppBarProps {
-  children?: ReactNode;
-  className?: string;
-}
+export interface AppBarProps extends ComponentProps<"header"> {}
 
 const cls = bemHelper("app-bar");
 
@@ -55,30 +52,26 @@ const tooltipContextValue: ContextType<typeof TooltipContext> = {
   },
 };
 
-export const AppBar = forwardRef<HTMLElement, AppBarProps>(
-  ({ children, className }, ref) => (
-    <header
-      ref={ref}
-      className={cls({
-        extra: className,
-      })}
-      data-theme="dark"
+export const AppBar = ({ children, className, ...props }: AppBarProps) => (
+  <header
+    {...props}
+    className={cls({
+      extra: className,
+    })}
+    data-theme="dark"
+  >
+    <Provider
+      values={[
+        [ToolbarContext, toolbarContextValue],
+        [LogoContext, logoContextValue],
+        [ButtonContext, buttonContextValue],
+        [TooltipContext, tooltipContextValue],
+      ]}
     >
-      <Provider
-        values={[
-          [ToolbarContext, toolbarContextValue],
-          [LogoContext, logoContextValue],
-          [ButtonContext, buttonContextValue],
-          [TooltipContext, tooltipContextValue],
-        ]}
-      >
-        {children}
-      </Provider>
-    </header>
-  ),
+      {children}
+    </Provider>
+  </header>
 );
-
-AppBar.displayName = "AppBar";
 
 export function AppBarRow({
   children,

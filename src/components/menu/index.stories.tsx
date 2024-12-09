@@ -171,7 +171,7 @@ export const Dynamic: Story = {
 };
 
 function SelectDemo({ selectionMode, color }: StoryProps) {
-  const [selected, setSelected] = useState<Selection>(new Set());
+  const [selected, setSelected] = useState<Selection>(() => new Set());
   return (
     <Menu
       trigger={

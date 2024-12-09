@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { forwardRef } from "react";
+import type { RefAttributes } from "react";
 import type { PopoverProps as AriaPopoverProps } from "react-aria-components";
 import {
   Popover as AriaPopover,
@@ -24,28 +24,25 @@ export type PopoverProps = Compute<
   Omit<AriaPopoverProps, "className"> &
     BackgroundProps & {
       className?: string;
-    }
+    } & RefAttributes<HTMLElement>
 >;
 
-export const Popover = forwardRef<HTMLElement, PopoverProps>(
-  ({ children, className, withBg = true, backgroundProps, ...props }, ref) => (
-    <AriaPopover
-      offset={8}
-      {...props}
-      ref={ref}
-      className={clsx("popover", className)}
-    >
-      {composeRenderProps(children, (children) =>
-        withBg ? (
-          <LineBackground opacity={0.3} {...backgroundProps}>
-            {children}
-          </LineBackground>
-        ) : (
-          children
-        ),
-      )}
-    </AriaPopover>
-  ),
+export const Popover = ({
+  children,
+  className,
+  withBg = true,
+  backgroundProps,
+  ...props
+}: PopoverProps) => (
+  <AriaPopover offset={8} {...props} className={clsx("popover", className)}>
+    {composeRenderProps(children, (children) =>
+      withBg ? (
+        <LineBackground opacity={0.3} {...backgroundProps}>
+          {children}
+        </LineBackground>
+      ) : (
+        children
+      ),
+    )}
+  </AriaPopover>
 );
-
-Popover.displayName = "Popover";

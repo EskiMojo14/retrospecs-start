@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
-import { createContext, forwardRef, useMemo, useState } from "react";
+import type { ReactNode, RefAttributes } from "react";
+import { createContext, useMemo, useState } from "react";
 import type {
   TabListProps as AriaTabListProps,
   TabsProps as AriaTabsProps,
@@ -23,59 +23,57 @@ import "./index.scss";
 
 const cls = bemHelper("tabs");
 
-export interface TabsProps extends Omit<AriaTabsProps, "className"> {
+export interface TabsProps
+  extends Omit<AriaTabsProps, "className">,
+    RefAttributes<HTMLDivElement> {
   className?: string;
 }
 
-export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
-  ({ className, ...props }, ref) => (
-    <AriaTabs
-      {...props}
-      ref={ref}
-      className={cls({
-        extra: className,
-      })}
-    />
-  ),
+export const Tabs = ({ className, ...props }: TabsProps) => (
+  <AriaTabs
+    {...props}
+    className={cls({
+      extra: className,
+    })}
+  />
 );
 
-Tabs.displayName = "Tabs";
-
 export interface TabListProps<T extends object>
-  extends Omit<AriaTabListProps<T>, "className"> {
+  extends Omit<AriaTabListProps<T>, "className">,
+    RefAttributes<HTMLDivElement> {
   className?: string;
   inlineIcons?: boolean;
   color?: Color;
   variant?: "filled" | "outlined";
 }
 
-export const TabList = forwardRef<HTMLDivElement, TabListProps<{}>>(
-  ({ className, inlineIcons, color, variant, ...props }, ref) => {
-    const tabContextValue = useMemo(
-      () => ({ ...(color && { color }), ...(variant && { variant }) }),
-      [color, variant],
-    );
-    return (
-      <TabContext.Provider value={tabContextValue}>
-        <AriaTabList
-          {...props}
-          ref={ref}
-          className={cls({
-            element: "list",
-            modifiers: {
-              "inline-icons": !!inlineIcons,
-            },
-            extra: className,
-          })}
-        />
-      </TabContext.Provider>
-    );
-  },
-) as (<T extends object>(props: TabListProps<T>) => React.JSX.Element) & {
-  displayName?: string;
+export const TabList = <T extends object>({
+  className,
+  inlineIcons,
+  color,
+  variant,
+  ...props
+}: TabListProps<T>) => {
+  const tabContextValue = useMemo(
+    () => ({ ...(color && { color }), ...(variant && { variant }) }),
+    [color, variant],
+  );
+  return (
+    <TabContext.Provider value={tabContextValue}>
+      <AriaTabList
+        {...props}
+        ref={ref}
+        className={cls({
+          element: "list",
+          modifiers: {
+            "inline-icons": !!inlineIcons,
+          },
+          extra: className,
+        })}
+      />
+    </TabContext.Provider>
+  );
 };
-
-TabList.displayName = "TabList";
 
 export interface TabProps extends Omit<AriaTabProps, "className"> {
   className?: string;
@@ -87,7 +85,10 @@ export interface TabProps extends Omit<AriaTabProps, "className"> {
 export const TabContext =
   createContext<ContextValue<TabProps, HTMLElement>>(null);
 
-export const Tab = forwardRef<HTMLButtonElement, TabProps>((props, ref) => {
+export const Tab = ({
+  ref,
+  ...props
+}: TabProps & RefAttributes<HTMLButtonElement>) => {
   [props, ref] = useContextProps(props, ref as never, TabContext) as [
     typeof props,
     typeof ref,
@@ -131,25 +132,20 @@ export const Tab = forwardRef<HTMLButtonElement, TabProps>((props, ref) => {
       ))}
     </AriaTab>
   );
-});
+};
 
-Tab.displayName = "Tab";
-
-export interface TabPanelProps extends Omit<AriaTabPanelProps, "className"> {
+export interface TabPanelProps
+  extends Omit<AriaTabPanelProps, "className">,
+    RefAttributes<HTMLDivElement> {
   className?: string;
 }
 
-export const TabPanel = forwardRef<HTMLDivElement, TabPanelProps>(
-  ({ className, ...props }, ref) => (
-    <AriaTabPanel
-      {...props}
-      ref={ref}
-      className={cls({
-        element: "panel",
-        extra: className,
-      })}
-    />
-  ),
+export const TabPanel = ({ className, ...props }: TabPanelProps) => (
+  <AriaTabPanel
+    {...props}
+    className={cls({
+      element: "panel",
+      extra: className,
+    })}
+  />
 );
-
-TabPanel.displayName = "TabPanel";

@@ -7,6 +7,7 @@ export function useImageIsLoaded(src?: string | null) {
 
   useEffect(() => {
     if (!src) {
+      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
       setIsLoaded("none");
       return;
     }
@@ -18,6 +19,7 @@ export function useImageIsLoaded(src?: string | null) {
       if (isMounted) setIsLoaded(status);
     };
 
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setIsLoaded("pending");
     image.onload = createStatusHandler("loaded");
     image.onerror = createStatusHandler("error");

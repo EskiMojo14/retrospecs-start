@@ -78,7 +78,7 @@ export function Toast({ state, ...props }: ToastProps) {
           {symbol ?? <Symbol>{toastSymbols[type]}</Symbol>}
         </div>
         <div className={cls("content")}>
-          {title && (
+          {!!title && (
             <Heading
               variant="subtitle1"
               className={cls("title")}
@@ -87,7 +87,7 @@ export function Toast({ state, ...props }: ToastProps) {
               {title}
             </Heading>
           )}
-          {description && (
+          {!!description && (
             <Typography
               variant="body2"
               className={cls("description")}
@@ -106,7 +106,7 @@ export function Toast({ state, ...props }: ToastProps) {
             <Symbol>close</Symbol>
           </IconButton>
         )}
-        {timeout && (
+        {!!timeout && (
           <div className={cls("progress")}>
             <div className={cls("progress-stop")} />
           </div>

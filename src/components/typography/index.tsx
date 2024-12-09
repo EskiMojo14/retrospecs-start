@@ -1,5 +1,10 @@
-import type { HTMLAttributes, ReactNode, TimeHTMLAttributes } from "react";
-import { forwardRef, useMemo } from "react";
+import type {
+  HTMLAttributes,
+  ReactNode,
+  RefAttributes,
+  TimeHTMLAttributes,
+} from "react";
+import { useMemo } from "react";
 import type { HeadingProps as AriaHeadingProps } from "react-aria-components";
 import {
   Heading as AriaHeading,
@@ -48,46 +53,34 @@ export const Typography = createGenericComponent<
 type HeadingProps = Overwrite<
   AriaHeadingProps,
   Overwrite<TypographyProps, { variant: HeadingVariant }>
->;
+> &
+  RefAttributes<HTMLHeadingElement>;
 
-export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
-  (props, ref) => (
-    <Typography
-      ref={ref}
-      as={AriaHeading}
-      level={levelMapping[props.variant]}
-      {...props}
-    />
-  ),
+export const Heading = (props: HeadingProps) => (
+  <Typography as={AriaHeading} level={levelMapping[props.variant]} {...props} />
 );
-
-Heading.displayName = "Heading";
 
 type HeaderProps = Overwrite<
   HTMLAttributes<HTMLElement>,
   Overwrite<TypographyProps, { variant: HeadingVariant }>
->;
+> &
+  RefAttributes<HTMLElement>;
 
-export const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => (
-  <Typography ref={ref} as={AriaHeader} {...props} />
-));
-
-Header.displayName = "Header";
+export const Header = (props: HeaderProps) => (
+  <Typography as={AriaHeader} {...props} />
+);
 
 type TimeProps = Overwrite<
   PickRequired<TimeHTMLAttributes<HTMLTimeElement>, "dateTime">,
   { children: (date: Date) => ReactNode }
->;
+> &
+  RefAttributes<HTMLTimeElement>;
 
-export const Time = forwardRef<HTMLTimeElement, TimeProps>(
-  ({ dateTime, children, ...rest }, ref) => {
-    const dateObj = useMemo(() => new Date(dateTime), [dateTime]);
-    return (
-      <time ref={ref} dateTime={dateTime} {...rest}>
-        <ClientOnly fallback={dateTime}>{() => children(dateObj)}</ClientOnly>
-      </time>
-    );
-  },
-);
-
-Time.displayName = "Time";
+export const Time = ({ dateTime, children, ...rest }: TimeProps) => {
+  const dateObj = useMemo(() => new Date(dateTime), [dateTime]);
+  return (
+    <time dateTime={dateTime} {...rest}>
+      <ClientOnly fallback={dateTime}>{() => children(dateObj)}</ClientOnly>
+    </time>
+  );
+};

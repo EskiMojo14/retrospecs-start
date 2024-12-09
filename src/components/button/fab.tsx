@@ -1,6 +1,5 @@
 import type { TooltipTriggerProps } from "@react-types/tooltip";
-import type { ContextType } from "react";
-import { forwardRef } from "react";
+import type { ContextType, RefAttributes } from "react";
 import {
   composeRenderProps,
   type ButtonProps as AriaButtonProps,
@@ -16,7 +15,8 @@ import { Button } from ".";
 import "./fab.scss";
 
 export interface FabProps
-  extends Omit<Overwrite<AriaButtonProps, ButtonProps>, "variant"> {
+  extends Omit<Overwrite<AriaButtonProps, ButtonProps>, "variant">,
+    RefAttributes<HTMLButtonElement> {
   tooltip: TooltipProps["children"];
   tooltipProps?: Omit<TooltipProps, "children">;
   tooltipTriggerProps?: TooltipTriggerProps;
@@ -32,47 +32,41 @@ const largeFabSymbolContextValue: ContextType<typeof SymbolContext> = {
   size: 36,
 };
 
-export const Fab = forwardRef<HTMLButtonElement, FabProps>(
-  (
-    {
-      size = "medium",
-      className,
-      children,
-      exited,
-      placement,
-      tooltip,
-      tooltipProps,
-      tooltipTriggerProps,
-      ...props
-    },
-    ref,
-  ) => (
-    <TooltipTrigger {...tooltipTriggerProps}>
-      <Button
-        ref={ref}
-        variant="filled"
-        {...props}
-        className={cls({
-          modifiers: {
-            [size]: true,
-            [placement ?? ""]: !!placement,
-            exited: !!exited,
-          },
-          extra: className,
-        })}
-      >
-        {composeRenderProps(children, (children) => (
-          <MergeProvider
-            context={SymbolContext}
-            value={size === "large" ? largeFabSymbolContextValue : null}
-          >
-            {children}
-          </MergeProvider>
-        ))}
-      </Button>
-      <Tooltip {...tooltipProps}>{tooltip}</Tooltip>
-    </TooltipTrigger>
-  ),
+export const Fab = ({
+  size = "medium",
+  className,
+  children,
+  exited,
+  placement,
+  tooltip,
+  tooltipProps,
+  tooltipTriggerProps,
+  ...props
+}: FabProps) => (
+  <TooltipTrigger {...tooltipTriggerProps}>
+    <Button
+      variant="filled"
+      {...props}
+      className={cls({
+        modifiers: {
+          [size]: true,
+          [placement ?? ""]: !!placement,
+          exited: !!exited,
+        },
+        extra: className,
+      })}
+    >
+      {composeRenderProps(children, (children) => (
+        <MergeProvider
+          context={SymbolContext}
+          value={size === "large" ? largeFabSymbolContextValue : null}
+        >
+          {children}
+        </MergeProvider>
+      ))}
+    </Button>
+    <Tooltip {...tooltipProps}>{tooltip}</Tooltip>
+  </TooltipTrigger>
 );
 
 Fab.displayName = "FloatingActionButton";
@@ -83,12 +77,14 @@ const extendedSymbolContextValue: ContextType<typeof SymbolContext> = {
   size: 24,
 };
 
-export const ExtendedFab = forwardRef<
-  HTMLButtonElement,
-  Omit<FabProps, "size" | "tooltip">
->(({ className, children, exited, placement, ...props }, ref) => (
+export const ExtendedFab = ({
+  className,
+  children,
+  exited,
+  placement,
+  ...props
+}: Omit<FabProps, "size" | "tooltip">) => (
   <Button
-    ref={ref}
     variant="filled"
     {...props}
     className={extendedCls({
@@ -105,6 +101,6 @@ export const ExtendedFab = forwardRef<
       </MergeProvider>
     ))}
   </Button>
-));
+);
 
 ExtendedFab.displayName = "ExtendedFloatingActionButton";

@@ -1,5 +1,5 @@
-import type { ContextType, ReactNode } from "react";
-import { forwardRef, useMemo } from "react";
+import type { ContextType, ReactNode, RefAttributes } from "react";
+import { useMemo } from "react";
 import type {
   TextFieldProps as AriaTextFieldProps,
   FieldErrorProps,
@@ -60,107 +60,97 @@ const textFieldEvents = {
   focused: { focus: true, blur: false },
 } satisfies EventMap;
 
-export const TextField = forwardRef<
-  HTMLInputElement & HTMLTextAreaElement,
-  TextFieldProps
->(
-  (
-    {
-      className,
-      label,
-      labelProps,
-      description,
-      descriptionProps,
-      errorMessage,
-      errorMessageProps,
-      textarea,
-      icon,
-      action,
-      onAction,
-      color = "gold",
-      ...props
-    },
-    ref,
-  ) => {
-    const { containerRef, inputEventProps } =
-      useLiftInputState(textFieldEvents);
-    const buttonContextValue = useMemo<ContextType<typeof ButtonContext>>(
-      () => ({
-        slots: {
-          action: {
-            className: cls("action"),
-            onPress: onAction,
-          },
+export const TextField = ({
+  className,
+  label,
+  labelProps,
+  description,
+  descriptionProps,
+  errorMessage,
+  errorMessageProps,
+  textarea,
+  icon,
+  action,
+  onAction,
+  color = "gold",
+  ref,
+  ...props
+}: TextFieldProps & RefAttributes<HTMLInputElement & HTMLTextAreaElement>) => {
+  const { containerRef, inputEventProps } = useLiftInputState(textFieldEvents);
+  const buttonContextValue = useMemo<ContextType<typeof ButtonContext>>(
+    () => ({
+      slots: {
+        action: {
+          className: cls("action"),
+          onPress: onAction,
         },
-      }),
-      [onAction],
-    );
-    return (
-      <AriaTextField
-        {...props}
+      },
+    }),
+    [onAction],
+  );
+  return (
+    <AriaTextField
+      {...props}
+      className={inputGroupCls({
+        extra: cls({ extra: [className ?? "", "color-" + color] }),
+      })}
+    >
+      <Typography
+        as={Label}
+        variant="subtitle2"
+        {...labelProps}
         className={inputGroupCls({
-          extra: cls({ extra: [className ?? "", "color-" + color] }),
+          element: "label",
+          extra: labelProps?.className,
         })}
       >
+        {label}
+      </Typography>
+      <label ref={containerRef} className={inputGroupCls("input-container")}>
+        <Provider
+          values={[
+            [SymbolContext, symbolContextValue],
+            [ButtonContext, buttonContextValue],
+          ]}
+        >
+          {icon}
+          {textarea ? (
+            <TextArea
+              ref={ref}
+              className={cls("textarea")}
+              {...inputEventProps}
+            />
+          ) : (
+            <Input ref={ref} className={cls("input")} {...inputEventProps} />
+          )}
+          {action}
+        </Provider>
+      </label>
+      {!!description && (
         <Typography
-          as={Label}
-          variant="subtitle2"
-          {...labelProps}
+          as={Text}
+          variant="caption"
+          slot="description"
+          {...descriptionProps}
           className={inputGroupCls({
-            element: "label",
-            extra: labelProps?.className,
+            element: "description",
+            extra: descriptionProps?.className,
           })}
         >
-          {label}
+          {description}
         </Typography>
-        <label ref={containerRef} className={inputGroupCls("input-container")}>
-          <Provider
-            values={[
-              [SymbolContext, symbolContextValue],
-              [ButtonContext, buttonContextValue],
-            ]}
-          >
-            {icon}
-            {textarea ? (
-              <TextArea
-                ref={ref}
-                className={cls("textarea")}
-                {...inputEventProps}
-              />
-            ) : (
-              <Input ref={ref} className={cls("input")} {...inputEventProps} />
-            )}
-            {action}
-          </Provider>
-        </label>
-        {description && (
-          <Typography
-            as={Text}
-            variant="caption"
-            slot="description"
-            {...descriptionProps}
-            className={inputGroupCls({
-              element: "description",
-              extra: descriptionProps?.className,
-            })}
-          >
-            {description}
-          </Typography>
-        )}
-        <Typography
-          as={FieldError}
-          variant="body2"
-          {...errorMessageProps}
-          className={inputGroupCls({
-            element: "error-message",
-            extra: errorMessageProps?.className,
-          })}
-        >
-          {errorMessage}
-        </Typography>
-      </AriaTextField>
-    );
-  },
-);
-
-TextField.displayName = "TextField";
+      )}
+      <Typography
+        as={FieldError}
+        variant="body2"
+        {...errorMessageProps}
+        className={inputGroupCls({
+          element: "error-message",
+          extra: errorMessageProps?.className,
+        })}
+      >
+        {errorMessage}
+      </Typography>
+    </AriaTextField>
+  );
+};

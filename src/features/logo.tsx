@@ -1,6 +1,6 @@
 import { clsx } from "clsx";
-import type { ComponentPropsWithoutRef } from "react";
-import { createContext, forwardRef } from "react";
+import type { ComponentProps, ComponentPropsWithoutRef } from "react";
+import { createContext } from "react";
 import type { ContextValue } from "react-aria-components";
 import { useContextProps } from "react-aria-components";
 // eslint-disable-next-line import-x/no-unresolved
@@ -12,17 +12,13 @@ export const LogoContext =
     null,
   );
 
-export const Logo = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
-  (props, ref) => {
-    [props, ref] = useContextProps(props, ref, LogoContext);
-    const { className, ...rest } = props;
-    return (
-      <div {...rest} className={clsx(styles.logo, className)}>
-        <img src={logo} alt="RetroSpecs" />
-        <h6 className={styles.wordmark}>RetroSpecs</h6>
-      </div>
-    );
-  },
-);
-
-Logo.displayName = "Logo";
+export const Logo = ({ ref, ...props }: ComponentProps<"div">) => {
+  [props, ref] = useContextProps(props, ref as never, LogoContext);
+  const { className, ...rest } = props;
+  return (
+    <div {...rest} className={clsx(styles.logo, className)}>
+      <img src={logo} alt="RetroSpecs" />
+      <h6 className={styles.wordmark}>RetroSpecs</h6>
+    </div>
+  );
+};

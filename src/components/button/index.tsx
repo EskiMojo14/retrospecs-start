@@ -1,7 +1,7 @@
 import type { CollectionProps } from "@react-aria/collections";
 import { mergeProps } from "@react-aria/utils";
-import type { ReactNode, RefCallback } from "react";
-import { createContext, forwardRef, useCallback, useMemo, useRef } from "react";
+import type { ReactNode, RefAttributes, RefCallback } from "react";
+import { createContext, useCallback, useMemo, useRef } from "react";
 import type {
   ToggleButtonProps as AriaToggleButtonProps,
   ContextValue,
@@ -118,33 +118,32 @@ export const LinkButton = withNewDefault("LinkButton", Button, Link);
 
 export type ToggleButtonProps = Overwrite<AriaToggleButtonProps, ButtonProps>;
 
-export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
-  (props, ref) => {
-    const innerRef = useRef<HTMLButtonElement>(null);
-    useEventListener(
-      innerRef,
-      "mouseleave",
-      useCallback(() => {
-        innerRef.current?.classList.remove("toggle-button--changed");
-      }, []),
-    );
-    return (
-      <Button
-        as={AriaToggleButton}
-        {...mergeProps(props, {
-          ref: mergeRefs(ref, innerRef),
-          onChange(isSelected: boolean) {
-            if (isSelected) {
-              innerRef.current?.classList.add("toggle-button--changed");
-            }
-          },
-        })}
-      />
-    );
-  },
-);
-
-ToggleButton.displayName = "ToggleButton";
+export const ToggleButton = ({
+  ref,
+  ...props
+}: ToggleButtonProps & RefAttributes<HTMLButtonElement>) => {
+  const innerRef = useRef<HTMLButtonElement>(null);
+  useEventListener(
+    innerRef,
+    "mouseleave",
+    useCallback(() => {
+      innerRef.current?.classList.remove("toggle-button--changed");
+    }, []),
+  );
+  return (
+    <Button
+      as={AriaToggleButton}
+      {...mergeProps(props, {
+        ref: mergeRefs(ref, innerRef),
+        onChange(isSelected: boolean) {
+          if (isSelected) {
+            innerRef.current?.classList.add("toggle-button--changed");
+          }
+        },
+      })}
+    />
+  );
+};
 
 export interface ButtonGroupProps<T extends object>
   extends Pick<ButtonProps, "color" | "variant" | "isDisabled">,
@@ -157,102 +156,92 @@ export interface ButtonGroupProps<T extends object>
 
 const clsGroup = bemHelper("button-group");
 
-export const ButtonGroup = forwardRef<HTMLDivElement, ButtonGroupProps<{}>>(
-  (
-    {
-      className,
-      children,
-      id,
+export const ButtonGroup = <T extends object>({
+  className,
+  children,
+  id,
 
-      isDisabled,
-      color,
-      variant,
+  isDisabled,
+  color,
+  variant,
 
-      orientation = "horizontal",
-      label,
-      labelProps,
-      description,
-      descriptionProps,
-      errorMessage,
-      errorMessageProps,
+  orientation = "horizontal",
+  label,
+  labelProps,
+  description,
+  descriptionProps,
+  errorMessage,
+  errorMessageProps,
 
-      items,
-      dependencies,
+  items,
+  dependencies,
 
-      ...props
-    },
-    ref,
-  ) => {
-    const contextValue = useMemo<ButtonProps>(
-      () => ({ color, isDisabled, variant }),
-      [color, isDisabled, variant],
-    );
+  ...props
+}: ButtonGroupProps<T>) => {
+  const contextValue = useMemo<ButtonProps>(
+    () => ({ color, isDisabled, variant }),
+    [color, isDisabled, variant],
+  );
 
-    return (
-      <Group
-        ref={ref}
-        {...props}
+  return (
+    <Group
+      {...props}
+      className={clsGroup({
+        extra: className,
+      })}
+      id={id}
+      data-orientation={orientation}
+    >
+      <Typography
+        as={Label}
+        variant="subtitle2"
+        id={`${id}-label`}
+        {...labelProps}
         className={clsGroup({
-          extra: className,
+          element: "label",
+          extra: labelProps?.className,
         })}
-        id={id}
-        data-orientation={orientation}
       >
+        {label}
+      </Typography>
+      <ButtonContext.Provider value={contextValue}>
+        <Toolbar
+          className={clsGroup("buttons")}
+          aria-labelledby={label ? `${id}-label` : undefined}
+          aria-describedby={description ? `${id}-description` : undefined}
+        >
+          <Collection
+            {...{
+              items,
+              dependencies,
+            }}
+            idScope={id}
+          >
+            {children}
+          </Collection>
+        </Toolbar>
+      </ButtonContext.Provider>
+      {description && (
         <Typography
-          as={Label}
-          variant="subtitle2"
-          id={`${id}-label`}
-          {...labelProps}
+          as={Text}
+          slot="description"
+          variant="caption"
+          id={`${id}-description`}
+          {...descriptionProps}
           className={clsGroup({
-            element: "label",
-            extra: labelProps?.className,
+            element: "description",
+            extra: descriptionProps?.className,
           })}
         >
-          {label}
+          {description}
         </Typography>
-        <ButtonContext.Provider value={contextValue}>
-          <Toolbar
-            className={clsGroup("buttons")}
-            aria-labelledby={label ? `${id}-label` : undefined}
-            aria-describedby={description ? `${id}-description` : undefined}
-          >
-            <Collection
-              {...{
-                items,
-                dependencies,
-              }}
-              idScope={id}
-            >
-              {children}
-            </Collection>
-          </Toolbar>
-        </ButtonContext.Provider>
-        {description && (
-          <Typography
-            as={Text}
-            slot="description"
-            variant="caption"
-            id={`${id}-description`}
-            {...descriptionProps}
-            className={clsGroup({
-              element: "description",
-              extra: descriptionProps?.className,
-            })}
-          >
-            {description}
-          </Typography>
-        )}
-        <Typography as={FieldError} variant="caption" {...errorMessageProps}>
-          {errorMessage}
-        </Typography>
-      </Group>
-    );
-  },
-) as (<T extends object>(props: ButtonGroupProps<T>) => React.JSX.Element) & {
-  displayName: string;
+      )}
+      <Typography as={FieldError} variant="caption" {...errorMessageProps}>
+        {errorMessage}
+      </Typography>
+    </Group>
+  );
 };
-
-ButtonGroup.displayName = "ButtonGroup";
 
 export interface LoadingButtonProps
   extends Pick<ProgressProps, "isIndeterminate"> {

@@ -18,6 +18,7 @@ export const Grid = createGenericComponent<
   GridProps,
   { className: string; children: ReactNode; style: CSSProperties }
 >("Grid", "div", ({ as: As, className, children, gutter, ...props }, ref) => {
+  // eslint-disable-next-line @eslint-react/no-children-to-array
   const firstEl = Children.toArray(children)[0];
   const needsInner = !isValidElement(firstEl) || firstEl.type !== GridInner;
   return (

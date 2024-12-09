@@ -76,7 +76,7 @@ export function Select<T extends object>({
         extra: cls({ extra: [className ?? "", "color-" + color] }),
       })}
     >
-      {label && (
+      {!!label && (
         <Typography
           as={Label}
           variant="subtitle2"
@@ -98,7 +98,7 @@ export function Select<T extends object>({
         </SymbolContext.Provider>
         <Symbol className={cls("dropdown-icon")}>arrow_drop_down</Symbol>
       </Button>
-      {description && (
+      {!!description && (
         <Typography
           as={Text}
           variant="caption"
