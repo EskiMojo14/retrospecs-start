@@ -20,32 +20,32 @@ import styles from "./nav-bar.module.scss";
 
 function useNavBarScroll() {
   const [navBarRef, setNavBarRef] = useState<HTMLElement | null>(null);
-  const foundation = useMemo(() => {
-    let foundation: MDCTopAppBarFoundation | null = null;
-    if (!navBarRef) return foundation;
-    foundation = new MDCTopAppBarFoundation({
-      addClass(className) {
-        navBarRef.classList.add(className);
-      },
-      removeClass(className) {
-        navBarRef.classList.remove(className);
-      },
-      hasClass: (className) => navBarRef.classList.contains(className),
-      setStyle(property, value) {
-        navBarRef.style.setProperty(
-          property === "top" ? "--top" : property,
-          value,
-        );
-      },
-      getTopAppBarHeight() {
-        const height = navBarRef.clientHeight;
-        navBarRef.style.setProperty("--app-bar-height", `${height}px`);
-        return height;
-      },
-      getViewportScrollY: () => window.scrollY,
-    });
-    return foundation;
-  }, [navBarRef]);
+  const foundation = useMemo(
+    () =>
+      navBarRef &&
+      new MDCTopAppBarFoundation({
+        addClass(className) {
+          navBarRef.classList.add(className);
+        },
+        removeClass(className) {
+          navBarRef.classList.remove(className);
+        },
+        hasClass: (className) => navBarRef.classList.contains(className),
+        setStyle(property, value) {
+          navBarRef.style.setProperty(
+            property === "top" ? "--top" : property,
+            value,
+          );
+        },
+        getTopAppBarHeight() {
+          const height = navBarRef.clientHeight;
+          navBarRef.style.setProperty("--app-bar-height", `${height}px`);
+          return height;
+        },
+        getViewportScrollY: () => window.scrollY,
+      }),
+    [navBarRef],
+  );
 
   useIsomorphicLayoutEffect(() => {
     if (!foundation) return;
