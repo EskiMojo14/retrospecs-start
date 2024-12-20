@@ -29,7 +29,7 @@ import { getUrl } from "~/util/isomorphic";
 import { promiseOwnProperties } from "~/util/ponyfills";
 import type { AppContext } from "~/util/supabase-query";
 import type { MaybePromise, Nullish } from "~/util/types";
-import "~/index.scss";
+import rootCss from "~/index.scss?url";
 
 const { TanStackRouterDevtools = () => null } =
   process.env.NODE_ENV === "development"
@@ -73,7 +73,10 @@ export const Route = createRootRouteWithContext<AppContext>()({
         content: "width=device-width, initial-scale=1",
       },
     ],
-    links: [{ rel: "icon", href: "/assets/retrospecs.png" }],
+    links: [
+      { rel: "icon", href: "/assets/retrospecs.png" },
+      { rel: "stylesheet", href: rootCss },
+    ],
   }),
   component: RootComponent,
   notFoundComponent: () => <ForeEauFore />,
