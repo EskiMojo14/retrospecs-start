@@ -33,7 +33,7 @@
     "@tanstack/react-router": "^1.83.0",
     "@tanstack/react-router-with-query": "^1.83.0",
     "@tanstack/router-devtools": "^1.83.0",
-    "@tanstack/start": "1.87.1",
+    "@tanstack/start": "1.92.1",
     "clsx": "^2.1.1",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",
