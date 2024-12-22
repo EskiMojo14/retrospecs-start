@@ -17,7 +17,7 @@ type ScrollTarget = Compute<
 >;
 
 export function useScrollDirection(
-  target: RefObject<ScrollTarget> | ScrollTarget | (() => ScrollTarget),
+  target: RefObject<ScrollTarget | null> | ScrollTarget | (() => ScrollTarget),
   onScroll: (direction: "up" | "down") => void,
   config: UseScrollDirectionConfig = {},
 ) {

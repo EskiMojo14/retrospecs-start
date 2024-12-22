@@ -39,6 +39,7 @@
     "lodash": "^4.17.21",
     "mix-n-matchers": "^1.8.0",
     "normalize.css": "^8.0.1",
+    "rad-event-listeners": "^1.0.0",
     "react": "^19.0.0",
     "react-aria-components": "^1.4.1",
     "react-bem-helper": "^1.4.1",

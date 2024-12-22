@@ -10936,6 +10936,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rad-event-listeners@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "rad-event-listeners@npm:1.0.0"
+  checksum: 10c0/5f623a0b957aba0ea94e0546c59719b722c314c2db12d1cb5d8a26449942572cde471a4e8a4a486a3f4ef7707050e86ac315e3ea7974d2ddf9b44ec11b0ef23c
+  languageName: node
+  linkType: hard
+
 "radix3@npm:^1.1.0, radix3@npm:^1.1.2":
   version: 1.1.2
   resolution: "radix3@npm:1.1.2"
@@ -11595,6 +11602,7 @@ __metadata:
     normalize.css: "npm:^8.0.1"
     postcss-load-config: "npm:^6.0.1"
     prettier: "npm:^3.3.3"
+    rad-event-listeners: "npm:^1.0.0"
     react: "npm:^19.0.0"
     react-aria-components: "npm:^1.4.1"
     react-bem-helper: "npm:^1.4.1"

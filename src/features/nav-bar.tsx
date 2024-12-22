@@ -1,6 +1,7 @@
 import { MDCTopAppBarFoundation } from "@material/top-app-bar";
 import type { LinkProps, RegisteredRouter } from "@tanstack/react-router";
 import { useRouter } from "@tanstack/react-router";
+import { radEventListeners } from "rad-event-listeners";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import { AppBar, AppBarRow } from "~/components/app-bar";
@@ -49,24 +50,17 @@ function useNavBarScroll() {
 
   useIsomorphicLayoutEffect(() => {
     if (!foundation) return;
-    const ac = new AbortController();
 
-    window.addEventListener(
-      "scroll",
-      foundation.handleTargetScroll.bind(foundation),
-      { signal: ac.signal },
-    );
-    window.addEventListener(
-      "resize",
-      foundation.handleWindowResize.bind(foundation),
-      { signal: ac.signal },
-    );
+    const removeListeners = radEventListeners(window, {
+      scroll: foundation.handleTargetScroll.bind(foundation),
+      resize: foundation.handleWindowResize.bind(foundation),
+    });
 
     foundation.init();
 
     return () => {
       foundation.destroy();
-      ac.abort();
+      removeListeners();
     };
   }, [foundation]);
 

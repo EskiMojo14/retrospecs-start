@@ -1,23 +1,15 @@
+import type {
+  EventTypes,
+  EventForType,
+  EventTargetLike,
+} from "rad-event-listeners";
+import { radEventListeners } from "rad-event-listeners";
 import type { RefObject } from "react";
 import { useEffect } from "react";
 import { useDevDebugValue } from "./use-dev-debug-value";
 import { useShallowStableValue } from "./use-shallow-stable";
 
-export type EventTypes<T> = {
-  [K in keyof T]: K extends `on${infer EventName}` ? EventName : never;
-}[keyof T];
-
-export type EventForType<
-  T,
-  EventType extends EventTypes<T>,
-> = EventType extends EventType // force distribution over union, to avoid intersection
-  ? T extends Record<`on${EventType}`, ((event: infer E) => unknown) | null>
-    ? E
-    : never
-  : never;
-
-export interface UseEventListenerConfig
-  extends Omit<AddEventListenerOptions, "signal"> {
+export interface UseEventListenerConfig extends AddEventListenerOptions {
   /** Whether the event listener should be disabled. */
   disabled?: boolean;
 }
@@ -30,7 +22,7 @@ export interface UseEventListenerConfig
  * @param config The configuration object.
  */
 export function useEventListener<
-  T extends EventTarget,
+  T extends EventTargetLike,
   EventName extends EventTypes<T>,
 >(
   target: RefObject<T | null> | T | (() => T),
@@ -40,23 +32,15 @@ export function useEventListener<
 ) {
   const stableConfig = useShallowStableValue(config);
   useEffect(() => {
-    const { disabled, ...rest } = stableConfig;
     const el =
       typeof target === "function"
         ? target()
         : "current" in target
           ? target.current
           : target;
-     
-    if (disabled || !el) return;
-    const ac = new AbortController();
-    el.addEventListener(type, callback as never, {
-      signal: ac.signal,
-      ...rest,
-    });
-    return () => {
-      ac.abort();
-    };
+
+    if (stableConfig.disabled || !el) return;
+    return radEventListeners(el, { [type]: callback } as never, stableConfig);
   }, [target, type, callback, stableConfig]);
   useDevDebugValue({ target, type });
 }
