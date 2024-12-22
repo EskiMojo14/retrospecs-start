@@ -15,6 +15,11 @@ export interface UseEventListenerConfig extends AddEventListenerOptions {
   disabled?: boolean;
 }
 
+type EventTarget<T extends EventTargetLike> =
+  | T
+  | RefObject<T | null>
+  | (() => T);
+
 /**
  * A hook to add an event listener to a given element.
  * @param ref A React ref object or a DOM element.
@@ -26,7 +31,7 @@ export function useEventListener<
   T extends EventTargetLike,
   EventName extends EventTypes<T>,
 >(
-  target: RefObject<T | null> | T | (() => T),
+  target: EventTarget<T>,
   type: EventName,
   callback: (event: EventForType<T, EventName>) => void,
   config: UseEventListenerConfig = {},
@@ -36,13 +41,14 @@ export function useEventListener<
     { [type]: callback } as Record<EventName, typeof callback>,
     config,
   );
+  useDevDebugValue({ target, type });
 }
 
 export function useEventListeners<
   T extends EventTargetLike,
   EventName extends EventTypes<T>,
 >(
-  target: RefObject<T | null> | T | (() => T),
+  target: EventTarget<T>,
   handlers: HandlerMap<T, EventName>,
   globalConfig: UseEventListenerConfig = {},
 ) {
