@@ -2,6 +2,7 @@ import type {
   EventTypes,
   EventForType,
   EventTargetLike,
+  HandlerMap,
 } from "rad-event-listeners";
 import { radEventListeners } from "rad-event-listeners";
 import type { RefObject } from "react";
@@ -30,7 +31,23 @@ export function useEventListener<
   callback: (event: EventForType<T, EventName>) => void,
   config: UseEventListenerConfig = {},
 ) {
-  const stableConfig = useShallowStableValue(config);
+  useEventListeners(
+    target,
+    { [type]: callback } as Record<EventName, typeof callback>,
+    config,
+  );
+}
+
+export function useEventListeners<
+  T extends EventTargetLike,
+  EventName extends EventTypes<T>,
+>(
+  target: RefObject<T | null> | T | (() => T),
+  handlers: HandlerMap<T, EventName>,
+  globalConfig: UseEventListenerConfig = {},
+) {
+  const stableHandlers = useShallowStableValue(handlers);
+  const stableConfig = useShallowStableValue(globalConfig);
   useEffect(() => {
     const el =
       typeof target === "function"
@@ -40,7 +57,7 @@ export function useEventListener<
           : target;
 
     if (stableConfig.disabled || !el) return;
-    return radEventListeners(el, { [type]: callback } as never, stableConfig);
-  }, [target, type, callback, stableConfig]);
-  useDevDebugValue({ target, type });
+    return radEventListeners(el, stableHandlers, stableConfig);
+  }, [target, stableHandlers, stableConfig]);
+  useDevDebugValue({ target, handlers });
 }

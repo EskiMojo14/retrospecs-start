@@ -10936,10 +10936,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rad-event-listeners@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "rad-event-listeners@npm:1.0.0"
-  checksum: 10c0/5f623a0b957aba0ea94e0546c59719b722c314c2db12d1cb5d8a26449942572cde471a4e8a4a486a3f4ef7707050e86ac315e3ea7974d2ddf9b44ec11b0ef23c
+"rad-event-listeners@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "rad-event-listeners@npm:1.0.1"
+  checksum: 10c0/fbe9f35b2a960724d54c4dd9963611b4715dee5ab89e5b6773098ab4d671488128cffeff0755fed6a2b9f1bca35659551e0b5d443c0760d28215bf80327eb418
   languageName: node
   linkType: hard
 
@@ -11602,7 +11602,7 @@ __metadata:
     normalize.css: "npm:^8.0.1"
     postcss-load-config: "npm:^6.0.1"
     prettier: "npm:^3.3.3"
-    rad-event-listeners: "npm:^1.0.0"
+    rad-event-listeners: "npm:^1.0.1"
     react: "npm:^19.0.0"
     react-aria-components: "npm:^1.4.1"
     react-bem-helper: "npm:^1.4.1"
