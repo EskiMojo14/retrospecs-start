@@ -25,11 +25,11 @@ import type { UserConfig } from "~/features/user_config";
 import { getUserConfig } from "~/features/user_config";
 import { useIsomorphicLayoutEffect } from "~/hooks/use-isomorphic-layout-effect";
 import { useOptionsCreator } from "~/hooks/use-options-creator";
+import rootCss from "~/index.scss?url";
 import { getUrl } from "~/util/isomorphic";
 import { promiseOwnProperties } from "~/util/ponyfills";
 import type { AppContext } from "~/util/supabase-query";
 import type { MaybePromise, Nullish } from "~/util/types";
-import rootCss from "~/index.scss?url";
 
 const { TanStackRouterDevtools = () => null } =
   process.env.NODE_ENV === "development"
