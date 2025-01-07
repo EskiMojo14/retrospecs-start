@@ -105,7 +105,8 @@ export function createGenericComponent<
     as?: ElementType | { getComponent: (props: ReceivedProps) => ElementType };
     ref: Ref<typeof refSymbol>;
   } & ReceivedProps) {
-    if (typeof as === "object") {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (typeof as === "object" && as.getComponent) {
       as = as.getComponent(props as never);
     }
     return render({ ...props, as } as never);
