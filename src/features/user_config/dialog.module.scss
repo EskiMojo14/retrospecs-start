@@ -25,20 +25,16 @@
 
 .selectItem,
 .selectValue {
-  @each $color in palette.$colors {
-    &.#{$color} {
-      --selected-background-rgb: var(--#{$color}-500-rgb);
-      --selected-text-rgb: var(--#{$color}-900-rgb);
-      :global(.input-group__icon) {
-        color: var(--#{$color}-500);
-      }
-      @include theme.dark {
-        --selected-background-rgb: var(--#{$color}-300-rgb);
-        --selected-text-rgb: var(--#{$color}-50-rgb);
-        :global(.input-group__icon) {
-          color: var(--#{$color}-300);
-        }
-      }
+  --selected-background-rgb: var(--shade-500-rgb);
+  --selected-text-rgb: var(--shade-900-rgb);
+  :global(.symbol) {
+    color: var(--shade-500);
+  }
+  @include theme.dark {
+    --selected-background-rgb: var(--shade-300-rgb);
+    --selected-text-rgb: var(--shade-50-rgb);
+    :global(.symbol) {
+      color: var(--shade-300);
     }
   }
 }

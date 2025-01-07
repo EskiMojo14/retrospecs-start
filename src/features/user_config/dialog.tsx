@@ -114,7 +114,7 @@ export function PreferencesDialog() {
                     <span
                       className={clsx(
                         styles.selectValue,
-                        styles[profile.color],
+                        "color-" + profile.color,
                       )}
                     >
                       {defaultChildren}
@@ -125,7 +125,7 @@ export function PreferencesDialog() {
                     <SelectItem
                       key={color}
                       id={color}
-                      className={clsx(styles.selectItem, styles[color])}
+                      className={clsx(styles.selectItem, "color-" + color)}
                       textValue={startCase(color)}
                     >
                       <Symbol fill>circle</Symbol>
