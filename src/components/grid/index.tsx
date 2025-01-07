@@ -17,14 +17,13 @@ export const Grid = createGenericComponent<
   "div",
   GridProps,
   { className: string; children: ReactNode; style: CSSProperties }
->("Grid", "div", ({ as: As, className, children, gutter, ...props }, ref) => {
+>("Grid", "div", ({ as: As, className, children, gutter, ...props }) => {
   // eslint-disable-next-line @eslint-react/no-children-to-array
   const firstEl = Children.toArray(children)[0];
   const needsInner = !isValidElement(firstEl) || firstEl.type !== GridInner;
   return (
     <As
       {...props}
-      ref={ref}
       className={cls({
         extra: className,
       })}
@@ -41,10 +40,9 @@ export const GridInner = createGenericComponent<
   "div",
   { className?: string },
   { className: string }
->("GridInner", "div", ({ as: As, className, ...props }, ref) => (
+>("GridInner", "div", ({ as: As, className, ...props }) => (
   <As
     {...props}
-    ref={ref}
     className={cls({
       element: "inner",
       extra: className,
@@ -74,7 +72,7 @@ export const GridCell = createGenericComponent<
 >(
   "GridCell",
   "div",
-  ({ as: As, className, span, start, breakpoints, ...props }, ref) => {
+  ({ as: As, className, span, start, breakpoints, ...props }) => {
     const { vars, classNames } = useMemo(() => {
       const classNames = [];
       const vars: Record<string, string | number | undefined> = {};
@@ -93,7 +91,6 @@ export const GridCell = createGenericComponent<
     return (
       <As
         {...props}
-        ref={ref}
         className={cls({
           element: "cell",
           modifiers: [

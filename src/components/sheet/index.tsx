@@ -129,10 +129,6 @@ export const SheetContent = createGenericComponent<
   "section",
   { className?: string },
   { className: string }
->("SheetContent", "section", ({ as: As, className, ...props }, ref) => (
-  <As
-    {...props}
-    ref={ref}
-    className={cls({ element: "content", extra: className })}
-  />
+>("SheetContent", "section", ({ as: As, className, ...props }) => (
+  <As {...props} className={cls({ element: "content", extra: className })} />
 ));

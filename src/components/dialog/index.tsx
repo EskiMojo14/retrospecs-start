@@ -89,6 +89,6 @@ export const DialogContent = createGenericComponent<
   "div",
   { className?: string },
   { className: string }
->("DialogContent", "div", ({ as: As, className, ...props }, ref) => (
-  <As ref={ref} {...props} className={cls("content", undefined, className)} />
+>("DialogContent", "div", ({ as: As, className, ...props }) => (
+  <As {...props} className={cls("content", undefined, className)} />
 ));

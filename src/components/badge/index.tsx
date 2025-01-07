@@ -40,22 +40,20 @@ export const Badge = createGenericComponent<
 >(
   "Badge",
   "span",
-  (
-    {
-      as: As,
-      badgeContent,
-      showZero,
-      max = Infinity,
-      color = "gold",
-      collapsed: propCollapsed,
-      children,
-      className,
-      variant = "standard",
-      overlap = "rectangle",
-      ...props
-    },
-    ref,
-  ) => {
+  ({
+    badgeContent,
+    showZero,
+    max = Infinity,
+    color = "gold",
+    collapsed: propCollapsed,
+    children,
+    className,
+    variant = "standard",
+    overlap = "rectangle",
+
+    as: As,
+    ...props
+  }) => {
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const collapsed = propCollapsed || (badgeContent === 0 && !showZero);
     const content =
@@ -64,7 +62,6 @@ export const Badge = createGenericComponent<
         : badgeContent;
     return (
       <As
-        ref={ref}
         {...props}
         className={cls({
           modifiers: {

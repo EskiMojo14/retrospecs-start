@@ -39,13 +39,12 @@ export const Avatar = createGenericComponent<
   "span",
   AvatarProps,
   AvatarPassedProps
->("Avatar", "span", (props, ref) => {
+>("Avatar", "span", ({ ref, ...props }) => {
   [props, ref] = useContextProps(props, ref as never, AvatarContext) as [
     typeof props,
     typeof ref,
   ];
   const {
-    as: As,
     src,
     name = "",
     size = "medium",
@@ -53,6 +52,8 @@ export const Avatar = createGenericComponent<
     className,
     children,
     font = "funky",
+
+    as: As,
     ...rest
   } = props;
   const imageLoaded = useImageIsLoaded(src);
@@ -105,27 +106,25 @@ export const AvatarGroup = createGenericComponent<
 >(
   "AvatarGroup",
   "div",
-  (
-    {
-      as: As,
-      className,
-      max = 5,
-      total: totalProp,
-      spacing = "medium",
-      renderSurplus = defaultRenderSurplus,
+  ({
+    className,
+    max = 5,
+    total: totalProp,
+    spacing = "medium",
+    renderSurplus = defaultRenderSurplus,
 
-      children,
-      items: itemsProp,
-      dependencies,
+    children,
+    items: itemsProp,
+    dependencies,
 
-      font,
-      size,
-      color,
+    font,
+    size,
+    color,
 
-      ...props
-    },
+    as: As,
     ref,
-  ) => {
+    ...props
+  }) => {
     const avatarContextValue = useMemo(
       () => ({ font, size, color }),
       [font, size, color],

@@ -36,19 +36,16 @@ export const Card = createGenericComponent<
 >(
   "Card",
   "div",
-  (
-    {
-      children,
-      color = "gold",
-      as: As,
-      className,
-      variant = "raised",
-      ...props
-    },
-    ref,
-  ) => (
+  ({
+    children,
+    color = "gold",
+    className,
+    variant = "raised",
+
+    as: As,
+    ...props
+  }) => (
     <As
-      ref={ref}
       {...props}
       className={cls({
         modifiers: {
@@ -77,8 +74,8 @@ export const CardSection = createGenericComponent<
   "section",
   CardSectionProps,
   CardSectionPassedProps
->("CardSection", "section", ({ as: As, className, ...props }, ref) => (
-  <As ref={ref} {...props} className={cls("section", undefined, className)} />
+>("CardSection", "section", ({ as: As, className, ...props }) => (
+  <As {...props} className={cls("section", undefined, className)} />
 ));
 
 interface CardPrimaryActionProps extends CardSectionProps {
@@ -93,7 +90,7 @@ export const CardPrimaryAction = createGenericComponent<
   typeof AriaButton,
   CardPrimaryActionProps,
   CardPrimaryActionPassedProps
->("CardPrimaryAction", AriaButton, ({ children, className, ...props }, ref) => {
+>("CardPrimaryAction", AriaButton, ({ children, className, ref, ...props }) => {
   const { rootRef, surfaceRef } = useRipple({ disabled: props.isDisabled });
   return (
     <CardSection
@@ -128,7 +125,7 @@ export const CardActions = createGenericComponent<
 >(
   "CardActions",
   "section",
-  ({ children, className, color = "inherit", ...props }, ref) => {
+  ({ children, className, color = "inherit", ...props }) => {
     const buttonContextValue = useMemo(
       () => ({
         slots: {
@@ -139,11 +136,7 @@ export const CardActions = createGenericComponent<
       [color],
     );
     return (
-      <CardSection
-        ref={ref}
-        {...props}
-        className={cls("section", "actions", className)}
-      >
+      <CardSection {...props} className={cls("section", "actions", className)}>
         <Provider
           values={[
             [ToolbarContext, toolbarContextValue],

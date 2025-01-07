@@ -39,7 +39,7 @@ export const Symbol = createGenericComponent<
   "i",
   SymbolProps,
   SymbolPassedProps
->("Symbol", "i", (props, ref) => {
+>("Symbol", "i", ({ ref, ...props }) => {
   [props, ref] = useContextProps(props, ref as never, SymbolContext) as [
     typeof props,
     typeof ref,

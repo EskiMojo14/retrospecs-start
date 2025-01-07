@@ -39,7 +39,7 @@ export const IconButton = createGenericComponent<
   {
     className: string;
   }
->("IconButton", Button, (props, ref) => {
+>("IconButton", Button, ({ ref, ...props }) => {
   [props, ref] = useContextProps(props, ref as never, IconButtonContext) as [
     typeof props,
     typeof ref,

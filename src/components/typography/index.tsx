@@ -35,9 +35,8 @@ export const Typography = createGenericComponent<
 >(
   "Typography",
   { getComponent: ({ variant }) => variantMapping[variant] },
-  ({ variant, noMargin = true, className, as: As, ...props }, ref) => (
+  ({ variant, noMargin = true, className, as: As, ...props }) => (
     <As
-      ref={ref}
       {...props}
       className={cls({
         modifier: {

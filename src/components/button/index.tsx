@@ -72,7 +72,7 @@ export const Button = createGenericComponent<
     children: ReactNode;
     ref: RefCallback<HTMLElement>;
   }
->("Button", AriaButton, (props, ref) => {
+>("Button", AriaButton, ({ ref, ...props }) => {
   let unbounded;
   [{ unbounded, ...props }, ref] = useContextProps(
     props,
@@ -87,6 +87,7 @@ export const Button = createGenericComponent<
     variant = "text",
     color = "gold",
     className,
+
     as: As,
     ...rest
   } = props;
@@ -259,19 +260,17 @@ export const LoadingButton = createGenericComponent<
 >(
   "LoadingButton",
   Button,
-  (
-    {
-      isIndeterminate,
-      loadingValue,
-      isDisabled,
-      as: As,
-      className,
-      progressLabel,
-      progressVariant = "cassette",
-      ...props
-    },
-    ref,
-  ) => {
+  ({
+    isIndeterminate,
+    loadingValue,
+    isDisabled,
+    className,
+    progressLabel,
+    progressVariant = "cassette",
+
+    as: As,
+    ...props
+  }) => {
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const isLoading = isIndeterminate || loadingValue !== undefined;
     const Progress =
@@ -281,7 +280,6 @@ export const LoadingButton = createGenericComponent<
         {...props}
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         isDisabled={isDisabled || isLoading}
-        ref={ref}
         className={cls({
           modifiers: {
             loading: isLoading,

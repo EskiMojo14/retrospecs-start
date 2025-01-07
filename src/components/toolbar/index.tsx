@@ -23,7 +23,7 @@ export const Toolbar = createGenericComponent<
   typeof AriaToolbar,
   ToolbarProps,
   ToolbarPassedProps
->("Toolbar", AriaToolbar, (props, ref) => {
+>("Toolbar", AriaToolbar, ({ ref, ...props }) => {
   [props, ref] = useContextProps(props, ref as never, ToolbarContext) as [
     typeof props,
     typeof ref,

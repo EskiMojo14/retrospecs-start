@@ -1,12 +1,10 @@
 import type {
   ComponentPropsWithRef,
   ComponentType,
-  ForwardedRef,
   JSXElementConstructor,
   ReactNode,
   Ref,
 } from "react";
-import { forwardRef } from "react";
 import { composeRenderProps } from "react-aria-components";
 import type { Overwrite } from "~/util/types";
 
@@ -19,10 +17,11 @@ type PlaceholderComponent<PassedProps> = ComponentType<
 
 /** To make sure all props and the ref is passed through, we fake some types here */
 type GenericRenderFunction<RecievedProps, PassedProps> = (
-  props: RecievedProps & { as: PlaceholderComponent<PassedProps> } & {
+  props: RecievedProps & {
+    as: PlaceholderComponent<PassedProps>;
     [propSymbol]: true;
+    ref: Ref<typeof refSymbol>;
   },
-  ref: ForwardedRef<typeof refSymbol>,
 ) => React.JSX.Element;
 
 type GenericComponentProps<Component extends ElementType, Acc extends {} = {}> =
@@ -98,18 +97,25 @@ export function createGenericComponent<
     | DefaultComponent
     | { getComponent: (props: ReceivedProps) => DefaultComponent },
   render: GenericRenderFunction<ReceivedProps, PassedProps>,
-): GenericComponent<DefaultComponent, ReceivedProps, PassedProps> {
-  const component = forwardRef<
-    typeof refSymbol,
-    { as?: ElementType } & ReceivedProps
-  >(function intermediate({ as = defaultComponent, ...props }, ref) {
-    if (typeof as === "object" && "getComponent" in as) {
+) {
+  function Component({
+    as = defaultComponent,
+    ...props
+  }: {
+    as?: ElementType | { getComponent: (props: ReceivedProps) => ElementType };
+    ref: Ref<typeof refSymbol>;
+  } & ReceivedProps) {
+    if (typeof as === "object") {
       as = as.getComponent(props as never);
     }
-    return render({ ...props, as } as never, ref);
-  });
-  component.displayName = displayName;
-  return component as never;
+    return render({ ...props, as } as never);
+  }
+  Component.displayName = displayName;
+  return Component as GenericComponent<
+    DefaultComponent,
+    ReceivedProps,
+    PassedProps
+  >;
 }
 
 /**
@@ -141,9 +147,11 @@ export const withNewDefault = <
   GenericComponent: GenericComponent<any, ReceivedProps, PassedProps>,
   as: NewComponent,
 ) => {
-  const Component = (
+  function Component(
     props: Overwrite<GenericComponentProps<NewComponent>, ReceivedProps>,
-  ) => <GenericComponent as={as} {...props} />;
+  ) {
+    return <GenericComponent as={as} {...props} />;
+  }
   Component.displayName = displayName;
   return Component as GenericComponent<
     NewComponent,
