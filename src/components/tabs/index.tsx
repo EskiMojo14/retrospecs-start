@@ -62,7 +62,6 @@ export const TabList = <T extends object>({
     <TabContext.Provider value={tabContextValue}>
       <AriaTabList
         {...props}
-        ref={ref}
         className={cls({
           element: "list",
           modifiers: {

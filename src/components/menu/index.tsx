@@ -48,7 +48,7 @@ export type MenuProps<T extends object> = AriaMenuProps<T> &
 
 type MenuContextValue = ContextValue<
   Omit<MenuProps<any>, "trigger" | "triggerProps" | "isSubmenu">,
-  HTMLElement
+  HTMLDivElement
 >;
 
 export const MenuContext = createContext<MenuContextValue>(null);
@@ -58,7 +58,7 @@ const cls = bemHelper("menu");
 export const Menu = <T extends object>({
   ref,
   ...props
-}: MenuProps<T> & RefAttributes<HTMLElement>) => {
+}: MenuProps<T> & RefAttributes<HTMLDivElement>) => {
   [props, ref] = useContextProps(props, ref as never, MenuContext) as [
     typeof props,
     typeof ref,

@@ -5,7 +5,6 @@ import type {
   JSXElementConstructor,
   ReactNode,
   Ref,
-  ComponentRef,
 } from "react";
 import { forwardRef } from "react";
 import { composeRenderProps } from "react-aria-components";
@@ -142,10 +141,9 @@ export const withNewDefault = <
   GenericComponent: GenericComponent<any, ReceivedProps, PassedProps>,
   as: NewComponent,
 ) => {
-  const Component = forwardRef<
-    ComponentRef<NewComponent>,
-    Overwrite<GenericComponentProps<NewComponent>, ReceivedProps>
-  >((props, ref) => <GenericComponent as={as} {...props} ref={ref} />);
+  const Component = (
+    props: Overwrite<GenericComponentProps<NewComponent>, ReceivedProps>,
+  ) => <GenericComponent as={as} {...props} />;
   Component.displayName = displayName;
   return Component as GenericComponent<
     NewComponent,

@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Link } from "@tanstack/react-router";
 import { Badge } from "~/components/badge";
 import { Breadcrumb, Breadcrumbs } from "~/components/breadcrumbs";
 import { IconButton } from "~/components/icon-button";
@@ -21,9 +20,9 @@ const meta = {
           <Toolbar as="nav" slot="nav" aria-label="Breadcrumbs">
             <Breadcrumbs>
               <Breadcrumb>
-                <Link href="/" aria-label="Home">
+                <ExternalLink href="/" aria-label="Home">
                   <Logo />
-                </Link>
+                </ExternalLink>
               </Breadcrumb>
               <Breadcrumb>
                 <ExternalLink href="/about">About</ExternalLink>
