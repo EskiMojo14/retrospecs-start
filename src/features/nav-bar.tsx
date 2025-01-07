@@ -1,5 +1,9 @@
 import { MDCTopAppBarFoundation } from "@material/top-app-bar";
-import type { LinkOptions, ValidateLinkOptions } from "@tanstack/react-router";
+import type {
+  LinkOptions,
+  ValidateFromPath,
+  ValidateLinkOptions,
+} from "@tanstack/react-router";
 import { useRouter } from "@tanstack/react-router";
 import { radEventListeners } from "rad-event-listeners";
 import type { ReactNode } from "react";
@@ -82,7 +86,7 @@ export interface NavBarProps<
   From extends string | undefined,
 > {
   breadcrumbs?: { [I in keyof Options]: NavItem<Options[I], From> };
-  from?: From;
+  from?: ValidateFromPath<From>;
   actions?: ReactNode;
 }
 
