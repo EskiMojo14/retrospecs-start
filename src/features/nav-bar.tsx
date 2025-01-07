@@ -1,5 +1,5 @@
 import { MDCTopAppBarFoundation } from "@material/top-app-bar";
-import type { LinkProps, RegisteredRouter } from "@tanstack/react-router";
+import type { LinkOptions, ValidateLinkOptions } from "@tanstack/react-router";
 import { useRouter } from "@tanstack/react-router";
 import { radEventListeners } from "rad-event-listeners";
 import type { ReactNode } from "react";
@@ -13,7 +13,6 @@ import { Symbol } from "~/components/symbol";
 import { Toolbar } from "~/components/toolbar";
 import { useSupabase } from "~/db/provider";
 import { useIsomorphicLayoutEffect } from "~/hooks/use-isomorphic-layout-effect";
-import type { PickRequired } from "~/util/types";
 import { Invites } from "./invites/invites";
 import { Logo } from "./logo";
 import { PreferencesDialog } from "./user_config/dialog";
@@ -67,26 +66,23 @@ function useNavBarScroll() {
   return setNavBarRef;
 }
 
-export type NavItem<TTo extends string | undefined = "."> = Omit<
-  PickRequired<LinkProps<"a", RegisteredRouter, string, TTo>, "to">,
-  "children"
-> & {
+export type NavItem<Option> = ValidateLinkOptions<Option> & {
   label: ReactNode;
   // defaults to href
   id?: string;
 };
 
-export interface NavBarProps<TTos extends ReadonlyArray<string | undefined>> {
-  breadcrumbs?: { [I in keyof TTos]: NavItem<TTos[I]> };
+export interface NavBarProps<Options extends ReadonlyArray<any>> {
+  breadcrumbs?: { [I in keyof Options]: NavItem<Options[I]> };
   actions?: ReactNode;
 }
 
 const emptyArray: Array<never> = [];
 
-export function NavBar<TTos extends ReadonlyArray<string | undefined> = []>({
+export function NavBar<Options extends ReadonlyArray<any>>({
   breadcrumbs = emptyArray as never,
   actions,
-}: NavBarProps<TTos>) {
+}: NavBarProps<Options>) {
   const navBarRef = useNavBarScroll();
   const router = useRouter();
   const supabase = useSupabase();
@@ -99,11 +95,9 @@ export function NavBar<TTos extends ReadonlyArray<string | undefined> = []>({
             <Logo aria-label="Home" />
           </InternalLink>
           <Breadcrumbs items={breadcrumbs}>
-            {({ to, label, id = to, ...props }) => (
-              <Breadcrumb id={id}>
-                <InternalLink to={to} {...(props as any)}>
-                  {label}
-                </InternalLink>
+            {({ label, id, ...props }: NavItem<LinkOptions>) => (
+              <Breadcrumb id={id ?? props.to}>
+                <InternalLink {...(props as any)}>{label}</InternalLink>
               </Breadcrumb>
             )}
           </Breadcrumbs>

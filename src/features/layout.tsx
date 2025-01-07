@@ -4,15 +4,15 @@ import { Footer } from "./footer";
 import type { NavBarProps } from "./nav-bar";
 import { NavBar } from "./nav-bar";
 
-interface LayoutProps<TTos extends ReadonlyArray<string | undefined>>
-  extends NavBarProps<TTos> {
+interface LayoutProps<Options extends ReadonlyArray<any>>
+  extends NavBarProps<Options> {
   children: ReactNode;
 }
 
-export function Layout<TTos extends ReadonlyArray<string | undefined> = []>({
+export function Layout<Options extends ReadonlyArray<any>>({
   children,
   ...props
-}: LayoutProps<TTos>) {
+}: LayoutProps<Options>) {
   return (
     <>
       <NavBar {...props} />
