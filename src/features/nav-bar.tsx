@@ -66,23 +66,36 @@ function useNavBarScroll() {
   return setNavBarRef;
 }
 
-export type NavItem<Option> = ValidateLinkOptions<Option> & {
+export type NavItem<
+  Option,
+  From extends string | undefined,
+> = ValidateLinkOptions<
+  Option & (From extends string ? { from: From } : {})
+> & {
   label: ReactNode;
   // defaults to href
   id?: string;
 };
 
-export interface NavBarProps<Options extends ReadonlyArray<any>> {
-  breadcrumbs?: { [I in keyof Options]: NavItem<Options[I]> };
+export interface NavBarProps<
+  Options extends ReadonlyArray<any>,
+  From extends string | undefined,
+> {
+  breadcrumbs?: { [I in keyof Options]: NavItem<Options[I], From> };
+  from?: From;
   actions?: ReactNode;
 }
 
 const emptyArray: Array<never> = [];
 
-export function NavBar<Options extends ReadonlyArray<any>>({
+export function NavBar<
+  Options extends ReadonlyArray<any>,
+  From extends string | undefined = undefined,
+>({
   breadcrumbs = emptyArray as never,
+  from,
   actions,
-}: NavBarProps<Options>) {
+}: NavBarProps<Options, From>) {
   const navBarRef = useNavBarScroll();
   const router = useRouter();
   const supabase = useSupabase();
@@ -95,9 +108,11 @@ export function NavBar<Options extends ReadonlyArray<any>>({
             <Logo aria-label="Home" />
           </InternalLink>
           <Breadcrumbs items={breadcrumbs}>
-            {({ label, id, ...props }: NavItem<LinkOptions>) => (
+            {({ label, id, ...props }: NavItem<LinkOptions, string>) => (
               <Breadcrumb id={id ?? props.to}>
-                <InternalLink {...(props as any)}>{label}</InternalLink>
+                <InternalLink from={from} {...(props as any)}>
+                  {label}
+                </InternalLink>
               </Breadcrumb>
             )}
           </Breadcrumbs>

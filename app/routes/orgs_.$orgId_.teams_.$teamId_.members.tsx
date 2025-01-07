@@ -53,20 +53,18 @@ function RouteComponent() {
   });
   return (
     <Layout
+      from={Route.fullPath}
       breadcrumbs={[
         {
           label: org.name,
-          from: Route.fullPath,
           to: "../../..",
         },
         {
           label: team.name,
-          from: Route.fullPath,
           to: "..",
         },
         {
           label: "Members",
-          from: Route.fullPath,
           to: ".",
         },
       ]}

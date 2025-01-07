@@ -105,20 +105,18 @@ function RouteComponent() {
   return (
     <>
       <NavBar
+        from={Route.fullPath}
         breadcrumbs={[
           {
             label: org.name,
-            from: Route.fullPath,
             to: "../../../..",
           },
           {
             label: team.name,
-            from: Route.fullPath,
             to: "../..",
           },
           {
             label: sprint.name,
-            from: Route.fullPath,
             to: ".",
           },
         ]}

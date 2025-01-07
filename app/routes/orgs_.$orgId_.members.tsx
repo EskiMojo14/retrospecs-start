@@ -81,15 +81,14 @@ function RouteComponent() {
   ) as Permission;
   return (
     <Layout
+      from={Route.fullPath}
       breadcrumbs={[
         {
           label: org.name,
-          from: Route.fullPath,
           to: "..",
         },
         {
           label: "Members",
-          from: Route.fullPath,
           to: ".",
         },
       ]}

@@ -77,10 +77,10 @@ function RouteComponent() {
 
   return (
     <Layout
+      from={Route.fullPath}
       breadcrumbs={[
         {
           label: org.name,
-          from: Route.fullPath,
           to: ".",
         },
       ]}
