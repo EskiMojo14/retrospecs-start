@@ -80,8 +80,8 @@ function RouteComponent() {
       breadcrumbs={[
         {
           label: org.name,
-          to: "/orgs/$orgId",
-          params: { orgId },
+          from: Route.fullPath,
+          to: ".",
         },
       ]}
       actions={
