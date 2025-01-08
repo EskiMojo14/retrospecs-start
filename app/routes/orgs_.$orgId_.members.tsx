@@ -13,7 +13,7 @@ import { CreateInvite } from "~/features/invites/create-invite";
 import { PendingInvites } from "~/features/invites/pending";
 import { Layout } from "~/features/layout";
 import { getOrg, getOrgMembers, selectOrgMemberIds } from "~/features/orgs";
-import { MemberList } from "~/features/teams/member-list";
+import { MemberList } from "~/features/orgs/member-list";
 import { useOptionsCreator } from "~/hooks/use-options-creator";
 import { useCurrentUserPermissions } from "~/hooks/use-user-permissions";
 import { parseNumberParams } from "~/util";
