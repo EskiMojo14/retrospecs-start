@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Card, CardSection } from "~/components/card";
 import { ConfirmationDialog } from "~/components/dialog/confirmation";
-import { Divider } from "~/components/divider";
+import { DividerContainer } from "~/components/divider";
 import { EmptyState } from "~/components/empty";
 import { Grid, GridCell, GridInner } from "~/components/grid";
 import { IconButton } from "~/components/icon-button";
@@ -37,7 +37,7 @@ function SprintListItem({ orgId, teamId, id: sprintId }: SprintItem) {
   const permission = useCurrentUserPermissions(orgId);
   if (!sprint) return null;
   return (
-    <>
+    <DividerContainer id={sprintId} variant="inset">
       <ListItem
         textValue={sprint.name}
         href={`/orgs/${orgId}/teams/${teamId}/sprints/${sprintId}`}
@@ -91,8 +91,7 @@ function SprintListItem({ orgId, teamId, id: sprintId }: SprintItem) {
           </Toolbar>
         )}
       </ListItem>
-      <Divider variant="inset" />
-    </>
+    </DividerContainer>
   );
 }
 

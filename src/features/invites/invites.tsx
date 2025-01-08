@@ -1,9 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { Dialog, DialogTrigger } from "react-aria-components";
 import { Badge } from "~/components/badge";
-import { Divider } from "~/components/divider";
+import { DividerContainer } from "~/components/divider";
 import { EmptyState } from "~/components/empty";
-import { IdFragment } from "~/components/fragment";
 import { IconButton } from "~/components/icon-button";
 import { List } from "~/components/list";
 import { Popover } from "~/components/popover";
@@ -55,10 +54,9 @@ export function Invites({ isOpen }: { isOpen?: boolean }) {
             nonInteractive
           >
             {(invite) => (
-              <IdFragment id={invite.org_id}>
+              <DividerContainer id={invite.org_id}>
                 <InviteEntry invite={invite} />
-                <Divider variant="middle" />
-              </IdFragment>
+              </DividerContainer>
             )}
           </List>
         </Dialog>

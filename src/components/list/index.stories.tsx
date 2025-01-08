@@ -8,9 +8,8 @@ import { Form, Text } from "react-aria-components";
 import { Avatar } from "~/components/avatar";
 import { LoadingButton } from "~/components/button";
 import { Checkbox } from "~/components/checkbox";
-import { Divider } from "~/components/divider";
+import { Divider, DividerContainer } from "~/components/divider";
 import { EmptyState } from "~/components/empty";
-import { IdFragment } from "~/components/fragment";
 import { IconButton } from "~/components/icon-button";
 import { Image } from "~/components/image";
 import { TextField } from "~/components/input/text-field";
@@ -131,14 +130,13 @@ export const OneLine: Story = {
       {...props}
     >
       {({ headline }) => (
-        <IdFragment id={headline}>
+        <DividerContainer id={headline} variant={divider}>
           <ListItem textValue={headline} isDisabled={isDisabled}>
             <Leading leading={leading} />
             <ListItemText headline={headline} />
             <Trailing trailing={trailing} />
           </ListItem>
-          {divider !== "none" && <Divider variant={divider} />}
-        </IdFragment>
+        </DividerContainer>
       )}
     </List>
   ),
@@ -166,14 +164,13 @@ export const TwoLine: Story = {
       {...props}
     >
       {({ headline, supporting }) => (
-        <IdFragment id={headline}>
+        <DividerContainer id={headline} variant={divider}>
           <ListItem textValue={headline} isDisabled={isDisabled}>
             <Leading leading={leading} />
             <ListItemText headline={headline} supporting={supporting} />
             <Trailing trailing={trailing} />
           </ListItem>
-          {divider !== "none" && <Divider variant={divider} />}
-        </IdFragment>
+        </DividerContainer>
       )}
     </List>
   ),
@@ -210,14 +207,13 @@ export const ThreeLine: Story = {
       {...props}
     >
       {({ headline, supporting }) => (
-        <IdFragment id={headline}>
+        <DividerContainer id={headline} variant={divider}>
           <ListItem textValue={headline} isDisabled={isDisabled}>
             <Leading leading={leading} />
             <ListItemText headline={headline} supporting={supporting} />
             <Trailing trailing={trailing} />
           </ListItem>
-          {divider !== "none" && <Divider variant={divider} />}
-        </IdFragment>
+        </DividerContainer>
       )}
     </List>
   ),
@@ -253,7 +249,7 @@ export const ThreeLineWithOverline: Story = {
       {...props}
     >
       {({ headline, supporting, overline }) => (
-        <IdFragment id={headline}>
+        <DividerContainer id={headline} variant={divider}>
           <ListItem textValue={headline} isDisabled={isDisabled}>
             <Leading leading={leading} />
             <ListItemText
@@ -263,8 +259,7 @@ export const ThreeLineWithOverline: Story = {
             />
             <Trailing trailing={trailing} />
           </ListItem>
-          {divider !== "none" && <Divider variant={divider} />}
-        </IdFragment>
+        </DividerContainer>
       )}
     </List>
   ),

@@ -1,9 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Card } from "~/components/card";
 import { ConfirmationDialog } from "~/components/dialog/confirmation";
-import { Divider } from "~/components/divider";
+import { DividerContainer } from "~/components/divider";
 import { EmptyState } from "~/components/empty";
-import { IdFragment } from "~/components/fragment";
 import { IconButton } from "~/components/icon-button";
 import { List, ListItem, ListItemText } from "~/components/list";
 import { Symbol } from "~/components/symbol";
@@ -117,10 +116,9 @@ export function PendingInvites({ orgId }: PendingInvitesProps) {
           items={invites}
         >
           {(invite) => (
-            <IdFragment id={invite.email}>
+            <DividerContainer id={invite.email}>
               <InviteRow invite={invite} />
-              <Divider variant="inset" />
-            </IdFragment>
+            </DividerContainer>
           )}
         </List>
       </Card>

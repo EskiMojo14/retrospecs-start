@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
 import type { Key } from "react-aria-components";
 import { Collection, Section } from "react-aria-components";
-import type { DividerProps } from "~/components/divider";
-import { Divider } from "~/components/divider";
-import { IdFragment } from "~/components/fragment";
+import type { DividerContainerProps, DividerProps } from "~/components/divider";
+import { DividerContainer } from "~/components/divider";
 import { Header } from "~/components/typography";
 import type { MenuItemTextProps, MenuItemProps } from ".";
 import { Menu, MenuItem, MenuItemText } from ".";
@@ -37,29 +36,35 @@ export interface SectionItem extends CommonItemProps {
 
 export type MenuItem = StandardItem | SubmenuItem | SectionItem;
 
+function getDividerProps(
+  item: MenuItem,
+): Omit<DividerContainerProps, "children" | "id"> {
+  if (!item.divider) {
+    return { variant: "none" };
+  }
+  if (typeof item.divider === "object") {
+    return item.divider;
+  }
+  return {
+    variant: typeof item.divider === "string" ? item.divider : undefined,
+  };
+}
+
 export function renderMenuItem(item: MenuItem): React.JSX.Element {
-  const dividerProps =
-    item.divider &&
-    (typeof item.divider === "object"
-      ? item.divider
-      : {
-          variant: typeof item.divider === "string" ? item.divider : undefined,
-        });
-  const divider = dividerProps && <Divider {...dividerProps} />;
+  const dividerProps = getDividerProps(item);
   switch (item.type) {
     case "section":
       return (
-        <IdFragment id={item.id}>
+        <DividerContainer id={item.id} {...dividerProps}>
           <Section>
             <Header variant="subtitle2">{item.header}</Header>
             <Collection items={item.children}>{renderMenuItem}</Collection>
           </Section>
-          {divider}
-        </IdFragment>
+        </DividerContainer>
       );
     case "submenu":
       return (
-        <IdFragment id={item.id}>
+        <DividerContainer id={item.id} {...dividerProps}>
           <Menu
             variant={item.variant}
             items={item.children}
@@ -76,20 +81,18 @@ export function renderMenuItem(item: MenuItem): React.JSX.Element {
           >
             {renderMenuItem}
           </Menu>
-          {divider}
-        </IdFragment>
+        </DividerContainer>
       );
     default: {
       const { leading, trailing, label, description, ...itemProps } = item;
       return (
-        <IdFragment id={item.id}>
+        <DividerContainer id={item.id} {...dividerProps}>
           <MenuItem {...itemProps}>
             {leading}
             <MenuItemText label={label} description={description} />
             {trailing}
           </MenuItem>
-          {divider}
-        </IdFragment>
+        </DividerContainer>
       );
     }
   }

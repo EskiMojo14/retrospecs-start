@@ -12,8 +12,7 @@ import {
 } from "valibot";
 import type { DialogProps } from "~/components/dialog";
 import { FormDialog } from "~/components/dialog/form";
-import { Divider } from "~/components/divider";
-import { IdFragment } from "~/components/fragment";
+import { DividerContainer } from "~/components/divider";
 import { Select, SelectItem } from "~/components/input/select";
 import { TextField } from "~/components/input/text-field";
 import type { TablesInsert } from "~/db/supabase";
@@ -81,12 +80,11 @@ export function CreateSprint({ teamId, ...props }: CreateSprintProps) {
         {(item) => {
           if (item.id === "") {
             return (
-              <IdFragment id={item.id}>
+              <DividerContainer id={item.id}>
                 <SelectItem id={item.id} textValue={item.name}>
                   {item.name}
                 </SelectItem>
-                <Divider />
-              </IdFragment>
+              </DividerContainer>
             );
           }
           return (
