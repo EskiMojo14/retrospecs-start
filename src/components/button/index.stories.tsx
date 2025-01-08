@@ -2,8 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import upperFirst from "lodash/upperFirst";
 import type { ComponentPropsWithoutRef, ComponentType } from "react";
-import { useEffect, useRef, useState } from "react";
-import { IdFragment } from "~/components/fragment";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Symbol } from "~/components/symbol";
 import { Tooltip, TooltipTrigger } from "~/components/tooltip";
 import { buttonColors, buttonVariants } from "./constants";
@@ -249,7 +248,7 @@ function AlignDemo({ isDisabled, color, orientation, variant }: StoryProps) {
       label="Align"
     >
       {([key, icon]) => (
-        <IdFragment id={key}>
+        <Fragment {...{ id: key }}>
           <TooltipTrigger>
             <ToggleButton
               key={key}
@@ -263,7 +262,7 @@ function AlignDemo({ isDisabled, color, orientation, variant }: StoryProps) {
             </ToggleButton>
             <Tooltip>{upperFirst(key)}</Tooltip>
           </TooltipTrigger>
-        </IdFragment>
+        </Fragment>
       )}
     </ButtonGroup>
   );
