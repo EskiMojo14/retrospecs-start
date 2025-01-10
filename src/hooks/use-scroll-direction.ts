@@ -1,6 +1,8 @@
+import { identity } from "lodash";
 import throttle from "lodash/throttle";
 import type { RefObject } from "react";
 import { useMemo, useRef } from "react";
+import { safeAssign } from "~/util";
 import type { Compute, OneOf } from "~/util/types";
 import type { UseEventListenerConfig } from "./use-event-listener";
 import { useEventListener } from "./use-event-listener";
@@ -21,8 +23,10 @@ export function useScrollDirection(
   onScroll: (direction: "up" | "down") => void,
   config: UseScrollDirectionConfig = {},
 ) {
-  const lastScrollTop = useRef(0);
-  const lastScrollDirection = useRef<"up" | "down">("down");
+  const lastScrollRef = useRef({
+    scrollTop: 0,
+    scrollDirection: identity<"up" | "down">("down"),
+  });
 
   useEventListener(
     target,
@@ -38,15 +42,17 @@ export function useScrollDirection(
                 : target;
           if (!el) return;
 
+          const { current: lastScroll } = lastScrollRef;
+
           const scrollTop = el.scrollY ?? el.scrollTop;
           const scrollDirection =
-            scrollTop > lastScrollTop.current ? "down" : "up";
-          if (scrollDirection !== lastScrollDirection.current) {
+            scrollTop > lastScroll.scrollTop ? "down" : "up";
+          if (scrollDirection !== lastScroll.scrollDirection) {
             onScroll(scrollDirection);
-            lastScrollDirection.current = scrollDirection;
+            safeAssign(lastScroll, { scrollDirection });
           }
 
-          lastScrollTop.current = scrollTop;
+          safeAssign(lastScroll, { scrollTop });
         }, config.throttleMs ?? 500),
       [onScroll, target, config.throttleMs],
     ),
