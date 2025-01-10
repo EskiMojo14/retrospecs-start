@@ -18,7 +18,6 @@ import { BreakpointDisplay } from "~/components/grid";
 import { GlobalToastRegion } from "~/components/toast/toast-region";
 import { SessionProvider, useSession } from "~/db/provider";
 import { ensureHydrated, withDehydratedState } from "~/db/query";
-import { ErrorPage } from "~/error-page";
 import type { Profile } from "~/features/profiles";
 import { getProfile } from "~/features/profiles";
 import type { UserConfig } from "~/features/user_config";
@@ -80,13 +79,6 @@ export const Route = createRootRouteWithContext<AppContext>()({
   }),
   component: RootComponent,
   notFoundComponent: () => <ForeEauFore />,
-  errorComponent: ({ error, info }) => (
-    <ErrorPage
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      message={error.message ?? String(error)}
-      stack={info?.componentStack}
-    />
-  ),
 });
 declare module "react-aria-components" {
   interface RouterConfig {
