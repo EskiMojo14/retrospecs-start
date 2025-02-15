@@ -52,7 +52,7 @@ export const Route = createFileRoute("/orgs_/$orgId")({
     ensureHydrated(getOrgData({ data: params }), context),
   head: ({ loaderData }) => ({
     meta: [
-      { title: `RetroSpecs - ${loaderData?.org.name ?? "Org"}` },
+      { title: `RetroSpecs - ${loaderData.org.name ?? "Org"}` },
       {
         name: "description",
         content: "View and manage your organization and its teams",

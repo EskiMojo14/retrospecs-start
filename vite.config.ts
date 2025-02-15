@@ -1,5 +1,5 @@
 import type { CustomizableConfig } from "vinxi/dist/types/lib/vite-dev";
-import type { UserConfig } from "vite";
+import type { ViteUserConfig } from "vitest/config";
 
 // we need to keep this because storybook uses it
 
@@ -20,4 +20,4 @@ export default {
       },
     },
   },
-} satisfies CustomizableConfig & Pick<UserConfig, "test">;
+} satisfies CustomizableConfig & Pick<ViteUserConfig, "test">;
