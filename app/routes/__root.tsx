@@ -3,11 +3,12 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { NavigateOptions, ToOptions } from "@tanstack/react-router";
 import {
   Outlet,
-  ScrollRestoration,
   createRootRouteWithContext,
   useRouter,
+  Scripts,
+  HeadContent,
 } from "@tanstack/react-router";
-import { createServerFn, Meta, Scripts } from "@tanstack/start";
+import { createServerFn } from "@tanstack/start";
 import { Suspense, type ReactNode } from "react";
 import { RouterProvider } from "react-aria-components";
 import { lazily } from "react-lazily";
@@ -143,11 +144,10 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       }}
     >
       <head>
-        <Meta />
+        <HeadContent />
       </head>
       <body>
         {children}
-        <ScrollRestoration />
         <Scripts />
       </body>
     </html>

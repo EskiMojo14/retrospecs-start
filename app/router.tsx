@@ -19,6 +19,7 @@ export function createRouterCreator(
         defaultErrorComponent: ({ error, info }) => (
           <ErrorPage message={error.message} stack={info?.componentStack} />
         ),
+        scrollRestoration: true,
       }),
       queryClient,
     );
