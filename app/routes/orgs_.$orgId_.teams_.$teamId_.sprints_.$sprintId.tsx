@@ -47,10 +47,10 @@ export const Route = createFileRoute(
   component: RouteComponent,
   loader: ({ params, context }) =>
     ensureHydrated(getSprintData({ data: params }), context),
-  head: () => ({
+  head: ({ loaderData }) => ({
     meta: [
       {
-        title: `Retrospecs - Sprint`,
+        title: `Retrospecs - ${loaderData.sprint.name}`,
       },
       {
         name: "description",

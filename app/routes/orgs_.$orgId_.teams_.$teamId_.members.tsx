@@ -34,7 +34,7 @@ export const Route = createFileRoute("/orgs_/$orgId_/teams_/$teamId_/members")({
   head: ({ loaderData }) => ({
     meta: [
       {
-        title: `Retrospecs - ${loaderData.org.name ?? "Team"} Members`,
+        title: `Retrospecs - ${loaderData.org.name} Members`,
       },
     ],
   }),
