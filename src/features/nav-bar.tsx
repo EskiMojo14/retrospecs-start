@@ -1,6 +1,7 @@
 import { MDCTopAppBarFoundation } from "@material/top-app-bar";
 import type {
   LinkOptions,
+  RegisteredRouter,
   ValidateFromPath,
   ValidateLinkOptions,
 } from "@tanstack/react-router";
@@ -74,6 +75,7 @@ export type NavItem<
   Option,
   From extends string | undefined,
 > = ValidateLinkOptions<
+  RegisteredRouter,
   Option & (From extends string ? { from: From } : {})
 > & {
   label: ReactNode;
@@ -86,7 +88,7 @@ export interface NavBarProps<
   From extends string | undefined,
 > {
   breadcrumbs?: { [I in keyof Options]: NavItem<Options[I], From> };
-  from?: ValidateFromPath<From>;
+  from?: ValidateFromPath<RegisteredRouter, From>;
   actions?: ReactNode;
 }
 

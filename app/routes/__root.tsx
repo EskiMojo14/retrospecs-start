@@ -8,7 +8,7 @@ import {
   Scripts,
   HeadContent,
 } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/start";
+import { createServerFn } from "@tanstack/react-start";
 import { Suspense, type ReactNode } from "react";
 import { RouterProvider } from "react-aria-components";
 import { lazily } from "react-lazily";

@@ -1,4 +1,4 @@
-import { createMiddleware } from "@tanstack/start";
+import { createMiddleware } from "@tanstack/react-start";
 import { ensureAuthenticated } from "~/db/auth";
 import { supabaseMw } from "./supabase";
 
