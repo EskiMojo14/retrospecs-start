@@ -27,19 +27,20 @@ export const {
 } = orgAdapter.getSelectors();
 
 export const getOrgs = supabaseQueryOptions(
-  ({ supabase }, user_id: string | undefined) => ({
-    queryKey: ["orgs", { user_id }],
-    queryFn: user_id
-      ? supabaseFn(
-          () =>
-            supabase
-              .from("orgs")
-              .select("*,members:org_members!inner(user_id)")
-              .eq("members.user_id", user_id),
-          (orgs) => orgAdapter.getInitialState(undefined, orgs),
-        )
-      : skipToken,
-  }),
+  ({ supabase }, user_id: string | undefined) =>
+    ({
+      queryKey: ["orgs", { user_id }],
+      queryFn: user_id
+        ? supabaseFn(
+            () =>
+              supabase
+                .from("orgs")
+                .select("*,members:org_members!inner(user_id)")
+                .eq("members.user_id", user_id),
+            (orgs) => orgAdapter.getInitialState(undefined, orgs),
+          )
+        : skipToken,
+    }) as const,
 );
 
 export const getOrg = supabaseQueryOptions(({ supabase }, id: Org["id"]) => ({
@@ -168,23 +169,20 @@ export const getOrgMemberCount = supabaseQueryOptions(
 );
 
 export const getOrgMember = supabaseQueryOptions(
-  (
-    { supabase },
-    orgId: Org["id"],
-    userId: OrgMember["user_id"] | undefined,
-  ) => ({
-    queryKey: ["orgMembers", orgId, userId],
-    queryFn: userId
-      ? supabaseFn(() =>
-          supabase
-            .from("org_members")
-            .select()
-            .eq("org_id", orgId)
-            .eq("user_id", userId)
-            .single(),
-        )
-      : skipToken,
-  }),
+  ({ supabase }, orgId: Org["id"], userId: OrgMember["user_id"] | undefined) =>
+    ({
+      queryKey: ["orgMembers", orgId, userId],
+      queryFn: userId
+        ? supabaseFn(() =>
+            supabase
+              .from("org_members")
+              .select()
+              .eq("org_id", orgId)
+              .eq("user_id", userId)
+              .single(),
+          )
+        : skipToken,
+    }) as const,
 );
 
 export const getOrgMembers = supabaseQueryOptions(

@@ -17,31 +17,33 @@ export const profileAdapter = createEntityAdapter({
 });
 
 export const getDisplayName = supabaseQueryOptions(
-  ({ supabase }, id: Nullish<string>) => ({
-    queryKey: ["display_name", id],
-    queryFn: id
-      ? supabaseFn(
-          () =>
-            supabase
-              .from("profiles")
-              .select("display_name")
-              .eq("user_id", id)
-              .single(),
-          ({ display_name }) => display_name,
-        )
-      : skipToken,
-  }),
+  ({ supabase }, id: Nullish<string>) =>
+    ({
+      queryKey: ["display_name", id],
+      queryFn: id
+        ? supabaseFn(
+            () =>
+              supabase
+                .from("profiles")
+                .select("display_name")
+                .eq("user_id", id)
+                .single(),
+            ({ display_name }) => display_name,
+          )
+        : skipToken,
+    }) as const,
 );
 
 export const getProfile = supabaseQueryOptions(
-  ({ supabase }, id: Nullish<string>) => ({
-    queryKey: ["profile", id],
-    queryFn: id
-      ? supabaseFn(() =>
-          supabase.from("profiles").select("*").eq("user_id", id).single(),
-        )
-      : skipToken,
-  }),
+  ({ supabase }, id: Nullish<string>) =>
+    ({
+      queryKey: ["profile", id],
+      queryFn: id
+        ? supabaseFn(() =>
+            supabase.from("profiles").select("*").eq("user_id", id).single(),
+          )
+        : skipToken,
+    }) as const,
 );
 
 export const updateProfile = supabaseMutationOptions(

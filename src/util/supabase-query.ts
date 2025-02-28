@@ -15,6 +15,7 @@ import type {
   MutationOptions,
   QueryClient,
 } from "@tanstack/react-query";
+import { pick } from "lodash";
 import type { AppSupabaseClient } from "~/db";
 
 export interface PostgrestMeta {
@@ -54,7 +55,11 @@ export function supabaseFn<FnData, TData = FnData, TVariables = void>(
     const { data, error, count, status, statusText } = await queryFn(context);
     const meta: PostgrestMeta = { count, status, statusText };
 
-    if (error) throw { ...error, meta };
+    if (error)
+      throw {
+        ...pick(error, "message", "details", "hint", "code", "name"),
+        meta,
+      } satisfies PostgrestErrorWithMeta;
     return transformResponse(data, meta);
   };
 }
@@ -67,7 +72,7 @@ export interface AppContext {
 export function supabaseQueryOptions<
   QueryFnData,
   const TQueryKey extends QueryKey,
-  Args extends Array<any> = [],
+  Args extends Array<any>,
 >(
   getOptions: (
     context: AppContext,
@@ -87,12 +92,12 @@ export function supabaseQueryOptions<
   QueryFnData,
   TQueryKey
 > & {
-  queryKey: DataTag<TQueryKey, QueryFnData>;
+  queryKey: DataTag<TQueryKey, QueryFnData, PostgrestErrorWithMeta>;
 };
 export function supabaseQueryOptions<
   QueryFnData,
   const TQueryKey extends QueryKey,
-  Args extends Array<any> = [],
+  Args extends Array<any>,
 >(
   getOptions: (
     context: AppContext,
@@ -112,12 +117,12 @@ export function supabaseQueryOptions<
   QueryFnData,
   TQueryKey
 > & {
-  queryKey: DataTag<TQueryKey, QueryFnData>;
+  queryKey: DataTag<TQueryKey, QueryFnData, PostgrestErrorWithMeta>;
 };
 export function supabaseQueryOptions<
   QueryFnData,
   const TQueryKey extends QueryKey,
-  Args extends Array<any> = [],
+  Args extends Array<any>,
 >(
   getOptions: (
     context: AppContext,
@@ -137,12 +142,12 @@ export function supabaseQueryOptions<
   QueryFnData,
   TQueryKey
 > & {
-  queryKey: DataTag<TQueryKey, QueryFnData>;
+  queryKey: DataTag<TQueryKey, QueryFnData, PostgrestErrorWithMeta>;
 };
 export function supabaseQueryOptions<
   QueryFnData,
   const TQueryKey extends QueryKey,
-  Args extends Array<any> = [],
+  Args extends Array<any>,
 >(
   getOptions: (
     context: AppContext,
@@ -161,7 +166,7 @@ export function supabaseMutationOptions<
   MutationFnData,
   TVariables,
   TContext,
-  Args extends Array<any> = [],
+  Args extends Array<any>,
 >(
   getOptions: (
     context: AppContext,

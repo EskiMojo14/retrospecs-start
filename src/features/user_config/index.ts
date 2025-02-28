@@ -13,22 +13,23 @@ export type Theme = Enums<"theme">;
 export type Groove = Enums<"groove">;
 
 export const getUserConfig = supabaseQueryOptions(
-  ({ supabase }, userId: string | undefined) => ({
-    queryKey: ["userConfig", userId],
-    queryFn: userId
-      ? supabaseFn(
-          () => supabase.from("user_config").select().eq("user_id", userId),
-          (response) => response[0] ?? null,
-        )
-      : skipToken,
-    onError(err: PostgrestErrorWithMeta) {
-      toastQueue.add({
-        type: "error",
-        title: "Failed to retrieve user preferences",
-        description: err.message,
-      });
-    },
-  }),
+  ({ supabase }, userId: string | undefined) =>
+    ({
+      queryKey: ["userConfig", userId],
+      queryFn: userId
+        ? supabaseFn(
+            () => supabase.from("user_config").select().eq("user_id", userId),
+            (response) => response[0] ?? null,
+          )
+        : skipToken,
+      onError(err: PostgrestErrorWithMeta) {
+        toastQueue.add({
+          type: "error",
+          title: "Failed to retrieve user preferences",
+          description: err.message,
+        });
+      },
+    }) as const,
 );
 
 export const updateUserConfig = supabaseMutationOptions(

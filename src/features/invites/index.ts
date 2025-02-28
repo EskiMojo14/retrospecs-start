@@ -33,24 +33,25 @@ export const {
 } = inviteAdapter.getSelectors();
 
 export const getInvitesByUserId = supabaseQueryOptions(
-  ({ supabase }, user_id: string | undefined) => ({
-    queryKey: ["invites", { user_id }],
-    queryFn: user_id
-      ? supabaseFn(
-          () =>
-            supabase
-              .from("invites")
-              .select(
-                `created_at,created_by,email,org_id,
+  ({ supabase }, user_id: string | undefined) =>
+    ({
+      queryKey: ["invites", { user_id }],
+      queryFn: user_id
+        ? supabaseFn(
+            () =>
+              supabase
+                .from("invites")
+                .select(
+                  `created_at,created_by,email,org_id,
             ...orgs(org_name:name),
             inviter:profiles!invites_created_by_fkey(avatar_url,color,display_name)
             `,
-              )
-              .eq("user_id", user_id),
-          (invites) => inviteAdapter.getInitialState(undefined, invites),
-        )
-      : skipToken,
-  }),
+                )
+                .eq("user_id", user_id),
+            (invites) => inviteAdapter.getInitialState(undefined, invites),
+          )
+        : skipToken,
+    }) as const,
 );
 
 export const getInvitesByOrgId = supabaseQueryOptions(
