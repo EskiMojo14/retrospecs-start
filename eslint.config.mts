@@ -86,6 +86,7 @@ export default tseslint.config(
         "error",
         { allowNumber: true },
       ],
+      "import-x/no-unresolved": "off",
       "import-x/order": [
         "error",
         {

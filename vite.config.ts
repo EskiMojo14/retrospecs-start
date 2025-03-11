@@ -7,7 +7,6 @@ export default {
   resolve: {
     alias: {
       "~": "/src",
-      "@": "/app",
     },
   },
   test: {

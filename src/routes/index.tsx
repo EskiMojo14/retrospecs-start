@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { ensureAuthenticatedMw } from "@/middleware/auth";
-import { queryClientMw } from "@/middleware/query-client";
+import { ensureAuthenticatedMw } from "~/middleware/auth";
+import { queryClientMw } from "~/middleware/query-client";
 import { ExtendedFab } from "~/components/button/fab";
 import { Symbol } from "~/components/symbol";
 import { useSession } from "~/db/provider";

@@ -8,13 +8,11 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "paths": {
-      "~/*": ["./src/*"],
-      "@/*": ["./app/*"]
+      "~/*": ["./src/*"]
     },
     "noEmit": true
   },
   "include": [
-    "app",
     "src",
     ".storybook/**/*",
     "types",
