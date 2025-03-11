@@ -161,7 +161,7 @@ export const AvatarGroup = createGenericComponent<
           extra: className,
         })}
       >
-        <AvatarContext.Provider value={avatarContextValue}>
+        <AvatarContext value={avatarContextValue}>
           {total > max && renderSurplus(total - (max - 1))}
           {typeof children === "function" ? (
             <Collection
@@ -174,7 +174,7 @@ export const AvatarGroup = createGenericComponent<
           ) : (
             slicedChildren
           )}
-        </AvatarContext.Provider>
+        </AvatarContext>
       </As>
     );
   },

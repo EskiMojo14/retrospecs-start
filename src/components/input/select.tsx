@@ -90,12 +90,12 @@ export function Select<T extends object>({
         </Typography>
       )}
       <Button className={inputGroupCls("input-container")}>
-        <SymbolContext.Provider value={symbolContextValue}>
+        <SymbolContext value={symbolContextValue}>
           {icon}
           <SelectValue className={cls("select-value")}>
             {renderSelected}
           </SelectValue>
-        </SymbolContext.Provider>
+        </SymbolContext>
         <Symbol className={cls("dropdown-icon")}>arrow_drop_down</Symbol>
       </Button>
       {!!description && (

@@ -75,7 +75,7 @@ export const Menu = <T extends object>({
   } = props;
   const contextValue = useMemo<MenuContextValue>(() => ({ color }), [color]);
   const popover = (
-    <MenuContext.Provider value={contextValue}>
+    <MenuContext value={contextValue}>
       <Popover
         offset={0}
         containerPadding={variant === "two-line" ? 64 : 56}
@@ -99,7 +99,7 @@ export const Menu = <T extends object>({
           {children}
         </AriaMenu>
       </Popover>
-    </MenuContext.Provider>
+    </MenuContext>
   );
   return isSubMenu ? (
     <SubmenuTrigger {...triggerProps}>
@@ -153,7 +153,7 @@ export const MenuItem = <T extends object>({
       })}
     >
       {composeRenderProps(children, (children, { isSelected, hasSubmenu }) => (
-        <SymbolContext.Provider value={symbolContextValue}>
+        <SymbolContext value={symbolContextValue}>
           <div ref={surfaceRef} className={cls("item-ripple")} />
           <div className={cls("item-content")}>
             {isSelected && <Symbol slot="check">check</Symbol>}
@@ -164,7 +164,7 @@ export const MenuItem = <T extends object>({
               </Symbol>
             )}
           </div>
-        </SymbolContext.Provider>
+        </SymbolContext>
       ))}
     </AriaMenuItem>
   );

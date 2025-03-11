@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { ensureAuthenticatedMw } from "~/middleware/auth";
-import { queryClientMw } from "~/middleware/query-client";
 import { ExtendedFab } from "~/components/button/fab";
 import { Symbol } from "~/components/symbol";
 import { useSession } from "~/db/provider";
@@ -12,6 +10,8 @@ import { getOrgs, selectAllOrgs, selectOrgIds } from "~/features/orgs";
 import { CreateOrg } from "~/features/orgs/create-org";
 import { OrgGrid, prefetchOrgCardData } from "~/features/orgs/org-grid";
 import { useOptionsCreator } from "~/hooks/use-options-creator";
+import { ensureAuthenticatedMw } from "~/middleware/auth";
+import { queryClientMw } from "~/middleware/query-client";
 
 const getRouteData = createServerFn({ method: "GET" })
   .middleware([ensureAuthenticatedMw, queryClientMw])

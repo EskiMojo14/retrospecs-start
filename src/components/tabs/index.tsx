@@ -59,7 +59,7 @@ export const TabList = <T extends object>({
     [color, variant],
   );
   return (
-    <TabContext.Provider value={tabContextValue}>
+    <TabContext value={tabContextValue}>
       <AriaTabList
         {...props}
         className={cls({
@@ -70,7 +70,7 @@ export const TabList = <T extends object>({
           extra: className,
         })}
       />
-    </TabContext.Provider>
+    </TabContext>
   );
 };
 

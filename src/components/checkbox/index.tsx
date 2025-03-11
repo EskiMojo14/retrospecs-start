@@ -130,7 +130,7 @@ export const CheckboxGroup = ({
       })}
     >
       {composeRenderProps(children, (children) => (
-        <CheckboxGroupContext.Provider value={checkboxGroupContextValue}>
+        <CheckboxGroupContext value={checkboxGroupContextValue}>
           <Typography
             as={Label}
             variant="subtitle2"
@@ -168,7 +168,7 @@ export const CheckboxGroup = ({
           >
             {errorMessage}
           </Typography>
-        </CheckboxGroupContext.Provider>
+        </CheckboxGroupContext>
       ))}
     </AriaCheckboxGroup>
   );

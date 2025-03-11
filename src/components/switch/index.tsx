@@ -66,9 +66,9 @@ export const Switch = ({
                   />
                 </div>
                 <div className={cls("handle")}>
-                  <SymbolContext.Provider value={symbolContextValue}>
+                  <SymbolContext value={symbolContextValue}>
                     <div className={cls("icon")}>{currentIcon}</div>
-                  </SymbolContext.Provider>
+                  </SymbolContext>
                 </div>
               </div>
             </div>

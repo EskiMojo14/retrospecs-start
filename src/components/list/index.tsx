@@ -57,7 +57,7 @@ export const List = <T extends object>({
     [nonInteractive, color],
   );
   return (
-    <ListItemContext.Provider value={listItemContextValue}>
+    <ListItemContext value={listItemContextValue}>
       <GridList
         {...props}
         className={cls({
@@ -65,7 +65,7 @@ export const List = <T extends object>({
           extra: className,
         })}
       />
-    </ListItemContext.Provider>
+    </ListItemContext>
   );
 };
 
@@ -115,10 +115,10 @@ export const ListItem = <T extends object>({
       })}
     >
       {composeRenderProps(children, (children) => (
-        <SymbolContext.Provider value={symbolContextValue}>
+        <SymbolContext value={symbolContextValue}>
           <div ref={surfaceRef} className={cls("item-ripple")} />
           <div className={cls("item-content")}>{children}</div>
-        </SymbolContext.Provider>
+        </SymbolContext>
       ))}
     </GridListItem>
   );

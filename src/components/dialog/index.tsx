@@ -15,7 +15,6 @@ import {
 } from "react-aria-components";
 import { createGenericComponent } from "~/components/generic";
 import { LineBackground } from "~/components/line-background";
-import { Provider } from "~/components/provider";
 import { ToolbarContext } from "~/components/toolbar";
 import { bemHelper } from "~/util";
 import "./index.scss";
@@ -74,9 +73,9 @@ export const Dialog = ({
         <LineBackground opacity={0.3}>
           <AriaDialog {...props} className={cls({ extra: className })}>
             {composeRenderProps(children, (children) => (
-              <Provider values={[[ToolbarContext, toolbarContextValue]]}>
+              <ToolbarContext value={toolbarContextValue}>
                 {children}
-              </Provider>
+              </ToolbarContext>
             ))}
           </AriaDialog>
         </LineBackground>

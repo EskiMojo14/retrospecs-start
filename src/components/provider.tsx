@@ -1,5 +1,5 @@
 import {
-  useContext,
+  use,
   useMemo,
   type Context,
   type Provider,
@@ -23,26 +23,24 @@ export function Provider<ContextValues extends Array<any>>({
   };
 }) {
   return values.reduceRight(
-    (acc, [context, value]) => (
-      <context.Provider value={value}>{acc}</context.Provider>
-    ),
+    (acc, [Context, value]) => <Context value={value}>{acc}</Context>,
     children,
   );
 }
 
 export const MergeProvider = <T, El extends HTMLElement>({
   children,
-  context,
+  context: Context,
   value,
 }: {
   context: Context<ContextValue<T, El>>;
   value: ContextValue<T, El>;
   children: ReactNode;
 }) => {
-  const parentValue = useContext(context);
+  const parentValue = use(Context);
   const merged = useMemo(
     () => mergeSlottedContext(parentValue, value),
     [parentValue, value],
   );
-  return <context.Provider value={merged}>{children}</context.Provider>;
+  return <Context value={merged}>{children}</Context>;
 };

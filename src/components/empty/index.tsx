@@ -61,9 +61,9 @@ export function EmptyState({
   return (
     <div className={cls()}>
       {icon && (
-        <SymbolContext.Provider value={symbolContextValue}>
+        <SymbolContext value={symbolContextValue}>
           {icon}
-        </SymbolContext.Provider>
+        </SymbolContext>
       )}
       <Heading variant={sizeMapping[size].title} className={cls("title")}>
         {title}

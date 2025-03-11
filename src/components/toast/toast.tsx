@@ -73,7 +73,7 @@ export function Toast({ state, ...props }: ToastProps) {
         }
       }}
     >
-      <ButtonContext.Provider value={buttonProps}>
+      <ButtonContext value={buttonProps}>
         <div className={cls("icon")}>
           {symbol ?? <Symbol>{toastSymbols[type]}</Symbol>}
         </div>
@@ -111,7 +111,7 @@ export function Toast({ state, ...props }: ToastProps) {
             <div className={cls("progress-stop")} />
           </div>
         )}
-      </ButtonContext.Provider>
+      </ButtonContext>
     </div>
   );
 }

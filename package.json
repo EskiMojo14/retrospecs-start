@@ -12,7 +12,7 @@
     "build": "vinxi build",
     "start": "vinxi start",
     "format": "prettier --write .",
-    "lint": "eslint --flag unstable_ts_config",
+    "lint": "eslint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "typecheck": "tsc",

@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { ensureAuthenticatedMw } from "~/middleware/auth";
-import { queryClientMw } from "~/middleware/query-client";
 import { Divider } from "~/components/divider";
 import { Symbol } from "~/components/symbol";
 import { Tab, TabList, Tabs } from "~/components/tabs";
@@ -17,6 +15,8 @@ import { getOrg } from "~/features/orgs";
 import { getSprintById } from "~/features/sprints";
 import { getTeam } from "~/features/teams";
 import { useOptionsCreator } from "~/hooks/use-options-creator";
+import { ensureAuthenticatedMw } from "~/middleware/auth";
+import { queryClientMw } from "~/middleware/query-client";
 import { parseNumberParams } from "~/util";
 import { promiseOwnProperties } from "~/util/ponyfills";
 import { numberParamsSchema } from "~/util/valibot";

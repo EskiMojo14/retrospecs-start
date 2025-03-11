@@ -205,7 +205,7 @@ export const ButtonGroup = <T extends object>({
       >
         {label}
       </Typography>
-      <ButtonContext.Provider value={contextValue}>
+      <ButtonContext value={contextValue}>
         <Toolbar
           className={clsGroup("buttons")}
           aria-labelledby={label ? `${id}-label` : undefined}
@@ -221,7 +221,7 @@ export const ButtonGroup = <T extends object>({
             {children}
           </Collection>
         </Toolbar>
-      </ButtonContext.Provider>
+      </ButtonContext>
       {description && (
         <Typography
           as={Text}

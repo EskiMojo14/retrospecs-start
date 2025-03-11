@@ -49,7 +49,7 @@ async function promiseFromEntriesPonyfill<V>(
   return Object.fromEntries(
     await Promise.all(
       Array.from(entries).map(
-        // eslint-disable-next-line @typescript-eslint/await-thenable
+         
         async ([key, value]) => [key, await value] as const,
       ),
     ),

@@ -3,7 +3,6 @@ import type { ComponentProps, ComponentPropsWithoutRef } from "react";
 import { createContext } from "react";
 import type { ContextValue } from "react-aria-components";
 import { useContextProps } from "react-aria-components";
-// eslint-disable-next-line import-x/no-unresolved
 import logo from "/assets/retrospecs.png";
 import styles from "./logo.module.scss";
 

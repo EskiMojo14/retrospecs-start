@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { ensureAuthenticatedMw } from "~/middleware/auth";
-import { queryClientMw } from "~/middleware/query-client";
 import { ExtendedFab } from "~/components/button/fab";
 import { LinkIconButton } from "~/components/icon-button";
 import { Symbol } from "~/components/symbol";
@@ -15,6 +13,8 @@ import { CreateTeam } from "~/features/teams/create-team";
 import { prefetchTeamCardData, TeamGrid } from "~/features/teams/team-grid";
 import { useOptionsCreator } from "~/hooks/use-options-creator";
 import { useCurrentUserPermissions } from "~/hooks/use-user-permissions";
+import { ensureAuthenticatedMw } from "~/middleware/auth";
+import { queryClientMw } from "~/middleware/query-client";
 import { parseNumberParams } from "~/util";
 import { Permission } from "~/util/permissions";
 import { promiseOwnProperties } from "~/util/ponyfills";
