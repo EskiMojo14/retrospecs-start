@@ -15,7 +15,7 @@ import type {
   MutationOptions,
   QueryClient,
 } from "@tanstack/react-query";
-import { pick } from "lodash";
+import pick from "lodash/pick";
 import type { AppSupabaseClient } from "~/db";
 
 export interface PostgrestMeta {
