@@ -1,5 +1,5 @@
 import { createIsomorphicFn } from "@tanstack/react-start";
-import { getRequestURL } from "vinxi/http";
+import { getRequestURL } from "@tanstack/react-start/server";
 
 export const getUrl = createIsomorphicFn()
   .server(getRequestURL)

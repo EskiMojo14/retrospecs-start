@@ -1,5 +1,5 @@
 import { createServerClient as createClient } from "@supabase/ssr";
-import { parseCookies, setCookie } from "vinxi/http";
+import { parseCookies, setCookie } from "@tanstack/react-start/server";
 import { VITE_SUPABASE_ANON_KEY, VITE_SUPABASE_URL } from "~/env";
 import type { Database } from "./supabase";
 

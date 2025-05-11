@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { Divider } from "~/components/divider";
 import { Symbol } from "~/components/symbol";
@@ -40,9 +39,7 @@ const getSprintData = createServerFn({ method: "GET" })
     },
   );
 
-export const Route = createFileRoute(
-  "/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId",
-)({
+export const Route = createFileRoute({
   params: parseNumberParams("orgId", "teamId", "sprintId"),
   component: RouteComponent,
   loader: ({ params, context }) =>

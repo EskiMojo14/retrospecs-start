@@ -8,65 +8,67 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import type { CreateFileRoute, FileRoutesByPath } from '@tanstack/react-router'
+
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as SignInImport } from './routes/sign-in'
-import { Route as IndexImport } from './routes/index'
-import { Route as OrgsOrgIdImport } from './routes/orgs_.$orgId'
-import { Route as AuthCallbackImport } from './routes/auth.callback'
-import { Route as OrgsOrgIdMembersImport } from './routes/orgs_.$orgId_.members'
-import { Route as OrgsOrgIdTeamsTeamIdImport } from './routes/orgs_.$orgId_.teams_.$teamId'
-import { Route as OrgsOrgIdTeamsTeamIdMembersImport } from './routes/orgs_.$orgId_.teams_.$teamId_.members'
-import { Route as OrgsOrgIdTeamsTeamIdSprintsSprintIdImport } from './routes/orgs_.$orgId_.teams_.$teamId_.sprints_.$sprintId'
+import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as OrgsOrgIdRouteImport } from './routes/orgs_.$orgId'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as OrgsOrgIdMembersRouteImport } from './routes/orgs_.$orgId_.members'
+import { Route as OrgsOrgIdTeamsTeamIdRouteImport } from './routes/orgs_.$orgId_.teams_.$teamId'
+import { Route as OrgsOrgIdTeamsTeamIdMembersRouteImport } from './routes/orgs_.$orgId_.teams_.$teamId_.members'
+import { Route as OrgsOrgIdTeamsTeamIdSprintsSprintIdRouteImport } from './routes/orgs_.$orgId_.teams_.$teamId_.sprints_.$sprintId'
 
 // Create/Update Routes
 
-const SignInRoute = SignInImport.update({
+const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const OrgsOrgIdRoute = OrgsOrgIdImport.update({
+const OrgsOrgIdRoute = OrgsOrgIdRouteImport.update({
   id: '/orgs_/$orgId',
   path: '/orgs/$orgId',
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthCallbackRoute = AuthCallbackImport.update({
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
   path: '/auth/callback',
   getParentRoute: () => rootRoute,
 } as any)
 
-const OrgsOrgIdMembersRoute = OrgsOrgIdMembersImport.update({
+const OrgsOrgIdMembersRoute = OrgsOrgIdMembersRouteImport.update({
   id: '/orgs_/$orgId_/members',
   path: '/orgs/$orgId/members',
   getParentRoute: () => rootRoute,
 } as any)
 
-const OrgsOrgIdTeamsTeamIdRoute = OrgsOrgIdTeamsTeamIdImport.update({
+const OrgsOrgIdTeamsTeamIdRoute = OrgsOrgIdTeamsTeamIdRouteImport.update({
   id: '/orgs_/$orgId_/teams_/$teamId',
   path: '/orgs/$orgId/teams/$teamId',
   getParentRoute: () => rootRoute,
 } as any)
 
 const OrgsOrgIdTeamsTeamIdMembersRoute =
-  OrgsOrgIdTeamsTeamIdMembersImport.update({
+  OrgsOrgIdTeamsTeamIdMembersRouteImport.update({
     id: '/orgs_/$orgId_/teams_/$teamId_/members',
     path: '/orgs/$orgId/teams/$teamId/members',
     getParentRoute: () => rootRoute,
   } as any)
 
 const OrgsOrgIdTeamsTeamIdSprintsSprintIdRoute =
-  OrgsOrgIdTeamsTeamIdSprintsSprintIdImport.update({
+  OrgsOrgIdTeamsTeamIdSprintsSprintIdRouteImport.update({
     id: '/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId',
     path: '/orgs/$orgId/teams/$teamId/sprints/$sprintId',
     getParentRoute: () => rootRoute,
@@ -80,59 +82,134 @@ declare module '@tanstack/react-router' {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRoute
     }
     '/sign-in': {
       id: '/sign-in'
       path: '/sign-in'
       fullPath: '/sign-in'
-      preLoaderRoute: typeof SignInImport
+      preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRoute
     }
     '/auth/callback': {
       id: '/auth/callback'
       path: '/auth/callback'
       fullPath: '/auth/callback'
-      preLoaderRoute: typeof AuthCallbackImport
+      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRoute
     }
     '/orgs_/$orgId': {
       id: '/orgs_/$orgId'
       path: '/orgs/$orgId'
       fullPath: '/orgs/$orgId'
-      preLoaderRoute: typeof OrgsOrgIdImport
+      preLoaderRoute: typeof OrgsOrgIdRouteImport
       parentRoute: typeof rootRoute
     }
     '/orgs_/$orgId_/members': {
       id: '/orgs_/$orgId_/members'
       path: '/orgs/$orgId/members'
       fullPath: '/orgs/$orgId/members'
-      preLoaderRoute: typeof OrgsOrgIdMembersImport
+      preLoaderRoute: typeof OrgsOrgIdMembersRouteImport
       parentRoute: typeof rootRoute
     }
     '/orgs_/$orgId_/teams_/$teamId': {
       id: '/orgs_/$orgId_/teams_/$teamId'
       path: '/orgs/$orgId/teams/$teamId'
       fullPath: '/orgs/$orgId/teams/$teamId'
-      preLoaderRoute: typeof OrgsOrgIdTeamsTeamIdImport
+      preLoaderRoute: typeof OrgsOrgIdTeamsTeamIdRouteImport
       parentRoute: typeof rootRoute
     }
     '/orgs_/$orgId_/teams_/$teamId_/members': {
       id: '/orgs_/$orgId_/teams_/$teamId_/members'
       path: '/orgs/$orgId/teams/$teamId/members'
       fullPath: '/orgs/$orgId/teams/$teamId/members'
-      preLoaderRoute: typeof OrgsOrgIdTeamsTeamIdMembersImport
+      preLoaderRoute: typeof OrgsOrgIdTeamsTeamIdMembersRouteImport
       parentRoute: typeof rootRoute
     }
     '/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId': {
       id: '/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId'
       path: '/orgs/$orgId/teams/$teamId/sprints/$sprintId'
       fullPath: '/orgs/$orgId/teams/$teamId/sprints/$sprintId'
-      preLoaderRoute: typeof OrgsOrgIdTeamsTeamIdSprintsSprintIdImport
+      preLoaderRoute: typeof OrgsOrgIdTeamsTeamIdSprintsSprintIdRouteImport
       parentRoute: typeof rootRoute
     }
   }
+}
+
+// Add type-safety to the createFileRoute function across the route tree
+
+declare module './routes/index' {
+  const createFileRoute: CreateFileRoute<
+    '/',
+    FileRoutesByPath['/']['parentRoute'],
+    FileRoutesByPath['/']['id'],
+    FileRoutesByPath['/']['path'],
+    FileRoutesByPath['/']['fullPath']
+  >
+}
+declare module './routes/sign-in' {
+  const createFileRoute: CreateFileRoute<
+    '/sign-in',
+    FileRoutesByPath['/sign-in']['parentRoute'],
+    FileRoutesByPath['/sign-in']['id'],
+    FileRoutesByPath['/sign-in']['path'],
+    FileRoutesByPath['/sign-in']['fullPath']
+  >
+}
+declare module './routes/auth.callback' {
+  const createFileRoute: CreateFileRoute<
+    '/auth/callback',
+    FileRoutesByPath['/auth/callback']['parentRoute'],
+    FileRoutesByPath['/auth/callback']['id'],
+    FileRoutesByPath['/auth/callback']['path'],
+    FileRoutesByPath['/auth/callback']['fullPath']
+  >
+}
+declare module './routes/orgs_.$orgId' {
+  const createFileRoute: CreateFileRoute<
+    '/orgs_/$orgId',
+    FileRoutesByPath['/orgs_/$orgId']['parentRoute'],
+    FileRoutesByPath['/orgs_/$orgId']['id'],
+    FileRoutesByPath['/orgs_/$orgId']['path'],
+    FileRoutesByPath['/orgs_/$orgId']['fullPath']
+  >
+}
+declare module './routes/orgs_.$orgId_.members' {
+  const createFileRoute: CreateFileRoute<
+    '/orgs_/$orgId_/members',
+    FileRoutesByPath['/orgs_/$orgId_/members']['parentRoute'],
+    FileRoutesByPath['/orgs_/$orgId_/members']['id'],
+    FileRoutesByPath['/orgs_/$orgId_/members']['path'],
+    FileRoutesByPath['/orgs_/$orgId_/members']['fullPath']
+  >
+}
+declare module './routes/orgs_.$orgId_.teams_.$teamId' {
+  const createFileRoute: CreateFileRoute<
+    '/orgs_/$orgId_/teams_/$teamId',
+    FileRoutesByPath['/orgs_/$orgId_/teams_/$teamId']['parentRoute'],
+    FileRoutesByPath['/orgs_/$orgId_/teams_/$teamId']['id'],
+    FileRoutesByPath['/orgs_/$orgId_/teams_/$teamId']['path'],
+    FileRoutesByPath['/orgs_/$orgId_/teams_/$teamId']['fullPath']
+  >
+}
+declare module './routes/orgs_.$orgId_.teams_.$teamId_.members' {
+  const createFileRoute: CreateFileRoute<
+    '/orgs_/$orgId_/teams_/$teamId_/members',
+    FileRoutesByPath['/orgs_/$orgId_/teams_/$teamId_/members']['parentRoute'],
+    FileRoutesByPath['/orgs_/$orgId_/teams_/$teamId_/members']['id'],
+    FileRoutesByPath['/orgs_/$orgId_/teams_/$teamId_/members']['path'],
+    FileRoutesByPath['/orgs_/$orgId_/teams_/$teamId_/members']['fullPath']
+  >
+}
+declare module './routes/orgs_.$orgId_.teams_.$teamId_.sprints_.$sprintId' {
+  const createFileRoute: CreateFileRoute<
+    '/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId',
+    FileRoutesByPath['/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId']['parentRoute'],
+    FileRoutesByPath['/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId']['id'],
+    FileRoutesByPath['/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId']['path'],
+    FileRoutesByPath['/orgs_/$orgId_/teams_/$teamId_/sprints_/$sprintId']['fullPath']
+  >
 }
 
 // Create and export the route tree

@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import {  useRouter } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { Form } from "react-aria-components";
 import { object, optional, string } from "valibot";
@@ -34,7 +34,7 @@ export const signinSearchSchema = object({
   error_description: optional(string()),
 });
 
-export const Route = createFileRoute("/sign-in")({
+export const Route = createFileRoute({
   validateSearch: signinSearchSchema,
   loader: () => ({ url: getURL() }),
   component: SignIn,

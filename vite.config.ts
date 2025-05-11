@@ -1,9 +1,9 @@
-import type { CustomizableConfig } from "vinxi/dist/types/lib/vite-dev";
-import type { ViteUserConfig } from "vitest/config";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import { defineConfig } from "vitest/config";
 
 // we need to keep this because storybook uses it
 
-export default {
+export default defineConfig({
   resolve: {
     alias: {
       "~": "/src",
@@ -19,4 +19,5 @@ export default {
       },
     },
   },
-} satisfies CustomizableConfig & Pick<ViteUserConfig, "test">;
+  plugins: [tanstackStart()],
+});

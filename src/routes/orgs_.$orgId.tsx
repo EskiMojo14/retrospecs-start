@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { ExtendedFab } from "~/components/button/fab";
 import { LinkIconButton } from "~/components/icon-button";
@@ -45,7 +44,7 @@ const getOrgData = createServerFn({ method: "GET" })
     );
   });
 
-export const Route = createFileRoute("/orgs_/$orgId")({
+export const Route = createFileRoute({
   params: parseNumberParams("orgId"),
   component: RouteComponent,
   loader: ({ params, context }) =>

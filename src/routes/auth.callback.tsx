@@ -1,6 +1,6 @@
-import { createFileRoute, isRedirect, redirect } from "@tanstack/react-router";
+import {  isRedirect, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestURL } from "vinxi/http";
+import { getRequestURL } from "@tanstack/react-start/server";
 import { createServerClient } from "~/db/server";
 
 const redirectToErr = (error?: string, error_description?: string) =>
@@ -33,6 +33,6 @@ const authCallback = createServerFn().handler(async () => {
   }
 });
 
-export const Route = createFileRoute("/auth/callback")({
+export const Route = createFileRoute({
   loader: () => authCallback(),
 });
